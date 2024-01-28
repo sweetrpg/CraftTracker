@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.common.util;
+package com.sweetrpg.crafttracker.common.util;
 
 //TODO
 public class RadialCoordinateIterator {

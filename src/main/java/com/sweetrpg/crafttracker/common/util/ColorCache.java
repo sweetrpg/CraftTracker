@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.common.util;
+package com.sweetrpg.crafttracker.common.util;
 
 public class ColorCache {
 

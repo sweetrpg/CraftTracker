@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.data;
+package com.sweetrpg.crafttracker.data;
 
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;

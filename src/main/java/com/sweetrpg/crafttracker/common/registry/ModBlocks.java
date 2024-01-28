@@ -1,8 +1,7 @@
-package com.sweetrpg.catherder.common.registry;
+package com.sweetrpg.crafttracker.common.registry;
 
-import com.sweetrpg.catherder.CatHerder;
-import com.sweetrpg.catherder.api.CatHerderAPI;
-import com.sweetrpg.catherder.common.block.*;
+import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.lib.Constants;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
@@ -20,28 +19,8 @@ import java.util.function.Supplier;
 
 public class ModBlocks {
 
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.Keys.BLOCKS, CatHerderAPI.MOD_ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.Keys.BLOCKS, Constants.MOD_ID);
     public static final DeferredRegister<Item> ITEMS = ModItems.ITEMS;
-
-    // cat items
-    public static final RegistryObject<CatTreeBlock> CAT_TREE = registerWithItem("cat_tree", CatTreeBlock::new);
-    public static final RegistryObject<LitterboxBlock> LITTERBOX = registerWithItem("litter_box", LitterboxBlock::new);
-    public static final RegistryObject<CatBowlBlock> CAT_BOWL = registerWithItem("cat_bowl", CatBowlBlock::new);
-    public static final RegistryObject<Block> CARDBOARD_BOX = registerWithItem("cardboard_box", CardboardBoxBlock::new);
-
-    // miscellaneous items
-    public static final RegistryObject<Block> MOUSE_TRAP = registerWithItem("mouse_trap", MouseTrapBlock::new);
-    public static final RegistryObject<Block> PET_DOOR = registerWithItem("pet_door", PetDoorBlock::new);
-
-    // food
-    public static final RegistryObject<Block> CHEESE_WHEEL = registerWithItem("cheese_wheel",
-                                                                             () -> new CheeseWheelBlock(Block.Properties.copy(Blocks.CAKE), true));
-
-    // crops
-    public static final RegistryObject<WildCatnipBlock> WILD_CATNIP = BLOCKS.register("wild_catnip",
-                                                                                      () -> new WildCatnipBlock(MobEffects.DIG_SLOWDOWN, 6, Block.Properties.copy(Blocks.TALL_GRASS)));
-    public static final RegistryObject<CatnipBlock> CATNIP_CROP = BLOCKS.register("catnip",
-                                                                                  () -> new CatnipBlock(Block.Properties.copy(Blocks.WHEAT)));
 
     private static Item.Properties createInitialProp() {
         return new Item.Properties().tab(ModItemGroups.GENERAL);
@@ -86,9 +65,9 @@ public class ModBlocks {
 
     public static void logError() {
         // Only try to register if blocks were successfully registered
-        // Trying to avoid as reports like CatHerder#242, where it says
-        // CatHerder crashed but is not the CAUSE of the crash
+        // Trying to avoid as reports like CraftTracker#242, where it says
+        // CraftTracker crashed but is not the CAUSE of the crash
 
-        CatHerder.LOGGER.info("Items/Blocks were not registered for some reason... probably because we are c...r..a..s.hing");
+        CraftTracker.LOGGER.info("Items/Blocks were not registered for some reason... probably because we are c...r..a..s.hing");
     }
 }

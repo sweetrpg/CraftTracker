@@ -1,25 +1,17 @@
-package com.sweetrpg.catherder.common.addon;
+package com.sweetrpg.crafttracker.common.addon;
 
 import com.google.common.collect.Lists;
-import com.sweetrpg.catherder.CatHerder;
-import com.sweetrpg.catherder.common.addon.autumnity.AutumnityAddon;
-import com.sweetrpg.catherder.common.addon.biomesoplenty.BiomesOPlentyAddon;
-import com.sweetrpg.catherder.common.addon.botania.BotaniaAddon;
-import com.sweetrpg.catherder.common.addon.itemphysic.ItemPhysicsAddon;
-import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue.Consumer;
+import com.sweetrpg.crafttracker.CraftTracker;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class AddonManager {
 
-    private static final List<Addon> ADDONS = Collections.unmodifiableList(Lists.newArrayList(
-            new ItemPhysicsAddon(),
-            new BiomesOPlentyAddon(),
-            new BotaniaAddon(),
-            new AutumnityAddon()));
+    private static final List<Addon> ADDONS = Collections.unmodifiableList(Lists.newArrayList());
     private static final List<Addon> RUN = Lists.newArrayList(ADDONS);
 
     public static void init() {
@@ -30,7 +22,7 @@ public class AddonManager {
     public static void exec() {
         // execs the addons that didn't error
         doWork(RUN, Addon::shouldLoad, Addon::exec, (addon, e) -> {
-            CatHerder.LOGGER.warn("Failed to init {}", addon.getName());
+            CraftTracker.LOGGER.warn("Failed to init {}", addon.getName());
             e.printStackTrace();
         });
     }

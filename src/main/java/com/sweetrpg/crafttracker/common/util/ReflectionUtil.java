@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.common.util;
+package com.sweetrpg.crafttracker.common.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

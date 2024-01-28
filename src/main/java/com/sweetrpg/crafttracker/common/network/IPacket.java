@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.common.network;
+package com.sweetrpg.crafttracker.common.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;

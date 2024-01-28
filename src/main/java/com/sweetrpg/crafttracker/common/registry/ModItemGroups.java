@@ -1,14 +1,14 @@
-package com.sweetrpg.catherder.common.registry;
+package com.sweetrpg.crafttracker.common.registry;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.function.Supplier;
 
 public class ModItemGroups {
 
-    public static final CreativeModeTab GENERAL = new CustomItemGroup("catherder", () -> new ItemStack(ModItems.TRAINING_TREAT.get()));
-//    public static final CreativeModeTab CAT_TREE = new CustomItemGroup("catherder.cattree", CattreeUtil::createRandomBed);
+    public static final CreativeModeTab GENERAL = new CustomItemGroup("CraftTracker", () -> new ItemStack(Items.CRAFTING_TABLE));
 
     public static class CustomItemGroup extends CreativeModeTab {
 

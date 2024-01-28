@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.client.screen;
+package com.sweetrpg.crafttracker.client.screen;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;

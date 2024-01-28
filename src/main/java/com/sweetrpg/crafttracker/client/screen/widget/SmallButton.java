@@ -1,9 +1,9 @@
-package com.sweetrpg.catherder.client.screen.widget;
+package com.sweetrpg.crafttracker.client.screen.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.sweetrpg.catherder.common.lib.Resources;
+import com.sweetrpg.crafttracker.common.lib.Resources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;

@@ -1,15 +1,14 @@
-package com.sweetrpg.catherder.common.util;
+package com.sweetrpg.crafttracker.common.util;
 
 import com.google.common.collect.Lists;
-import com.sweetrpg.catherder.api.CatHerderAPI;
-import com.sweetrpg.catherder.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.lib.Constants;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
-import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.IRegistryDelegate;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.text.DecimalFormat;
 import java.util.Collection;
@@ -102,7 +101,7 @@ public class Util {
      * @param name The path of the resource
      */
     public static ResourceLocation getResource(String name) {
-        return getResource(CatHerderAPI.MOD_ID, name);
+        return getResource(Constants.MOD_ID, name);
     }
 
     public static ResourceLocation getResource(String modId, String name) {
@@ -110,11 +109,11 @@ public class Util {
     }
 
     public static String getResourcePath(String name) {
-        return getResourcePath(CatHerderAPI.MOD_ID, name);
+        return getResourcePath(Constants.MOD_ID, name);
     }
 
     public static ResourceLocation modLoc(String name) {
-        return new ResourceLocation(CatHerderAPI.MOD_ID, name);
+        return new ResourceLocation(Constants.MOD_ID, name);
     }
 
     public static ResourceLocation mcLoc(String name) {

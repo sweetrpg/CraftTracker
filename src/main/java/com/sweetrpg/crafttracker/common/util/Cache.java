@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.common.util;
+package com.sweetrpg.crafttracker.common.util;
 
 import java.util.Optional;
 import java.util.function.Predicate;

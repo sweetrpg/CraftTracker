@@ -1,7 +1,7 @@
-package com.sweetrpg.catherder.common.block.entity;
+package com.sweetrpg.crafttracker.common.block.entity;
 
-import com.sweetrpg.catherder.common.util.NBTUtil;
-import com.sweetrpg.catherder.common.util.WorldUtil;
+import com.sweetrpg.crafttracker.common.util.NBTUtil;
+import com.sweetrpg.crafttracker.common.util.WorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;

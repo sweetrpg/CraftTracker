@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.client;
+package com.sweetrpg.crafttracker.client;
 
 public enum SkinRequest {
 

@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.common.util;
+package com.sweetrpg.crafttracker.common.util;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;

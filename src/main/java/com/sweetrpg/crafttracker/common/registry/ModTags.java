@@ -1,6 +1,6 @@
-package com.sweetrpg.catherder.common.registry;
+package com.sweetrpg.crafttracker.common.registry;
 
-import com.sweetrpg.catherder.common.util.Util;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.tags.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;

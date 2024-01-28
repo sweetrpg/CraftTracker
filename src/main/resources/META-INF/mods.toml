@@ -1,35 +1,35 @@
 modLoader="javafml"
 loaderVersion="${fml_version_range}"
 license="MIT"
-issueTrackerURL="https://github.com/sweetrpg/CatHerder/issues"
-displayURL="https://minecraft.curseforge.com/projects/cat-herder/"
-logoFile= "ch_logo.png"
+issueTrackerURL="https://github.com/sweetrpg/CraftTracker/issues"
+displayURL="https://minecraft.curseforge.com/projects/craft-tracker/"
+logoFile= "ct_logo.png"
 
 [[mods]]
-    modId="catherder"
+    modId="crafttracker"
     version="${version}"
-    updateJSONURL="https://minecraft.sweetrpg.com/mods/catherder/version.json"
-    displayName="Cat Herder"
-    credits="paulyhedral,percivalalb,RaustBlackDragon,NovaViper"
+    updateJSONURL="https://minecraft.sweetrpg.com/mods/crafttracker/version.json"
+    displayName="Craft Tracker"
+    credits="paulyhedral"
     authors="paulyhedral"
     description='''
-    Turning your cats into fun, playful cats.
+    Keep track of all the things you need to craft.
     '''
-[[dependencies.catherder]]
+[[dependencies.crafttracker]]
     modId="forge"
     mandatory=true
     versionRange="${forge_version_range}"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.catherder]]
+[[dependencies.crafttracker]]
     modId="minecraft"
     mandatory=true
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.catherder]]
+[[dependencies.crafttracker]]
     modId="configured"
     mandatory=false
     versionRange="[1.5.4,)"

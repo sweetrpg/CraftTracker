@@ -1,9 +1,9 @@
-package com.sweetrpg.catherder.client;
+package com.sweetrpg.crafttracker.client;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.sweetrpg.catherder.CatHerder;
+import com.sweetrpg.crafttracker.CraftTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -48,7 +48,7 @@ public class CachedFileTexture extends SimpleTexture {
                 NativeImage nativeimage = null;
 
                 if (this.cacheFile.isFile() && this.cacheFile.exists()) {
-                    CatHerder.LOGGER.debug("Loading cat texture from local cache ({})", this.cacheFile);
+                    CraftTracker.LOGGER.debug("Loading cat texture from local cache ({})", this.cacheFile);
                     FileInputStream fileinputstream = null;
                     try {
                         fileinputstream = new FileInputStream(this.cacheFile);
@@ -63,7 +63,7 @@ public class CachedFileTexture extends SimpleTexture {
                 if (nativeimage != null) {
                     this.setImage(nativeimage);
                 } else {
-                    CatHerder.LOGGER.warn("Was unable to set image ({})", this.cacheFile);
+                    CraftTracker.LOGGER.warn("Was unable to set image ({})", this.cacheFile);
                 }
             }
         });
@@ -77,7 +77,7 @@ public class CachedFileTexture extends SimpleTexture {
        try {
            nativeimage = NativeImage.read(inputStreamIn);
        } catch (IOException ioexception) {
-           CatHerder.LOGGER.warn("Error while loading the skin texture", ioexception);
+           CraftTracker.LOGGER.warn("Error while loading the skin texture", ioexception);
        }
 
        return nativeimage;

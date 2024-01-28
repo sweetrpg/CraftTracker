@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.common.util;
+package com.sweetrpg.crafttracker.common.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;

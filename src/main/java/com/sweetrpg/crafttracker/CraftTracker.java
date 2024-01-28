@@ -1,18 +1,15 @@
-package com.sweetrpg.catherder;
+package com.sweetrpg.crafttracker;
 
-import com.sweetrpg.catherder.api.CatHerderAPI;
-import com.sweetrpg.catherder.client.ClientSetup;
-import com.sweetrpg.catherder.client.entity.render.world.BedFinderRenderer;
-import com.sweetrpg.catherder.client.event.ClientEventHandler;
-import com.sweetrpg.catherder.common.lib.Capabilities;
-import com.sweetrpg.catherder.common.CommonSetup;
-import com.sweetrpg.catherder.common.addon.AddonManager;
-import com.sweetrpg.catherder.common.command.CatRespawnCommand;
-import com.sweetrpg.catherder.common.config.ConfigHandler;
-import com.sweetrpg.catherder.common.event.EventHandler;
-import com.sweetrpg.catherder.common.lib.Constants;
-import com.sweetrpg.catherder.common.registry.*;
-import com.sweetrpg.catherder.data.*;
+import com.sweetrpg.crafttracker.client.ClientSetup;
+import com.sweetrpg.crafttracker.client.event.ClientEventHandler;
+import com.sweetrpg.crafttracker.common.CommonSetup;
+import com.sweetrpg.crafttracker.common.addon.AddonManager;
+import com.sweetrpg.crafttracker.common.config.ConfigHandler;
+import com.sweetrpg.crafttracker.common.event.EventHandler;
+import com.sweetrpg.crafttracker.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.registry.*;
+import com.sweetrpg.crafttracker.data.CTAdvancementProvider;
+import com.sweetrpg.crafttracker.data.CTLangProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,18 +31,18 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author Paulyhedral, ProPercivalalb
  */
-@Mod(CatHerderAPI.MOD_ID)
-public class CatHerder {
+@Mod(Constants.MOD_ID)
+public class CraftTracker {
 
-    public static final Logger LOGGER = LogManager.getLogger(CatHerderAPI.MOD_ID);
+    public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
 
-    public static final SimpleChannel HANDLER = NetworkRegistry.ChannelBuilder.named(Constants.CHANNEL_NAME)
+    public static final SimpleChannel HANDLER = NetworkRegistry.ChannelBuilder.named(com.sweetrpg.crafttracker.common.lib.Constants.CHANNEL_NAME)
             .clientAcceptedVersions(Constants.PROTOCOL_VERSION::equals)
             .serverAcceptedVersions(Constants.PROTOCOL_VERSION::equals)
-            .networkProtocolVersion(Constants.PROTOCOL_VERSION::toString)
+            .networkProtocolVersion(com.sweetrpg.crafttracker.common.lib.Constants.PROTOCOL_VERSION::toString)
             .simpleChannel();
 
-    public CatHerder() {
+    public CraftTracker() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         // Mod lifecycle
@@ -57,22 +54,14 @@ public class CatHerder {
         ModBlocks.BLOCKS.register(modEventBus);
         ModBlockEntityTypes.TILE_ENTITIES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
-        ModEntityTypes.ENTITIES.register(modEventBus);
+//        ModEntityTypes.ENTITIES.register(modEventBus);
         ModContainerTypes.CONTAINERS.register(modEventBus);
         ModSerializers.SERIALIZERS.register(modEventBus);
-        ModSounds.SOUNDS.register(modEventBus);
         ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
-        ModTalents.TALENTS.register(modEventBus);
-        ModAccessories.ACCESSORIES.register(modEventBus);
-        ModAccessoryTypes.ACCESSORY_TYPES.register(modEventBus);
-        ModMaterials.STRUCTURES.register(modEventBus);
-        ModMaterials.COLORS.register(modEventBus);
-        ModMaterials.DYES.register(modEventBus);
-        ModAttributes.ATTRIBUTES.register(modEventBus);
 
         modEventBus.addListener(ModRegistries::newRegistry);
-        modEventBus.addListener(ModEntityTypes::addEntityAttributes);
-        modEventBus.addListener(Capabilities::registerCaps);
+//        modEventBus.addListener(ModEntityTypes::addEntityAttributes);
+//        modEventBus.addListener(Capabilities::registerCaps);
 
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
         forgeEventBus.addListener(this::serverStarting);
@@ -85,13 +74,12 @@ public class CatHerder {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             modEventBus.addListener(this::clientSetup);
             modEventBus.addListener(ModBlocks::registerBlockColours);
-            modEventBus.addListener(ModItems::registerItemColours);
             modEventBus.addListener(ClientEventHandler::onModelBakeEvent);
             modEventBus.addListener(ClientSetup::setupTileEntityRenderers);
             modEventBus.addListener(ClientSetup::setupEntityRenderers);
             modEventBus.addListener(ClientSetup::addClientReloadListeners);
+
             forgeEventBus.register(new ClientEventHandler());
-            forgeEventBus.addListener(BedFinderRenderer::onWorldRenderLast);
         });
 
         ConfigHandler.init(modEventBus);
@@ -108,7 +96,6 @@ public class CatHerder {
 
     public void registerCommands(final RegisterCommandsEvent event) {
         LOGGER.debug("Register commands");
-        CatRespawnCommand.register(event.getDispatcher());
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -117,7 +104,6 @@ public class CatHerder {
 
         ClientSetup.setupScreenManagers(event);
 
-        ClientSetup.setupCollarRenderers(event);
     }
 
     protected void interModProcess(final InterModProcessEvent event) {
@@ -135,27 +121,22 @@ public class CatHerder {
         DataGenerator gen = event.getGenerator();
 
         if(event.includeClient()) {
-            CHBlockstateProvider blockstates = new CHBlockstateProvider(gen, event.getExistingFileHelper());
-            gen.addProvider(blockstates);
-            gen.addProvider(new CHItemModelProvider(gen, blockstates.getExistingHelper()));
-            gen.addProvider(new CHLangProvider(gen, Constants.LOCALE_EN_US));
-            gen.addProvider(new CHLangProvider(gen, Constants.LOCALE_EN_GB));
-            gen.addProvider(new CHLangProvider(gen, Constants.LOCALE_DE_DE));
-            gen.addProvider(new CHLangProvider(gen, Constants.LOCALE_KO_KR));
-            gen.addProvider(new CHLangProvider(gen, Constants.LOCALE_RU_RU));
-            gen.addProvider(new CHLangProvider(gen, Constants.LOCALE_VI_VN));
-            gen.addProvider(new CHLangProvider(gen, Constants.LOCALE_ZH_CN));
-            gen.addProvider(new CHLangProvider(gen, Constants.LOCALE_ZH_TW));
+//            BlockstateProvider blockstates = new BlockstateProvider(gen, event.getExistingFileHelper());
+//            gen.addProvider(blockstates);
+//            gen.addProvider(new ItemModelProvider(gen, blockstates.getExistingHelper()));
+            gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_EN_US));
+            gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_EN_GB));
+            gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_DE_DE));
         }
 
         if(event.includeServer()) {
             // gen.addProvider(new DTBlockTagsProvider(gen));
-            gen.addProvider(new CHAdvancementProvider(gen));
-            CHBlockTagsProvider blockTagProvider = new CHBlockTagsProvider(gen, event.getExistingFileHelper());
-            gen.addProvider(blockTagProvider);
-            gen.addProvider(new CHItemTagsProvider(gen, blockTagProvider, event.getExistingFileHelper()));
-            gen.addProvider(new CHRecipeProvider(gen));
-            gen.addProvider(new CHLootTableProvider(gen));
+            gen.addProvider(new CTAdvancementProvider(gen));
+//            BlockTagsProvider blockTagProvider = new CHBlockTagsProvider(gen, event.getExistingFileHelper());
+//            gen.addProvider(blockTagProvider);
+//            gen.addProvider(new ItemTagsProvider(gen, blockTagProvider, event.getExistingFileHelper()));
+//            gen.addProvider(new RecipeProvider(gen));
+//            gen.addProvider(new LootTableProvider(gen));
         }
     }
 }

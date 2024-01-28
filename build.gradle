@@ -130,7 +130,6 @@ task sourcesJar(type: Jar) {
     duplicatesStrategy(DuplicatesStrategy.FAIL)
     archiveClassifier = 'sources'
     from sourceSets.main.allJava
-    from sourceSets.api.allJava
 }
 
 // Add the sources and API jars to the list of generated artifacts
@@ -164,7 +163,6 @@ classes.configure {
 
 jar {
     from sourceSets.main.output
-    from sourceSets.api.output
 
     manifest {
         attributes([

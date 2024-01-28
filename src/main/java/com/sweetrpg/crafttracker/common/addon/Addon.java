@@ -1,4 +1,4 @@
-package com.sweetrpg.catherder.common.addon;
+package com.sweetrpg.crafttracker.common.addon;
 
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;

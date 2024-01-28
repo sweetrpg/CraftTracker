@@ -1,38 +1,17 @@
-package com.sweetrpg.catherder.common.util;
+package com.sweetrpg.crafttracker.common.util;
 
-import com.sweetrpg.catherder.api.feature.FoodHandler;
-import com.sweetrpg.catherder.api.inferface.AbstractCatEntity;
-import com.sweetrpg.catherder.api.inferface.ICatFoodHandler;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public class InventoryUtil {
 
-    public static InteractionResult feedCatFrom(AbstractCatEntity catIn, @Nullable Entity entity, IItemHandlerModifiable source) {
 
-        for (int i = 0; i < source.getSlots(); i++) {
-
-            ItemStack stack = source.getStackInSlot(i).copy();
-            Optional<ICatFoodHandler> foodHandler = FoodHandler.getMatch(catIn, stack, entity);
-
-            if (foodHandler.isPresent()) {
-                InteractionResult response = foodHandler.get().consume(catIn, stack, entity);
-                source.setStackInSlot(i, stack);
-                return response;
-            }
-        }
-
-        return InteractionResult.PASS;
-    }
 
     public static Pair<ItemStack, Integer> findStack(IItemHandler source, Predicate<ItemStack> searchCriteria) {
         for (int i = 0; i < source.getSlots(); i++) {
