@@ -61,6 +61,12 @@ public class ClientEventHandler {
         if(ModKeyBindings.ADD_TO_QUEUE_MAPPING.consumeClick()) {
 
         }
+        else if(ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.consumeClick()) {
+
+        }
+        else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.consumeClick()) {
+
+        }
     }
 
     @SubscribeEvent

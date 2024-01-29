@@ -1,5 +1,6 @@
 {
-  "crafttracker.screen.list.title": "Bastelliste",
+  "crafttracker.screen.craft_list.title": "Bastelliste",
+  "crafttracker.screen.shopping_list.title": "Einkaufsliste",
   "key.addToQueue": "Zur Warteschlange hinzuf\u00FCgen",
   "key.categories.crafttracker": "Handwerks-Tracker"
 }

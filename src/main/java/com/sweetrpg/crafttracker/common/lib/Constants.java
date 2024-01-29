@@ -21,12 +21,15 @@ public class Constants {
     public static final String LOCALE_DE_DE = "de_de";
 
     // Translation keys
-    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_TITLE = "crafttracker.screen.list.title";
+    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_TITLE = "crafttracker.screen.craft_list.title";
+    public static final String TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE = "crafttracker.screen.shopping_list.title";
     public static final String TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE = "key.categories.crafttracker";
     public static final String TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE = "key.addToQueue";
+    public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE = "key.toggleCraftList";
+    public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPINGLIST_TITLE = "key.toggleShoppingList";
 
     // Advancements
     public static final String TRANSLATION_KEY_ADVANCEMENT_MAKE_LIST_TITLE = "advancements.crafttracker.main.make_list.title";
-    public static final String TRANSLATION_KEY_ADVANCEMENT_TRAIN_CAT_DESCRIPTION = "advancements.crafttracker.main.make_list.description";
+    public static final String TRANSLATION_KEY_ADVANCEMENT_MAKE_LIST_DESCRIPTION = "advancements.crafttracker.main.make_list.description";
 
 }
