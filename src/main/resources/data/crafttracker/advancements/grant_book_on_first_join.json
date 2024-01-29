@@ -6,7 +6,7 @@
   },
   "rewards": {
     "loot": [
-      "catherder:grant_book_on_first_join"
+      "crafttracker:grant_book_on_first_join"
     ]
   }
 }

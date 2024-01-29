@@ -29,7 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * @author Paulyhedral, ProPercivalalb
+ * @author Paulyhedral
  */
 @Mod(Constants.MOD_ID)
 public class CraftTracker {
@@ -60,24 +60,22 @@ public class CraftTracker {
         ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
 
         modEventBus.addListener(ModRegistries::newRegistry);
-//        modEventBus.addListener(ModEntityTypes::addEntityAttributes);
-//        modEventBus.addListener(Capabilities::registerCaps);
 
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
         forgeEventBus.addListener(this::serverStarting);
         forgeEventBus.addListener(this::registerCommands);
 
         forgeEventBus.register(new EventHandler());
-//        forgeEventBus.register(new BackwardsComp());
 
         // Client Events
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             modEventBus.addListener(this::clientSetup);
-            modEventBus.addListener(ModBlocks::registerBlockColours);
-            modEventBus.addListener(ClientEventHandler::onModelBakeEvent);
-            modEventBus.addListener(ClientSetup::setupTileEntityRenderers);
-            modEventBus.addListener(ClientSetup::setupEntityRenderers);
+//            modEventBus.addListener(ModBlocks::registerBlockColours);
+//            modEventBus.addListener(ClientEventHandler::onModelBakeEvent);
+//            modEventBus.addListener(ClientSetup::setupTileEntityRenderers);
+//            modEventBus.addListener(ClientSetup::setupEntityRenderers);
             modEventBus.addListener(ClientSetup::addClientReloadListeners);
+            modEventBus.addListener(ClientSetup::addKeyBindings);
 
             forgeEventBus.register(new ClientEventHandler());
         });

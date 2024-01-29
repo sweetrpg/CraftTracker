@@ -1,5 +1,6 @@
 package com.sweetrpg.crafttracker.data;
 
+import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -27,16 +28,26 @@ public class CTLangProvider extends LanguageProvider {
     }
 
     private void processENUS() {
+        CraftTracker.LOGGER.info("Adding translations for en_us...");
+
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE, "Craft List");
+        add(Constants.TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE, "Craft Tracker");
+        add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Add to Queue");
     }
 
     private void processENGB() {
-        add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE, "Craft List");
+        CraftTracker.LOGGER.info("Adding translations for en_gb...");
 
+        add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE, "Craft List");
+        add(Constants.TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE, "Craft Tracker");
+        add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Add to Queue");
     }
 
     private void processDEDE() {
-        add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE, "Craft List");
-    }
+        CraftTracker.LOGGER.info("Adding translations for de_de...");
 
+        add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE, "Bastelliste");
+        add(Constants.TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE, "Handwerks-Tracker");
+        add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Zur Warteschlange hinzufügen");
+    }
 }

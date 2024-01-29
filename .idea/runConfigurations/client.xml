@@ -7,7 +7,7 @@
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run"/>
     <module name="CraftTracker.main"/>
     <envs>
-      <env name="MOD_CLASSES" value="catherder%%$PROJECT_DIR$/build/resources/main:catherder%%$PROJECT_DIR$/build/classes/java/main"/>
+      <env name="MOD_CLASSES" value="crafttracker%%$PROJECT_DIR$/build/resources/main:crafttracker%%$PROJECT_DIR$/build/classes/java/main"/>
       <env name="MCP_MAPPINGS" value="parchment_2022.11.06-1.18.2"/>
     </envs>
     <method v="2">

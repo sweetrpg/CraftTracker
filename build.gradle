@@ -81,7 +81,7 @@ minecraft {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
-                catherder.sources((SourceSet[]) [sourceSets.main])
+                crafttracker.sources((SourceSet[]) [sourceSets.main])
             }
         }
 
@@ -92,7 +92,7 @@ minecraft {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
-                catherder.sources((SourceSet[]) [sourceSets.main])
+                crafttracker.sources((SourceSet[]) [sourceSets.main])
             }
         }
 
@@ -102,9 +102,9 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            args '--mod', 'catherder', '--all', '--output', '"' + file('src/generated/resources/') + '"', '--existing', '"' + sourceSets.main.resources.srcDirs[0] + '"'
+            args '--mod', project.mod_id, '--all', '--output', '"' + file('src/generated/resources/') + '"', '--existing', '"' + sourceSets.main.resources.srcDirs[0] + '"'
             mods {
-                catherder.sources((SourceSet[]) [sourceSets.main])
+                crafttracker.sources((SourceSet[]) [sourceSets.main])
             }
         }
     }
@@ -168,7 +168,7 @@ jar {
         attributes([
             "Specification-Title": project.name,
             "Specification-Vendor": "SweetRPG",
-            "Specification-Version": project.version, // "1",
+            "Specification-Version": project.version,
             "Implementation-Title": project.name,
             "Implementation-Version": project.version,
             "Implementation-Vendor" :"SweetRPG",

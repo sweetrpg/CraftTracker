@@ -8,7 +8,7 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import net.minecraft.resources.ResourceLocation;
 
 @JeiPlugin
-public class CHPlugin implements IModPlugin {
+public class CTPlugin implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid() {

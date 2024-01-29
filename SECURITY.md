@@ -8,4 +8,4 @@
 
 ## Reporting a Vulnerability
 
-Please open an issue [here](https://github.com/sweetrpg/CatHerder/issues).
+Please open an issue [here](https://github.com/sweetrpg/CraftTracker/issues).

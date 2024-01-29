@@ -53,15 +53,15 @@ public class ModBlocks {
         return BLOCKS.register(name, blockSupplier);
     }
 
-    public static void registerBlockColours(final ColorHandlerEvent.Block event) {
-        BlockColors blockColors = event.getBlockColors();
-
-//        Util.acceptOrElse(CatBlocks.CAT_BATH, (block) -> {
-//            blockColors.register((state, world, pos, tintIndex) -> {
-//                return world != null && pos != null ? BiomeColors.getAverageWaterColor(world, pos) : -1;
-//             }, block);
-//        }, CatBlocks::logError);
-    }
+//    public static void registerBlockColours(final ColorHandlerEvent.Block event) {
+//        BlockColors blockColors = event.getBlockColors();
+//
+////        Util.acceptOrElse(CatBlocks.CAT_BATH, (block) -> {
+////            blockColors.register((state, world, pos, tintIndex) -> {
+////                return world != null && pos != null ? BiomeColors.getAverageWaterColor(world, pos) : -1;
+////             }, block);
+////        }, CatBlocks::logError);
+//    }
 
     public static void logError() {
         // Only try to register if blocks were successfully registered
