@@ -2,5 +2,7 @@
   "crafttracker.screen.craft_list.title": "Craft List",
   "crafttracker.screen.shopping_list.title": "Shopping List",
   "key.addToQueue": "Add to Queue",
-  "key.categories.crafttracker": "Craft Tracker"
+  "key.categories.crafttracker": "Craft Tracker",
+  "key.toggleCraftList": "Toggle Craft List",
+  "key.toggleShoppingList": "Toggle Shopping List"
 }
