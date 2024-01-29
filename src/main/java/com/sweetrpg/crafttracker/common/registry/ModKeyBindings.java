@@ -10,7 +10,9 @@ public class ModKeyBindings {
     public static final String KEY_CATEGORIES_CRAFT_TRACKER = "key.categories.crafttracker";
     public static final String KEY_ADD_TO_QUEUE = "key.addToQueue";
 
+    public static final KeyMapping ADD_TO_QUEUE_MAPPING = new KeyMapping(KEY_ADD_TO_QUEUE, KeyConflictContext.GUI, InputConstants.Type.KEYSYM, InputConstants.KEY_Q, KEY_CATEGORIES_CRAFT_TRACKER);
+
     public static void init() {
-        ClientRegistry.registerKeyBinding(new KeyMapping(KEY_ADD_TO_QUEUE, KeyConflictContext.GUI, InputConstants.Type.KEYSYM, InputConstants.KEY_Q, KEY_CATEGORIES_CRAFT_TRACKER));
+        ClientRegistry.registerKeyBinding(ADD_TO_QUEUE_MAPPING);
     }
 }

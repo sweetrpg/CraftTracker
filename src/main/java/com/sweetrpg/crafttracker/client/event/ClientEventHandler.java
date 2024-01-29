@@ -3,7 +3,9 @@ package com.sweetrpg.crafttracker.client.event;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.network.PacketHandler;
+import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -54,7 +56,11 @@ public class ClientEventHandler {
 
 //    @SubscribeEvent
     public static void onKeyInput(final InputEvent.KeyInputEvent event) {
+        CraftTracker.LOGGER.debug("#onKeyInput: {}", event);
 
+        if(ModKeyBindings.ADD_TO_QUEUE_MAPPING.consumeClick()) {
+
+        }
     }
 
     @SubscribeEvent
