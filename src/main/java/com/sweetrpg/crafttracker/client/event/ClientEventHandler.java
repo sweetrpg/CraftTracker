@@ -5,6 +5,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.network.PacketHandler;
+import com.sweetrpg.crafttracker.common.network.packet.data.AddToQueueData;
+import com.sweetrpg.crafttracker.common.network.packet.data.DisplayCraftListData;
+import com.sweetrpg.crafttracker.common.network.packet.data.DisplayShoppingListData;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,19 +15,14 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
-
-import java.util.Map;
 
 public class ClientEventHandler {
 
@@ -54,18 +52,18 @@ public class ClientEventHandler {
 //
 //    }
 
-//    @SubscribeEvent
+    //    @SubscribeEvent
     public static void onKeyInput(final InputEvent.KeyInputEvent event) {
         CraftTracker.LOGGER.debug("#onKeyInput: {}", event);
 
         if(ModKeyBindings.ADD_TO_QUEUE_MAPPING.consumeClick()) {
-
+            PacketHandler.send(PacketDistributor.SERVER.noArg(), new AddToQueueData("TODO"));
         }
         else if(ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.consumeClick()) {
-
+            PacketHandler.send(PacketDistributor.SERVER.noArg(), new DisplayCraftListData(true));
         }
         else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.consumeClick()) {
-
+            PacketHandler.send(PacketDistributor.SERVER.noArg(), new DisplayShoppingListData(true));
         }
     }
 
@@ -77,7 +75,7 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onScreenInit(final ScreenEvent.InitScreenEvent.Post event) {
         Screen screen = event.getScreen();
-        if (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
+        if(screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
             boolean creative = screen instanceof CreativeModeInventoryScreen;
 //            boolean dtLoaded = ModList.get().isLoaded("doggytalents");
             Minecraft mc = Minecraft.getInstance();
@@ -101,7 +99,7 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onScreenDrawForeground(final ScreenEvent.DrawScreenEvent event) {
         Screen screen = event.getScreen();
-        if (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
+        if(screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
             boolean creative = screen instanceof CreativeModeInventoryScreen;
 //            CatInventoryButton btn = null;
 //

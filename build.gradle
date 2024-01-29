@@ -81,7 +81,9 @@ minecraft {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
-                crafttracker.sources((SourceSet[]) [sourceSets.main])
+                create(mod_id) {
+                    source(sourceSets.main)
+                }
             }
         }
 
@@ -92,7 +94,9 @@ minecraft {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
-                crafttracker.sources((SourceSet[]) [sourceSets.main])
+                create(mod_id) {
+                    source(sourceSets.main)
+                }
             }
         }
 
@@ -104,7 +108,9 @@ minecraft {
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             args '--mod', project.mod_id, '--all', '--output', '"' + file('src/generated/resources/') + '"', '--existing', '"' + sourceSets.main.resources.srcDirs[0] + '"'
             mods {
-                crafttracker.sources((SourceSet[]) [sourceSets.main])
+                create(mod_id) {
+                    source(sourceSets.main)
+                }
             }
         }
     }
