@@ -1,6 +1,8 @@
 package com.sweetrpg.crafttracker.common.network;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.network.packet.AddToQueuePacket;
+import com.sweetrpg.crafttracker.common.network.packet.data.AddToQueueData;
 import net.minecraftforge.network.PacketDistributor;
 
 public final class PacketHandler {
@@ -8,7 +10,7 @@ public final class PacketHandler {
     private static int disc = 0;
 
     public static void init() {
-//        registerPacket(new CatModePacket(), CatModeData.class);
+        registerPacket(new AddToQueuePacket(), AddToQueueData.class);
 //        registerPacket(new CatNamePacket(), CatNameData.class);
 //        registerPacket(new CatObeyPacket(), CatObeyData.class);
 //        registerPacket(new CatTalentPacket(), CatTalentData.class);
