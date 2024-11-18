@@ -4,10 +4,11 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.client.screen.widget.SmallButton;
 import com.sweetrpg.crafttracker.common.network.PacketHandler;
 import com.sweetrpg.crafttracker.common.network.packet.data.AddToQueueData;
-import com.sweetrpg.crafttracker.common.network.packet.data.DisplayCraftListData;
-import com.sweetrpg.crafttracker.common.network.packet.data.DisplayShoppingListData;
+import com.sweetrpg.crafttracker.common.network.packet.data.ToggleCraftListData;
+import com.sweetrpg.crafttracker.common.network.packet.data.ToggleShoppingListData;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -25,6 +27,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
 public class ClientEventHandler {
+
+//    static boolean craftListDisplayed = true;
+//    static boolean shoppingListDisplayed = true;
 
 //    public static void onModelBakeEvent(final ModelBakeEvent event) {
 //        Map<ResourceLocation, BakedModel> modelRegistry = event.getModelRegistry();
@@ -54,30 +59,40 @@ public class ClientEventHandler {
 
     //    @SubscribeEvent
     public static void onKeyInput(final InputEvent.KeyInputEvent event) {
-        CraftTracker.LOGGER.debug("#onKeyInput: {}", event);
+        CraftTracker.LOGGER.trace("#onKeyInput: {}", event);
 
-        if(ModKeyBindings.ADD_TO_QUEUE_MAPPING.consumeClick()) {
+        if(ModKeyBindings.ADD_TO_QUEUE_MAPPING.matches(event.getKey(), event.getScanCode())) {
+            CraftTracker.LOGGER.debug("#onKeyInput: ADD_TO_QUEUE_MAPPING");
             PacketHandler.send(PacketDistributor.SERVER.noArg(), new AddToQueueData("TODO"));
         }
-        else if(ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.consumeClick()) {
-            PacketHandler.send(PacketDistributor.SERVER.noArg(), new DisplayCraftListData(true));
+        else if(ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_CRAFT_LIST_MAPPING");
+//            craftListDisplayed = !craftListDisplayed;
+            PacketHandler.send(PacketDistributor.SERVER.noArg(), new ToggleCraftListData());
         }
-        else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.consumeClick()) {
-            PacketHandler.send(PacketDistributor.SERVER.noArg(), new DisplayShoppingListData(true));
+        else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_SHOPPING_LIST_MAPPING");
+//            shoppingListDisplayed = !shoppingListDisplayed;
+            PacketHandler.send(PacketDistributor.SERVER.noArg(), new ToggleShoppingListData());
         }
     }
 
     @SubscribeEvent
     public void onInputEvent(final MovementInputUpdateEvent event) {
+        CraftTracker.LOGGER.trace("#onInputEvent: {}", event);
 
     }
 
     @SubscribeEvent
     public void onScreenInit(final ScreenEvent.InitScreenEvent.Post event) {
+        CraftTracker.LOGGER.trace("#onScreenInit: {}", event);
+
         Screen screen = event.getScreen();
         if(screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
             boolean creative = screen instanceof CreativeModeInventoryScreen;
-//            boolean dtLoaded = ModList.get().isLoaded("doggytalents");
+//            CraftTracker.LOGGER.debug("#onScreenInit: creative {}", creative);
+
+            //            boolean dtLoaded = ModList.get().isLoaded("doggytalents");
             Minecraft mc = Minecraft.getInstance();
             int width = mc.getWindow().getGuiScaledWidth();
             int height = mc.getWindow().getGuiScaledHeight();
@@ -89,18 +104,23 @@ public class ClientEventHandler {
             int x = guiLeft + (creative ? 36 : sizeX / 2 - 10);
             int y = guiTop + (creative ? 7 : 48);
 
-//            event.addListener(new Button(x, y, screen, (btn) -> {
-//                PacketHandler.send(PacketDistributor.SERVER.noArg(), new OpenCatScreenData());
+            event.addListener(new SmallButton(x, y, new TranslatableComponent("X"), (btn) -> {
+                CraftTracker.LOGGER.debug("#onScreenInit: SMALL BUTTON PRESSED {}", btn);
+                PacketHandler.send(PacketDistributor.SERVER.noArg(), new AddToQueueData("TODO"));
 ////                btn.active = false;
-//            }));
+            }));
         }
     }
 
     @SubscribeEvent
     public void onScreenDrawForeground(final ScreenEvent.DrawScreenEvent event) {
+        CraftTracker.LOGGER.trace("#onScreenDrawForeground: {}", event);
+
         Screen screen = event.getScreen();
         if(screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
             boolean creative = screen instanceof CreativeModeInventoryScreen;
+//            CraftTracker.LOGGER.debug("#onScreenInit: creative {}", creative);
+
 //            CatInventoryButton btn = null;
 //
 //            //TODO just create a static variable in this class
@@ -134,6 +154,8 @@ public class ClientEventHandler {
     }
 
     public void drawSelectionBox(PoseStack matrixStackIn, Player player, float particleTicks, AABB boundingBox) {
+        CraftTracker.LOGGER.debug("#drawSelectionBox: {}, player: {}", matrixStackIn, player);
+
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         // RenderSystem.disableAlphaTest();

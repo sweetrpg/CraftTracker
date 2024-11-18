@@ -15,6 +15,10 @@ public class Constants {
     public static final ResourceLocation CHANNEL_NAME = Util.getResource("channel");
     public static final String PROTOCOL_VERSION = Integer.toString(1);
 
+    // Storage
+    public static final String STORAGE_CRAFTING_QUEUE = "crafting_queue";
+    public static final String STORAGE_SHOPPING_LIST = "shopping_list";
+
     // Language
     public static final String LOCALE_EN_US = "en_us";
     public static final String LOCALE_EN_GB = "en_gb";

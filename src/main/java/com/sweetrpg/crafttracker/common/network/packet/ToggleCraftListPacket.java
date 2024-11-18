@@ -1,28 +1,28 @@
 package com.sweetrpg.crafttracker.common.network.packet;
 
 import com.sweetrpg.crafttracker.common.network.IPacket;
-import com.sweetrpg.crafttracker.common.network.packet.data.AddToQueueData;
-import com.sweetrpg.crafttracker.common.network.packet.data.DisplayCraftListData;
+import com.sweetrpg.crafttracker.common.network.packet.data.ToggleCraftListData;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent.Context;
 
 import java.util.function.Supplier;
 
-public class DisplayCraftListPacket implements IPacket<DisplayCraftListData> {
+public class ToggleCraftListPacket implements IPacket<ToggleCraftListData> {
 
     @Override
-    public void encode(DisplayCraftListData data, FriendlyByteBuf buf) {
-        buf.writeBoolean(data.display);
+    public void encode(ToggleCraftListData data, FriendlyByteBuf buf) {
+
+//        buf.writeBoolean(data.display);
     }
 
     @Override
-    public DisplayCraftListData decode(FriendlyByteBuf buf) {
-        boolean display = buf.readBoolean();
-        return new DisplayCraftListData(display);
+    public ToggleCraftListData decode(FriendlyByteBuf buf) {
+//        boolean display = buf.readBoolean();
+        return new ToggleCraftListData();
     }
 
     @Override
-    public final void handle(DisplayCraftListData data, Supplier<Context> ctx) {
+    public final void handle(ToggleCraftListData data, Supplier<Context> ctx) {
         ctx.get().enqueueWork(() -> {
 //            Entity target = ctx.get().getSender().level.getEntity(data.entityId);
 //

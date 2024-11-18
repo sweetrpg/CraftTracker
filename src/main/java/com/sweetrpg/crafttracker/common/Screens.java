@@ -43,5 +43,9 @@ public class Screens {
 //        }
 //    }
 
+    public static void updateCraftQueue(ServerPlayer player) {
+// TODO: display if hidden
+        // redraw list of items
+    }
 
 }

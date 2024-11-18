@@ -1,28 +1,28 @@
 package com.sweetrpg.crafttracker.common.network.packet;
 
 import com.sweetrpg.crafttracker.common.network.IPacket;
-import com.sweetrpg.crafttracker.common.network.packet.data.DisplayCraftListData;
-import com.sweetrpg.crafttracker.common.network.packet.data.DisplayShoppingListData;
+import com.sweetrpg.crafttracker.common.network.packet.data.ToggleShoppingListData;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent.Context;
 
 import java.util.function.Supplier;
 
-public class DisplayShoppingListPacket implements IPacket<DisplayShoppingListData> {
+public class ToggleShoppingListPacket implements IPacket<ToggleShoppingListData> {
 
     @Override
-    public void encode(DisplayShoppingListData data, FriendlyByteBuf buf) {
-        buf.writeBoolean(data.display);
+    public void encode(ToggleShoppingListData data, FriendlyByteBuf buf) {
+
+//        buf.writeBoolean(data.display);
     }
 
     @Override
-    public DisplayShoppingListData decode(FriendlyByteBuf buf) {
-        boolean display = buf.readBoolean();
-        return new DisplayShoppingListData(display);
+    public ToggleShoppingListData decode(FriendlyByteBuf buf) {
+//        boolean display = buf.readBoolean();
+        return new ToggleShoppingListData();
     }
 
     @Override
-    public final void handle(DisplayShoppingListData data, Supplier<Context> ctx) {
+    public final void handle(ToggleShoppingListData data, Supplier<Context> ctx) {
         ctx.get().enqueueWork(() -> {
 //            Entity target = ctx.get().getSender().level.getEntity(data.entityId);
 //
