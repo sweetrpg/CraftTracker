@@ -10,8 +10,10 @@ import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent.Context;
 
+import java.io.IOException;
 import java.util.function.Supplier;
 
 public class AddToQueuePacket implements IPacket<AddToQueueData> {
@@ -32,20 +34,26 @@ public class AddToQueuePacket implements IPacket<AddToQueueData> {
         CraftTracker.LOGGER.debug("AddToQueuePacket#handle: {}", data);
 
         ctx.get().enqueueWork(() -> {
-            CTPlugin.jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse()
-                    .ifPresent(ingredient -> {
-                        CraftTracker.LOGGER.debug("AddToQueuePacket#handle: type {}", ingredient.getType());
-                        CraftTracker.LOGGER.debug("AddToQueuePacket#handle: ingredient {}", ingredient.getIngredient());
+            LogicalSide side = ctx.get().getDirection().getReceptionSide();
+            if (side.isClient()) {
 
-                        if(ingredient.getIngredient() instanceof ItemStack itemStack) {
-                            ResourceLocation res = itemStack.getItem().getRegistryName();
-                            CraftTracker.LOGGER.debug("AddToQueuePacket#handle: res {}", res);
+            }
+            else if (side.isServer()) {
+                CTPlugin.jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse()
+                        .ifPresent(ingredient -> {
+                            CraftTracker.LOGGER.debug("AddToQueuePacket#handle: type {}", ingredient.getType());
+                            CraftTracker.LOGGER.debug("AddToQueuePacket#handle: ingredient {}", ingredient.getIngredient());
 
-                            CraftingQueueManager.INSTANCE.addProduct(res, 1);
+                            if(ingredient.getIngredient() instanceof ItemStack itemStack) {
+                                ResourceLocation res = itemStack.getItem().getRegistryName();
+                                CraftTracker.LOGGER.debug("AddToQueuePacket#handle: res {}", res);
+
+                                CraftingQueueManager.INSTANCE.addProduct(res, 1);
 
 
-                        }
-                    });
+                            }
+                        });
+            }
         });
 
         ctx.get().setPacketHandled(true);

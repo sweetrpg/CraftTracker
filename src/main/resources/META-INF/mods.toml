@@ -46,7 +46,7 @@ logoFile= "ct_logo.png"
 [[dependencies.crafttracker]]
     modId="patchouli"
     mandatory=false
-    versionRange="[71.1,)"
+    versionRange="[1.18.2-71.1,)"
     ordering="NONE"
     side="BOTH"
 
