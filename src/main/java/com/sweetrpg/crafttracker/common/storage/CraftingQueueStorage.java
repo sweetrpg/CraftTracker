@@ -22,6 +22,8 @@ public class CraftingQueueStorage extends SavedData {
     public CraftingQueueStorage() {}
 
     public static CraftingQueueStorage get(Level world) {
+        CraftTracker.LOGGER.debug("#get: {}", world);
+
         if (!(world instanceof ServerLevel)) {
             throw new RuntimeException("Tried to access crafting queue data from the client. This should not happen...");
         }
@@ -33,6 +35,8 @@ public class CraftingQueueStorage extends SavedData {
     }
 
     public CraftingQueueData getData(UUID uuid) {
+        CraftTracker.LOGGER.debug("#getData: {}", uuid);
+
         return queueDataMap.computeIfAbsent(uuid, (k) -> {
             CraftingQueueData data = new CraftingQueueData(this, uuid);
             this.setDirty();
@@ -41,11 +45,15 @@ public class CraftingQueueStorage extends SavedData {
     }
 
     public void removeData(UUID uuid) {
+        CraftTracker.LOGGER.debug("#removeData: {}", uuid);
+
         queueDataMap.remove(uuid);
         this.setDirty();
     }
 
     public static CraftingQueueStorage load(CompoundTag nbt) {
+        CraftTracker.LOGGER.debug("#load: {}", nbt);
+
         CraftingQueueStorage store = new CraftingQueueStorage();
         store.queueDataMap.clear();
 
@@ -73,6 +81,8 @@ public class CraftingQueueStorage extends SavedData {
 
     @Override
     public CompoundTag save(CompoundTag compound) {
+        CraftTracker.LOGGER.debug("#save: {}", compound);
+
         ListTag list = new ListTag();
 
         for (Map.Entry<UUID, CraftingQueueData> entry : this.queueDataMap.entrySet()) {
