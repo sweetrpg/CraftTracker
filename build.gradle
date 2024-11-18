@@ -202,7 +202,7 @@ curseforge {
 //        }
         relations {
             optionalDependency 'configured'
-            optionalDependency 'jei'
+            requiredDependency 'jei'
             optionalDependency 'patchouli'
         }
     }
@@ -222,7 +222,7 @@ modrinth {
     loaders = ["forge"]
     dependencies {
         optional.project "configured"
-        optional.project "jei"
+        required.project "jei"
         optional.project "patchouli"
     }
 }

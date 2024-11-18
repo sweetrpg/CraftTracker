@@ -30,9 +30,23 @@ logoFile= "ct_logo.png"
     side="BOTH"
 
 [[dependencies.crafttracker]]
+    modId="jei"
+    mandatory=true
+    versionRange="[9.7.2.281,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.crafttracker]]
     modId="configured"
     mandatory=false
     versionRange="[1.5.4,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.crafttracker]]
+    modId="patchouli"
+    mandatory=false
+    versionRange="[71.1,)"
     ordering="NONE"
     side="BOTH"
 
