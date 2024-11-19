@@ -26,6 +26,7 @@ public class Constants {
 
     // Translation keys
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_TITLE = "crafttracker.screen.craft_list.title";
+    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY = "crafttracker.screen.craft_list.empty_message";
     public static final String TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE = "crafttracker.screen.shopping_list.title";
     public static final String TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE = "key.categories.crafttracker";
     public static final String TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE = "key.addToQueue";

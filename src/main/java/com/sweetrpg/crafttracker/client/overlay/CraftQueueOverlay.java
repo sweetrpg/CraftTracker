@@ -24,6 +24,26 @@ public class CraftQueueOverlay {
         GuiComponent.drawCenteredString(poseStack, gui.getFont(),
                 new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE),
                 (x + olWidth - 8) / 2, y + 6, 0xffffffff);
+
+        // if products list is empty, display "empty" message
+        if(true) { // TODO
+            GuiComponent.drawCenteredString(poseStack, gui.getFont(),
+                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY),
+                    (x + olWidth - 8) / 2, y + 6, 0xffffffff);
+            return;
+        }
+
+        // end products
+        // TODO: title
+        // TODO: items
+
+        // intermediates
+        // TODO: title
+        // TODO: items
+
+        // raw materials
+        // TODO: title
+        // TODO: items
     };
 
 }
