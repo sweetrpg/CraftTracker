@@ -5,15 +5,12 @@ import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.network.IPacket;
 import com.sweetrpg.crafttracker.common.network.packet.data.AddToQueueData;
-import mezz.jei.api.ingredients.IIngredientHelper;
-import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent.Context;
 
-import java.io.IOException;
 import java.util.function.Supplier;
 
 public class AddToQueuePacket implements IPacket<AddToQueueData> {
@@ -35,10 +32,10 @@ public class AddToQueuePacket implements IPacket<AddToQueueData> {
 
         ctx.get().enqueueWork(() -> {
             LogicalSide side = ctx.get().getDirection().getReceptionSide();
-            if (side.isClient()) {
+            if(side.isClient()) {
 
             }
-            else if (side.isServer()) {
+            else if(side.isServer()) {
                 CTPlugin.jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse()
                         .ifPresent(ingredient -> {
                             CraftTracker.LOGGER.debug("AddToQueuePacket#handle: type {}", ingredient.getType());
@@ -48,9 +45,7 @@ public class AddToQueuePacket implements IPacket<AddToQueueData> {
                                 ResourceLocation res = itemStack.getItem().getRegistryName();
                                 CraftTracker.LOGGER.debug("AddToQueuePacket#handle: res {}", res);
 
-                                CraftingQueueManager.INSTANCE.addProduct(res, 1);
-
-
+                                CraftingQueueManager.INSTANCE.addProduct(ctx.get().getSender().level, res, 1);
                             }
                         });
             }

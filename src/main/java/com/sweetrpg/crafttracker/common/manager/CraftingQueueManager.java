@@ -2,85 +2,100 @@ package com.sweetrpg.crafttracker.common.manager;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
+import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
 import com.sweetrpg.crafttracker.common.storage.CraftingQueueStorage;
+import com.sweetrpg.crafttracker.common.util.RecipeUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.level.Level;
 import org.antlr.v4.misc.OrderedHashMap;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CraftingQueueManager {
 
     public static CraftingQueueManager INSTANCE = new CraftingQueueManager();
 
-    private Map<ResourceLocation, Integer> endProducts = new OrderedHashMap<>();
+    private Map<ResourceLocation, CraftingQueueProduct> endProducts = new OrderedHashMap<>();
     private Map<ResourceLocation, Integer> intermediateProducts = new OrderedHashMap<>();
     private Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
 
-    private CraftingQueueStorage storage;
+//    private CraftingQueueStorage storage;
 
     public CraftingQueueManager() {
-        this.storage = new CraftingQueueStorage();
+//        this.storage = new CraftingQueueStorage();
     }
 
-    public List<QueueItem> getEndProducts() {
-        return endProducts.entrySet()
-                .stream()
-                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
-                .collect(Collectors.toUnmodifiableList());
+//    public List<QueueItem> getEndProducts() {
+//        return endProducts.entrySet()
+//                .stream()
+//                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
+//                .collect(Collectors.toUnmodifiableList());
+//    }
+//
+//    public List<QueueItem> getIntermediates() {
+//        return intermediateProducts.entrySet()
+//                .stream()
+//                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
+//                .collect(Collectors.toUnmodifiableList());
+//    }
+//
+//    public List<QueueItem> getRawMaterials() {
+//        return rawMaterials.entrySet()
+//                .stream()
+//                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
+//                .collect(Collectors.toUnmodifiableList());
+//    }
+
+    public void addProduct(Level level, ResourceLocation itemId, int quantity) {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#addProduct: {}, quantity: {}", itemId, quantity);
+
+        var recipes = RecipeUtil.getRecipesFor(itemId);
+
+        if(recipes.size() > 0) {
+            CraftTracker.LOGGER.debug("recipes: {}", recipes);
+
+            var product = new CraftingQueueProduct(itemId, recipes, quantity);
+            endProducts.compute(itemId, (rl, p) -> p == null ? product :
+                    new CraftingQueueProduct(p.getItemId(), p.getRecipes(), p.getQuantity() + quantity));
+
+            CraftingQueueStorage.get(level).putData(itemId, quantity);
+
+            computeAll();
+        }
+        else {
+            CraftTracker.LOGGER.info("Not adding {} to queue, since there are no recipes for it.", itemId);
+        }
     }
 
-    public List<QueueItem> getIntermediates() {
-        return intermediateProducts.entrySet()
-                .stream()
-                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
-                .collect(Collectors.toUnmodifiableList());
-    }
+    public void removeProduct(Level level, ResourceLocation itemId, int quantity) {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}, quantity: {}", itemId, quantity);
 
-    public List<QueueItem> getRawMaterials() {
-        return rawMaterials.entrySet()
-                .stream()
-                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
-                .collect(Collectors.toUnmodifiableList());
-    }
+        var product = this.endProducts.get(itemId);
+        if(product == null) {
+            CraftTracker.LOGGER.info("No product found in queue for {}", itemId);
+            return;
+        }
 
-    public void addProduct(ResourceLocation itemId, int quantity) {
-        CraftTracker.LOGGER.debug("#addProduct: {}, quantity: {}", itemId, quantity);
-
-        var rm = CTPlugin.jeiRuntime.getRecipeManager();
-
-        rm.createRecipeCategoryLookup().get()
-                .peek(c -> CraftTracker.LOGGER.debug("category: {}", c))
-                .map(c -> c.getRecipeType())
-                .peek(t -> CraftTracker.LOGGER.debug("type: {}", t))
-                .flatMap(t -> rm.createRecipeLookup(t).get())
-                .peek(r -> CraftTracker.LOGGER.debug("recipe: {}", r))
-                .filter(r -> r instanceof CraftingRecipe)
-                .map(r -> CraftingRecipe.class.cast(r))
-                .peek(r -> CraftTracker.LOGGER.debug("CraftingRecipe: {}", r.getId()))
-                .filter(cr -> cr.getId().equals(itemId))
-                .peek(cr -> CraftTracker.LOGGER.debug("{}: {}", itemId, cr))
-                .findFirst()
-                .ifPresentOrElse(r -> {
-                            CraftTracker.LOGGER.debug("r: {}", r);
-                            endProducts.compute(itemId, (k, v) -> v == null ? quantity : v + quantity);
-                        },
-                        () -> {
-                            CraftTracker.LOGGER.warn("No recipe found for {}", itemId);
-                        });
+        // if we would remove more than what's left in the queue, remove it entirely
+        int newQuantity = product.getQuantity() - quantity;
+        if(newQuantity < 1) {
+            CraftTracker.LOGGER.info("Removing item from queue storage: {}", itemId);
+            CraftingQueueStorage.get(level).removeData(itemId);
+        }
+        else {
+            CraftTracker.LOGGER.info("Adjusting quantity of item in queue storage to {}: {}", quantity, itemId);
+            CraftingQueueStorage.get(level).putData(itemId, newQuantity);
+        }
 
         computeAll();
     }
 
-    public void removeProduct(ResourceLocation itemId, int quantity) {
-
-    }
-
     public void computeAll() {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#computeAll");
+
         Map<ResourceLocation, Integer> intermediateProducts = new OrderedHashMap<>();
         Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
 
