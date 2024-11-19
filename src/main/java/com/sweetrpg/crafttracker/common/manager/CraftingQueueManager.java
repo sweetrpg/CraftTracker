@@ -1,16 +1,16 @@
 package com.sweetrpg.crafttracker.common.manager;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.storage.CraftingQueueStorage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import org.antlr.v4.misc.OrderedHashMap;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CraftingQueueManager {
@@ -24,7 +24,7 @@ public class CraftingQueueManager {
     private CraftingQueueStorage storage;
 
     public CraftingQueueManager() {
-        this.storage = CraftingQueueStorage.get(Minecraft.getInstance().level);
+        this.storage = new CraftingQueueStorage();
     }
 
     public List<QueueItem> getEndProducts() {
@@ -51,25 +51,27 @@ public class CraftingQueueManager {
     public void addProduct(ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("#addProduct: {}, quantity: {}", itemId, quantity);
 
-        RecipeManager rm = new RecipeManager(ICondition.IContext.EMPTY);
+        var rm = CTPlugin.jeiRuntime.getRecipeManager();
 
-        rm.byKey(itemId).ifPresentOrElse(r -> {
-                    this.endProducts.compute(itemId, (k, v) -> {
-                        if(v == null) {
-                            return quantity;
-                        }
-
-                        return v + quantity;
-                    });
-
-                    var playerId = Minecraft.getInstance().player.getUUID();
-                    this.storage.getData(playerId).addItem(itemId, quantity);
-                },
-                () -> {
-                    // should not have gotten here, since #addProduct should have filtered out the item
-                    // since it had to ingredients
-                    CraftTracker.LOGGER.warn("#computeAll: no recipe found for {}", itemId);
-                });
+        rm.createRecipeCategoryLookup().get()
+                .peek(c -> CraftTracker.LOGGER.debug("category: {}", c))
+                .map(c -> c.getRecipeType())
+                .peek(t -> CraftTracker.LOGGER.debug("type: {}", t))
+                .flatMap(t -> rm.createRecipeLookup(t).get())
+                .peek(r -> CraftTracker.LOGGER.debug("recipe: {}", r))
+                .filter(r -> r instanceof CraftingRecipe)
+                .map(r -> CraftingRecipe.class.cast(r))
+                .peek(r -> CraftTracker.LOGGER.debug("CraftingRecipe: {}", r.getId()))
+                .filter(cr -> cr.getId().equals(itemId))
+                .peek(cr -> CraftTracker.LOGGER.debug("{}: {}", itemId, cr))
+                .findFirst()
+                .ifPresentOrElse(r -> {
+                            CraftTracker.LOGGER.debug("r: {}", r);
+                            endProducts.compute(itemId, (k, v) -> v == null ? quantity : v + quantity);
+                        },
+                        () -> {
+                            CraftTracker.LOGGER.warn("No recipe found for {}", itemId);
+                        });
 
         computeAll();
     }
@@ -82,18 +84,21 @@ public class CraftingQueueManager {
         Map<ResourceLocation, Integer> intermediateProducts = new OrderedHashMap<>();
         Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
 
-        RecipeManager rm = new RecipeManager(ICondition.IContext.EMPTY);
+        var rm = CTPlugin.jeiRuntime.getRecipeManager();
+
+//        RecipeManager rm = new RecipeManager(ICondition.IContext.EMPTY);
 
         this.endProducts.forEach((k, v) -> {
-            rm.byKey(k).ifPresentOrElse(r -> {
-                        var ingredients = r.getIngredients();
 
-                    },
-                    () -> {
-                        // should not have gotten here, since #addProduct should have filtered out the item
-                        // since it had to ingredients
-                        CraftTracker.LOGGER.warn("#computeAll: no recipe found for {}", k);
-                    });
+//            rm.byKey(k).ifPresentOrElse(r -> {
+//                        var ingredients = r.getIngredients();
+//
+//                    },
+//                    () -> {
+//                        // should not have gotten here, since #addProduct should have filtered out the item
+//                        // since it had to ingredients
+//                        CraftTracker.LOGGER.warn("#computeAll: no recipe found for {}", k);
+//                    });
 
         });
 
