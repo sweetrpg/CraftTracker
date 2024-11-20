@@ -1,5 +1,7 @@
 package com.sweetrpg.crafttracker.common;
 
+import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.client.overlay.CraftQueueOverlay;
 import com.sweetrpg.crafttracker.common.registry.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -44,7 +46,11 @@ public class Screens {
 //    }
 
     public static void updateCraftQueue(ServerPlayer player) {
-// TODO: display if hidden
+        CraftTracker.LOGGER.debug("Screens#updateCraftQueue: {}", player);
+
+        // TODO: display if hidden
+
+//        CraftQueueOverlay.CRAFT_QUEUE.render();
         // redraw list of items
     }
 

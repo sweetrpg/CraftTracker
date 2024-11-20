@@ -60,6 +60,6 @@ public class CTPlugin implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
         CraftTracker.LOGGER.debug("CTPlugin#onRuntimeAvailable: {}", jeiRuntime);
 
-CTPlugin.jeiRuntime =         jeiRuntime;
+        CTPlugin.jeiRuntime = jeiRuntime;
     }
 }

@@ -1,4 +1,8 @@
 {
+  "crafttracker.screen.craft_list.empty_message": "The queue is empty.",
+  "crafttracker.screen.craft_list.section.intermediates": "Intermediates",
+  "crafttracker.screen.craft_list.section.materials": "Materials",
+  "crafttracker.screen.craft_list.section.products": "Products",
   "crafttracker.screen.craft_list.title": "Craft List",
   "crafttracker.screen.shopping_list.title": "Shopping List",
   "key.addToQueue": "Add to Queue",

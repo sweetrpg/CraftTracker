@@ -1,12 +1,7 @@
 package com.sweetrpg.crafttracker.common.network;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.network.packet.AddToQueuePacket;
-import com.sweetrpg.crafttracker.common.network.packet.ToggleCraftListPacket;
-import com.sweetrpg.crafttracker.common.network.packet.ToggleShoppingListPacket;
-import com.sweetrpg.crafttracker.common.network.packet.data.AddToQueueData;
-import com.sweetrpg.crafttracker.common.network.packet.data.ToggleCraftListData;
-import com.sweetrpg.crafttracker.common.network.packet.data.ToggleShoppingListData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.PacketDistributor;
 
 public final class PacketHandler {
@@ -14,9 +9,11 @@ public final class PacketHandler {
     private static int disc = 0;
 
     public static void init() {
-        registerPacket(new AddToQueuePacket(), AddToQueueData.class);
-        registerPacket(new ToggleCraftListPacket(), ToggleCraftListData.class);
-        registerPacket(new ToggleShoppingListPacket(), ToggleShoppingListData.class);
+//        registerPacket(new AddToQueuePacket(), AddToQueueData.class);
+//        registerPacket(new ToggleCraftListPacket(), ToggleCraftListData.class);
+//        registerPacket(new ToggleShoppingListPacket(), ToggleShoppingListData.class);
+//        registerPacket(new UpdateCraftQueuePacket(), UpdateCraftQueueData.class);
+//        registerPacket(new UpdateShoppingListPacket(), UpdateShoppingListData.class);
 //        registerPacket(new CatNamePacket(), CatNameData.class);
 //        registerPacket(new CatObeyPacket(), CatObeyData.class);
 //        registerPacket(new CatTalentPacket(), CatTalentData.class);
@@ -29,8 +26,12 @@ public final class PacketHandler {
 //        registerPacket(new CatTexturePacket(), CatTextureData.class);
     }
 
-    public static <MSG> void send(PacketDistributor.PacketTarget target, MSG message) {
-        CraftTracker.HANDLER.send(target, message);
+    public static <MSG> void sendToServer(MSG message) {
+        CraftTracker.HANDLER.sendToServer(message);
+    }
+
+    public static <MSG> void sendToPlayer(ServerPlayer player, MSG message) {
+        CraftTracker.HANDLER.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 
     public static <D> void registerPacket(IPacket<D> packet, Class<D> dataClass) {
