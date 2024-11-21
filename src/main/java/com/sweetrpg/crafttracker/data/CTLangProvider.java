@@ -35,6 +35,7 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS, "Products");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES, "Intermediates");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS, "Materials");
+        add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_FUEL, "Fuel");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE, "Shopping List");
         add(Constants.TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE, "Craft Tracker");
         add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Add to Queue");
@@ -50,6 +51,7 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS, "Products");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES, "Intermediates");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS, "Materials");
+        add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_FUEL, "Fuel");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE, "Shopping List");
         add(Constants.TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE, "Craft Tracker");
         add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Add to Queue");
@@ -65,6 +67,7 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS, "Produkte");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES, "Zwischenprodukte");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS, "Materialien");
+        add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_FUEL, "Kraftstoff");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE, "Einkaufsliste");
         add(Constants.TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE, "Handwerks-Tracker");
         add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Zur Warteschlange hinzufügen");

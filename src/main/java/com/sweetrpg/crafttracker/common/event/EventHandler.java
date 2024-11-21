@@ -2,6 +2,7 @@ package com.sweetrpg.crafttracker.common.event;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
@@ -33,7 +34,7 @@ public class EventHandler {
 //
     @SubscribeEvent
     public void onEntitySpawn(final EntityJoinWorldEvent event) {
-        CraftTracker.LOGGER.debug("EventHandler#onEntitySpawn: {}", event);
+        CraftTracker.LOGGER.trace("EventHandler#onEntitySpawn: {}", event);
 
         Entity entity = event.getEntity();
 
@@ -46,7 +47,7 @@ public class EventHandler {
     public void playerLoggedIn(final PlayerLoggedInEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#playerLoggedIn: {}", event);
 
-//        CraftingQueueManager.get(event.getPlayer().level);
+        CraftingQueueManager.INSTANCE.load(event.getPlayer());
     }
 
 //    @SubscribeEvent

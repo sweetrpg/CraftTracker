@@ -10,11 +10,13 @@ public class CraftingQueueProduct {
     ResourceLocation itemId;
     List<Recipe> recipes;
     int quantity;
+    int index;
 
     public CraftingQueueProduct(ResourceLocation itemId, List<Recipe> recipes, int quantity) {
         this.itemId = itemId;
         this.recipes = recipes;
         this.quantity = quantity;
+        this.index = 0;
     }
 
     public ResourceLocation getItemId() {
@@ -39,5 +41,13 @@ public class CraftingQueueProduct {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

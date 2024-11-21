@@ -1,12 +1,13 @@
 package com.sweetrpg.crafttracker.common.manager;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
 import com.sweetrpg.crafttracker.common.util.RecipeUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,9 +58,8 @@ public class CraftingQueueManager {
 
     }
 
-    ////        this.storage = new CraftingQueueStorage();
+    /// /        this.storage = new CraftingQueueStorage();
 //    }
-
     public List<ProductItem> getEndProducts() {
         return endProducts.entrySet()
                 .stream()
@@ -135,36 +135,77 @@ public class CraftingQueueManager {
         computeAll();
     }
 
+    /**
+     * Compute all the intermediate items, raw materials, and fuel needed to make the recipes
+     */
     public void computeAll() {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeAll");
 
-        Map<ResourceLocation, Integer> intermediateProducts = new HashMap<>();
-        Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
-
-        var rm = CTPlugin.jeiRuntime.getRecipeManager();
-
-//        RecipeManager rm = new RecipeManager(ICondition.IContext.EMPTY);
+        this.intermediateProducts.clear();
+        this.rawMaterials.clear();
+        this.fuel.clear();
 
         this.endProducts.forEach((k, v) -> {
-
-//            rm.byKey(k).ifPresentOrElse(r -> {
-//                        var ingredients = r.getIngredients();
-//
-//                    },
-//                    () -> {
-//                        // should not have gotten here, since #addProduct should have filtered out the item
-//                        // since it had to ingredients
-//                        CraftTracker.LOGGER.warn("#computeAll: no recipe found for {}", k);
-//                    });
-
+            this.computeProduct(v);
         });
 
-        this.intermediateProducts = intermediateProducts;
-        this.rawMaterials = rawMaterials;
     }
 
-    public void computeIntermediates() {
+    public void computeProduct(CraftingQueueProduct product) {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#computeProduct: {}", product);
 
+        var index = Math.min(product.getIndex(), product.getRecipes().size());
+        var recipe = product.getRecipes().get(index);
+
+        this.computeRecipe(recipe, product.getQuantity());
+    }
+
+    public void computeRecipe(Recipe recipe, int recipeQuantity) {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", recipe);
+
+        var ingredients = recipe.getIngredients();
+        CraftTracker.LOGGER.debug("ingredients: {}", ingredients);
+
+        ingredients.stream()
+                .filter((i) -> i instanceof Ingredient)
+                .map((i) -> Ingredient.class.cast(i))
+                .forEach((i) -> {
+                    CraftTracker.LOGGER.debug("i: {}", i);
+
+                    if(i instanceof Ingredient ingredient) {
+                        CraftTracker.LOGGER.debug("ingredient: {}", ingredient);
+
+                        for(var item : ingredient.getItems()) {
+                            CraftTracker.LOGGER.debug("item: {}", item);
+                            var id = item.getItem().getRegistryName();
+                            CraftTracker.LOGGER.debug("id: {}", id);
+                            var subRecipes = RecipeUtil.getRecipesFor(id);
+                            CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes);
+                            if(subRecipes.isEmpty()) {
+                                // no recipes for this ingredient, so it's a raw material
+                                this.rawMaterials.compute(id, (itemId, quantity) -> {
+                                    if(quantity == null) {
+                                        return item.getCount() * recipeQuantity;
+                                    }
+
+                                    return quantity + (item.getCount() * recipeQuantity);
+                                });
+                            }
+                            else {
+                                // intermediate
+                                this.intermediateProducts.compute(id,  (itemId, quantity) -> {
+                                    if(quantity == null) {
+                                        return item.getCount();
+                                    }
+
+                                    return quantity + item.getCount();
+                                });
+
+                                this.computeRecipe(subRecipes.get(0), recipeQuantity);
+                            }
+                        }
+                    }
+                });
     }
 
     public static class ProductItem {
