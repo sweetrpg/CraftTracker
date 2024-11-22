@@ -6,13 +6,12 @@ import com.sweetrpg.crafttracker.common.util.RecipeUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CraftingQueueManager {
@@ -166,6 +165,25 @@ public class CraftingQueueManager {
         var ingredients = recipe.getIngredients();
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients);
 
+        if(RecipeUtil.areIngredientsSame(ingredients)) {
+            CraftTracker.LOGGER.debug("ingredients are the same: {}", ingredients);
+//            if(ingredients.get(0) instanceof Ingredient ingredient) {
+//                var item = ingredient.getItems()[0];
+//                var id = item.getItem().getRegistryName();
+            var id = recipe.getId();
+            CraftTracker.LOGGER.debug("id: {}", id);
+            if(this.intermediateProducts.containsKey(id)) {
+                CraftTracker.LOGGER.debug("intermediates has this ingredient already: {}", id);
+                var quantity = this.intermediateProducts.remove(id);
+                var item = ForgeRegistries.ITEMS.getValue(id);
+                this.intermediateProducts.remove(id);
+                this.updateRawMaterials(id, new ItemStack(item, quantity), recipeQuantity);
+
+                return;
+            }
+//            }
+        }
+
         ingredients.stream()
                 .filter((i) -> i instanceof Ingredient)
                 .map((i) -> Ingredient.class.cast(i))
@@ -175,37 +193,46 @@ public class CraftingQueueManager {
                     if(i instanceof Ingredient ingredient) {
                         CraftTracker.LOGGER.debug("ingredient: {}", ingredient);
 
-                        for(var item : ingredient.getItems()) {
-                            CraftTracker.LOGGER.debug("item: {}", item);
-                            var id = item.getItem().getRegistryName();
-                            CraftTracker.LOGGER.debug("id: {}", id);
-                            var subRecipes = RecipeUtil.getRecipesFor(id);
-                            CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes);
-                            if(subRecipes.isEmpty()) {
-                                // no recipes for this ingredient, so it's a raw material
-                                this.rawMaterials.compute(id, (itemId, quantity) -> {
-                                    if(quantity == null) {
-                                        return item.getCount() * recipeQuantity;
+                        Arrays.stream(ingredient.getItems())
+                                .findFirst()
+                                .ifPresent((item) -> {
+                                    CraftTracker.LOGGER.debug("item: {}", item);
+                                    var id = item.getItem().getRegistryName();
+                                    CraftTracker.LOGGER.debug("id: {}", id);
+                                    var subRecipes = RecipeUtil.getRecipesFor(id);
+                                    CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes);
+
+                                    if(subRecipes.isEmpty()) {
+                                        CraftTracker.LOGGER.debug("subRecipes is empty; raw material");
+                                        // no recipes for this ingredient, so it's a raw material
+                                        this.updateRawMaterials(id, item, recipeQuantity);
                                     }
+                                    else {
+                                        CraftTracker.LOGGER.debug("subRecipes has {} items; intermediate", subRecipes.size());
+                                        // intermediate
+                                        this.intermediateProducts.compute(id, (itemId, quantity) -> {
+                                            if(quantity == null) {
+                                                return item.getCount();
+                                            }
 
-                                    return quantity + (item.getCount() * recipeQuantity);
-                                });
-                            }
-                            else {
-                                // intermediate
-                                this.intermediateProducts.compute(id,  (itemId, quantity) -> {
-                                    if(quantity == null) {
-                                        return item.getCount();
+                                            return quantity + item.getCount();
+                                        });
+
+                                        this.computeRecipe(subRecipes.get(0), recipeQuantity);
                                     }
-
-                                    return quantity + item.getCount();
                                 });
-
-                                this.computeRecipe(subRecipes.get(0), recipeQuantity);
-                            }
-                        }
                     }
                 });
+    }
+
+    private void updateRawMaterials(ResourceLocation id, ItemStack item, int recipeQuantity) {
+        this.rawMaterials.compute(id, (itemId, quantity) -> {
+            if(quantity == null) {
+                return item.getCount() * recipeQuantity;
+            }
+
+            return quantity + (item.getCount() * recipeQuantity);
+        });
     }
 
     public static class ProductItem {
