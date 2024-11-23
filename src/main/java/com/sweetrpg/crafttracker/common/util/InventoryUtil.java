@@ -11,8 +11,6 @@ import java.util.function.Predicate;
 
 public class InventoryUtil {
 
-
-
     public static Pair<ItemStack, Integer> findStack(IItemHandler source, Predicate<ItemStack> searchCriteria) {
         for (int i = 0; i < source.getSlots(); i++) {
 
