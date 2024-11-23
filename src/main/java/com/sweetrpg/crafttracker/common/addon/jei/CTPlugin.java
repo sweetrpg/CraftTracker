@@ -1,14 +1,25 @@
 package com.sweetrpg.crafttracker.common.addon.jei;
 
+import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.ModIds;
+import mezz.jei.api.registration.IAdvancedRegistration;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 @JeiPlugin
 public class CTPlugin implements IModPlugin {
+
+    public static IJeiRuntime jeiRuntime;
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -17,6 +28,8 @@ public class CTPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
+        CraftTracker.LOGGER.debug("CTPlugin#registerItemSubtypes: {}", registration);
+
 //        registration.registerSubtypeInterpreter(ModBlocks.CAT_TREE.get().asItem(), (stack, ctx) -> {
 //            IColorMaterial colorMaterial = CatTreeUtil.getColorMaterial(stack);
 //
@@ -29,7 +42,34 @@ public class CTPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-//        registration.addRecipes(CatTreeRecipeMaker.createCatTreeRecipes(), RecipeTypes.CRAFTING.getUid());
+        CraftTracker.LOGGER.debug("CTPlugin#registerRecipes: {}", registration);
+
+        //        registration.addRecipes(CatTreeRecipeMaker.createCatTreeRecipes(), RecipeTypes.CRAFTING.getUid());
 //        registration.addRecipes(PetDoorRecipeMaker.createPetDoorRecipes(), RecipeTypes.CRAFTING.getUid());
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        CraftTracker.LOGGER.debug("CTPlugin#registerGuiHandlers: {}", registration);
+
+    }
+
+    @Override
+    public void registerAdvanced(IAdvancedRegistration registration) {
+        CraftTracker.LOGGER.debug("CTPlugin#registerAdvanced: {}", registration);
+
+//        registration.getJeiHelpers().getGuiHelper().createCraftingGridHelper(0);
+    }
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        CraftTracker.LOGGER.debug("CTPlugin#onRuntimeAvailable: {}", jeiRuntime);
+
+        CTPlugin.jeiRuntime = jeiRuntime;
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            Player player = Minecraft.getInstance().player;
+            CraftingQueueManager.INSTANCE.load(player);
+        });
     }
 }

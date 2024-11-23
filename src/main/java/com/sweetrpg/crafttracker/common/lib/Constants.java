@@ -15,6 +15,10 @@ public class Constants {
     public static final ResourceLocation CHANNEL_NAME = Util.getResource("channel");
     public static final String PROTOCOL_VERSION = Integer.toString(1);
 
+    // Storage
+    public static final String STORAGE_CRAFTING_QUEUE = "crafting_queue";
+    public static final String STORAGE_SHOPPING_LIST = "shopping_list";
+
     // Language
     public static final String LOCALE_EN_US = "en_us";
     public static final String LOCALE_EN_GB = "en_gb";
@@ -22,6 +26,11 @@ public class Constants {
 
     // Translation keys
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_TITLE = "crafttracker.screen.craft_list.title";
+    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY = "crafttracker.screen.craft_list.empty_message";
+    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS = "crafttracker.screen.craft_list.section.products";
+    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES = "crafttracker.screen.craft_list.section.intermediates";
+    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS = "crafttracker.screen.craft_list.section.materials";
+    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_FUEL = "crafttracker.screen.craft_list.section.fuel";
     public static final String TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE = "crafttracker.screen.shopping_list.title";
     public static final String TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE = "key.categories.crafttracker";
     public static final String TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE = "key.addToQueue";

@@ -1,10 +1,14 @@
-package com.sweetrpg.crafttracker.common.network.packet.data;
-
-public class AddToQueueData {
-
-    public String itemId;
-
-    public AddToQueueData(String itemId) {
-        this.itemId = itemId;
-    }
-}
+//package com.sweetrpg.crafttracker.common.network.packet.data;
+//
+//import net.minecraft.resources.ResourceLocation;
+//
+//public class AddToQueueData {
+//
+//    public ResourceLocation itemId;
+//    public int quantity;
+//
+//    public AddToQueueData(ResourceLocation itemId, int quantity) {
+//        this.itemId = itemId;
+//        this.quantity = quantity;
+//    }
+//}

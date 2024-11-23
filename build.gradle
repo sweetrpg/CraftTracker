@@ -10,7 +10,7 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.0.+', changing: true
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
-        classpath "org.ajoberstar.grgit:grgit-gradle:5.2.1"
+        classpath "org.ajoberstar.grgit:grgit-gradle:5.2.2"
         classpath 'org.parchmentmc:librarian:1.+'
     }
 }
@@ -202,7 +202,7 @@ curseforge {
 //        }
         relations {
             optionalDependency 'configured'
-            optionalDependency 'jei'
+            requiredDependency 'jei'
             optionalDependency 'patchouli'
         }
     }
@@ -222,7 +222,7 @@ modrinth {
     loaders = ["forge"]
     dependencies {
         optional.project "configured"
-        optional.project "jei"
+        required.project "jei"
         optional.project "patchouli"
     }
 }

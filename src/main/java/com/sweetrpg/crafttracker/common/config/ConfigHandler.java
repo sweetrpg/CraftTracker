@@ -17,7 +17,6 @@ public class ConfigHandler {
     private static ForgeConfigSpec CONFIG_SERVER_SPEC;
     private static ForgeConfigSpec CONFIG_CLIENT_SPEC;
 
-
     public static void init(IEventBus modEventBus) {
         Pair<ServerConfig, ForgeConfigSpec> commonPair = new ForgeConfigSpec.Builder().configure(ServerConfig::new);
         CONFIG_SERVER_SPEC = commonPair.getRight();
@@ -80,7 +79,6 @@ public class ConfigHandler {
     }
 
     public static class ServerConfig {
-
 
         public ServerConfig(ForgeConfigSpec.Builder builder) {
             {

@@ -36,10 +36,10 @@ public class CraftTracker {
 
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
 
-    public static final SimpleChannel HANDLER = NetworkRegistry.ChannelBuilder.named(com.sweetrpg.crafttracker.common.lib.Constants.CHANNEL_NAME)
+    public static final SimpleChannel HANDLER = NetworkRegistry.ChannelBuilder.named(Constants.CHANNEL_NAME)
             .clientAcceptedVersions(Constants.PROTOCOL_VERSION::equals)
             .serverAcceptedVersions(Constants.PROTOCOL_VERSION::equals)
-            .networkProtocolVersion(com.sweetrpg.crafttracker.common.lib.Constants.PROTOCOL_VERSION::toString)
+            .networkProtocolVersion(Constants.PROTOCOL_VERSION::toString)
             .simpleChannel();
 
     public CraftTracker() {

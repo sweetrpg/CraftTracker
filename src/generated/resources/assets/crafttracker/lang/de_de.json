@@ -1,4 +1,8 @@
 {
+  "crafttracker.screen.craft_list.empty_message": "Die Warteschlange ist leer.",
+  "crafttracker.screen.craft_list.section.intermediates": "Zwischenprodukte",
+  "crafttracker.screen.craft_list.section.materials": "Materialien",
+  "crafttracker.screen.craft_list.section.products": "Produkte",
   "crafttracker.screen.craft_list.title": "Bastelliste",
   "crafttracker.screen.shopping_list.title": "Einkaufsliste",
   "key.addToQueue": "Zur Warteschlange hinzuf\u00FCgen",
