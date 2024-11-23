@@ -123,7 +123,7 @@ public class CraftingQueueManager {
     public List<ProductItem> getEndProducts() {
         return endProducts.entrySet()
                 .stream()
-                .map((e) ->
+                .map(e ->
                         new ProductItem(e.getKey(), e.getValue().getQuantity(), new ArrayList<>()))
                 .collect(Collectors.toUnmodifiableList());
     }
@@ -131,21 +131,21 @@ public class CraftingQueueManager {
     public List<QueueItem> getIntermediates() {
         return intermediateProducts.entrySet()
                 .stream()
-                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
+                .map(e -> new QueueItem(e.getKey(), e.getValue()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public List<QueueItem> getRawMaterials() {
         return rawMaterials.entrySet()
                 .stream()
-                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
+                .map(e -> new QueueItem(e.getKey(), e.getValue()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public List<QueueItem> getFuel() {
         return fuel.entrySet()
                 .stream()
-                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
+                .map(e -> new QueueItem(e.getKey(), e.getValue()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -258,7 +258,7 @@ public class CraftingQueueManager {
 
                         Arrays.stream(ingredient.getItems())
                                 .findFirst()
-                                .ifPresent((item) -> {
+                                .ifPresent(item -> {
                                     CraftTracker.LOGGER.debug("item: {}", item);
                                     var id = item.getItem().getRegistryName();
                                     CraftTracker.LOGGER.debug("id: {}", id);
@@ -277,10 +277,10 @@ public class CraftingQueueManager {
                                         var inventory = Minecraft.getInstance().player.getInventory();
                                         if(inventory.contains(item)) {
                                             inventory.items.stream()
-                                                    .filter((inv) -> inv.getItem().getRegistryName().equals(id))
-                                                    .map((inv) -> inv.getCount())
+                                                    .filter(inv -> inv.getItem().getRegistryName().equals(id))
+                                                    .map(inv -> inv.getCount())
                                                     .findFirst()
-                                                    .ifPresent((count) -> {
+                                                    .ifPresent(count -> {
                                                         this.intermediateProducts.compute(id, (itemId, quantity) -> {
                                                             Integer finalCount = (quantity == null ? 0 : quantity) + item.getCount() - count;
                                                             if(finalCount < 1) {

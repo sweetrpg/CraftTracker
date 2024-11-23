@@ -1,10 +1,7 @@
 package com.sweetrpg.crafttracker.common.registry;
 
 import com.sweetrpg.crafttracker.common.lib.Constants;
-import com.sweetrpg.crafttracker.common.util.Util;
-import net.minecraft.client.color.item.ItemColors;
-import net.minecraft.world.item.*;
-import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;

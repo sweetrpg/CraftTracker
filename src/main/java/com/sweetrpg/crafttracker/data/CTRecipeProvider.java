@@ -2,16 +2,10 @@ package com.sweetrpg.crafttracker.data;
 
 import com.google.gson.JsonObject;
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.registry.ModBlocks;
-import com.sweetrpg.crafttracker.common.registry.ModItems;
-import com.sweetrpg.crafttracker.common.registry.ModRecipeSerializers;
-import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.HashCache;
-import net.minecraft.data.recipes.*;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;

@@ -4,19 +4,15 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.client.screen.QueueManagementScreen;
-import com.sweetrpg.crafttracker.client.screen.widget.SmallButton;
 import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -82,21 +78,21 @@ public class ClientEventHandler {
 
 
         }
-        else if(ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
-            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_CRAFT_LIST_MAPPING");
-//            craftListDisplayed = !craftListDisplayed;
-//            PacketHandler.sendToServer(new ToggleCraftListData());
-        }
-        else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
-            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_SHOPPING_LIST_MAPPING");
-//            shoppingListDisplayed = !shoppingListDisplayed;
-//            PacketHandler.sendToServer(new ToggleShoppingListData());
-        }
-        else if(ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.matches(event.getKey(), event.getScanCode())) {
-            CraftTracker.LOGGER.debug("#onKeyInput: OPEN_QUEUE_MANAGER_MAPPING");
-
-            QueueManagementScreen.open();
-        }
+//        else if(ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+//            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_CRAFT_LIST_MAPPING");
+////            craftListDisplayed = !craftListDisplayed;
+////            PacketHandler.sendToServer(new ToggleCraftListData());
+//        }
+//        else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+//            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_SHOPPING_LIST_MAPPING");
+////            shoppingListDisplayed = !shoppingListDisplayed;
+////            PacketHandler.sendToServer(new ToggleShoppingListData());
+//        }
+//        else if(ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.matches(event.getKey(), event.getScanCode())) {
+//            CraftTracker.LOGGER.debug("#onKeyInput: OPEN_QUEUE_MANAGER_MAPPING");
+//
+//            QueueManagementScreen.open();
+//        }
     }
 
     @SubscribeEvent

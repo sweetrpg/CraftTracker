@@ -11,7 +11,6 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 public class CraftQueueOverlay {
 
@@ -51,7 +50,7 @@ public class CraftQueueOverlay {
         var products = mgr.getEndProducts();
 
         // if products list is empty, display "empty" message
-        if(products.isEmpty()) { // TODO
+        if(products.isEmpty()) {
             GuiComponent.drawCenteredString(poseStack, gui.getFont(),
                     new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY),
                     (x + olWidth - 8) / 2, (y + olHeight - 6) / 2, MESSAGE_COLOR);
@@ -73,7 +72,6 @@ public class CraftQueueOverlay {
         // items
         for(int i = 0; i < products.size(); i++) {
             var p = products.get(i);
-//            var index = products.indexOf(p);
 
             var item = ForgeRegistries.ITEMS.getValue(p.getItemId());
             var stack = item.getDefaultInstance();
@@ -104,7 +102,6 @@ public class CraftQueueOverlay {
             // items
             for(int i = 0; i < mgr.getIntermediates().size(); i++) {
                 var inter = mgr.getIntermediates().get(i);
-//                var index = mgr.getIntermediates().indexOf(i);
 
                 var item = ForgeRegistries.ITEMS.getValue(inter.getItemId());
                 var stack = item.getDefaultInstance();
@@ -136,7 +133,6 @@ public class CraftQueueOverlay {
             // items
             for(int i = 0; i < mgr.getRawMaterials().size(); i++) {
                 var m = mgr.getRawMaterials().get(i);
-//                var index = mgr.getRawMaterials().indexOf(m);
 
                 var item = ForgeRegistries.ITEMS.getValue(m.getItemId());
                 var stack = item.getDefaultInstance();
@@ -148,10 +144,10 @@ public class CraftQueueOverlay {
                 final int lambdaYpos = yPos;
                 if(inventory.contains(stack)) {
                     inventory.items.stream()
-                            .filter((inv) -> inv.getItem().getRegistryName().equals(m.getItemId()))
-                            .map((inv) -> inv.getCount())
+                            .filter(inv -> inv.getItem().getRegistryName().equals(m.getItemId()))
+                            .map(inv -> inv.getCount())
                             .findFirst()
-                            .ifPresent((count) -> {
+                            .ifPresent(count -> {
                                 var text = String.format("%s [%d]",
                                         item.getDescription().getString(MAX_STRING_LENGTH),
                                         count);

@@ -1,9 +1,5 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
-import com.sweetrpg.crafttracker.common.config.ConfigHandler;
-import com.sweetrpg.crafttracker.common.lib.Constants;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class ShoppingListOverlay {
