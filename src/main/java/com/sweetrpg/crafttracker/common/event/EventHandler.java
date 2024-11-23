@@ -47,7 +47,7 @@ public class EventHandler {
     public void playerLoggedIn(final PlayerLoggedInEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#playerLoggedIn: {}", event);
 
-        CraftingQueueManager.INSTANCE.load(event.getPlayer());
+//        CraftingQueueManager.INSTANCE.load(event.getPlayer());
     }
 
 //    @SubscribeEvent

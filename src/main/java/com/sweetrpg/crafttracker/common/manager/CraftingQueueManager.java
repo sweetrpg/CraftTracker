@@ -2,21 +2,34 @@ package com.sweetrpg.crafttracker.common.manager;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
+import com.sweetrpg.crafttracker.common.storage.CraftingQueueStorage;
 import com.sweetrpg.crafttracker.common.util.RecipeUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class CraftingQueueManager {
 
     public static CraftingQueueManager INSTANCE = new CraftingQueueManager();
+
+    public static final Path STORAGE_DIR = FMLPaths.GAMEDIR.get().resolve("craft_tracker");
 
     private Map<ResourceLocation, CraftingQueueProduct> endProducts = new HashMap<>();
     private Map<ResourceLocation, Integer> intermediateProducts = new HashMap<>();
@@ -54,7 +67,55 @@ public class CraftingQueueManager {
     }
 
     public void load(Player player) {
+        CraftTracker.LOGGER.info("Loading crafting queue for {}", player);
 
+        Path file = STORAGE_DIR.resolve("queue.nbt").toAbsolutePath();
+        CraftTracker.LOGGER.debug("file: {}", file);
+
+        try {
+//            Files.createDirectories(file);
+            try (InputStream in = Files.newInputStream(file, StandardOpenOption.READ)) {
+                var data = NbtIo.readCompressed(in);
+                var products = CraftingQueueStorage.load(data);
+                products.forEach((k, v) -> v.setRecipes(RecipeUtil.getRecipesFor(k)));
+                this.endProducts = products;
+                this.computeAll();
+            }
+        }
+        catch (IOException e) {
+            CraftTracker.LOGGER.error("An error occurred while loading crafting queue [" + file + "]", e);
+        }
+    }
+
+    public void save(Player player) {
+        CraftTracker.LOGGER.info("Saving crafting queue for {}", player);
+
+        Path file = STORAGE_DIR.resolve("queue.nbt").toAbsolutePath();
+        CraftTracker.LOGGER.debug("file: {}", file);
+
+        try {
+            Files.createDirectories(file);
+        }
+        catch(FileAlreadyExistsException e) {
+            // ignore
+        }
+        catch (IOException e) {
+            CraftTracker.LOGGER.error("An error occurred while creating directory for crafting queue [" + file + "]", e);
+        }
+
+        try {
+            boolean overwritten = Files.deleteIfExists(file);
+            try (OutputStream out = Files.newOutputStream(file, StandardOpenOption.CREATE)) {
+                var root = new CompoundTag();
+                var storage = new CraftingQueueStorage();
+                storage.putData(this.endProducts);
+                var data = storage.save(root);
+                NbtIo.writeCompressed(data, out);
+            }
+        }
+        catch (IOException e) {
+            CraftTracker.LOGGER.error("An error occurred while saving crafting queue [" + file + "]", e);
+        }
     }
 
     /// /        this.storage = new CraftingQueueStorage();
@@ -109,6 +170,8 @@ public class CraftingQueueManager {
         else {
             CraftTracker.LOGGER.info("Not adding {} to queue, since there are no recipes for it.", itemId);
         }
+
+        this.save(player);
     }
 
     public void removeProduct(Player player, ResourceLocation itemId, int quantity) {
@@ -132,6 +195,8 @@ public class CraftingQueueManager {
         }
 
         computeAll();
+
+        this.save(player);
     }
 
     /**
@@ -147,7 +212,6 @@ public class CraftingQueueManager {
         this.endProducts.forEach((k, v) -> {
             this.computeProduct(v);
         });
-
     }
 
     public void computeProduct(CraftingQueueProduct product) {

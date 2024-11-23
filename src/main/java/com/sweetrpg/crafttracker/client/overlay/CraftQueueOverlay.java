@@ -57,7 +57,7 @@ public class CraftQueueOverlay {
         }
 
         int yPos = y + SECTION_TITLE_Y_OFFSET;
-        CraftTracker.LOGGER.debug("yPos (initial): {}", yPos);
+        CraftTracker.LOGGER.trace("yPos (initial): {}", yPos);
 
         // SECTION: end products
 
@@ -66,7 +66,7 @@ public class CraftQueueOverlay {
                 new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS),
                 x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
         yPos += TEXT_HEIGHT + 2;
-        CraftTracker.LOGGER.debug("yPos (after product title): {}", yPos);
+        CraftTracker.LOGGER.trace("yPos (after product title): {}", yPos);
 
         // items
         for(int i = 0; i < products.size(); i++) {
@@ -84,20 +84,20 @@ public class CraftQueueOverlay {
             GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
 
             yPos += LINE_HEIGHT + 2;
-            CraftTracker.LOGGER.debug("yPos (product item {}): {}", i, yPos);
+            CraftTracker.LOGGER.trace("yPos (product item {}): {}", i, yPos);
         }
 
         // SECTION: intermediates
         if(!mgr.getIntermediates().isEmpty()) {
             yPos += (TEXT_HEIGHT * 2);
-            CraftTracker.LOGGER.debug("yPos (before intermediates title): {}", yPos);
+            CraftTracker.LOGGER.trace("yPos (before intermediates title): {}", yPos);
 
             // title
             GuiComponent.drawString(poseStack, gui.getFont(),
                     new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
-            CraftTracker.LOGGER.debug("yPos (after intermediates title): {}", yPos);
+            CraftTracker.LOGGER.trace("yPos (after intermediates title): {}", yPos);
 
             // items
             for(int i = 0; i < mgr.getIntermediates().size(); i++) {
@@ -113,21 +113,21 @@ public class CraftQueueOverlay {
                 GuiComponent.drawString(poseStack, gui.getFont(), item.getDescription().getString(MAX_STRING_LENGTH), x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
 
                 yPos += LINE_HEIGHT + 2;
-                CraftTracker.LOGGER.debug("yPos (intermediates item {}): {}", i, yPos);
+                CraftTracker.LOGGER.trace("yPos (intermediates item {}): {}", i, yPos);
             }
         }
 
         // SECTION: raw materials
         if(!mgr.getRawMaterials().isEmpty()) {
             yPos += (TEXT_HEIGHT * 2);
-            CraftTracker.LOGGER.debug("yPos (before materials title): {}", yPos);
+            CraftTracker.LOGGER.trace("yPos (before materials title): {}", yPos);
 
             // title
             GuiComponent.drawString(poseStack, gui.getFont(),
                     new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
-            CraftTracker.LOGGER.debug("yPos (after materials title): {}", yPos);
+            CraftTracker.LOGGER.trace("yPos (after materials title): {}", yPos);
 
             // items
             for(int i = 0; i < mgr.getRawMaterials().size(); i++) {
@@ -143,7 +143,7 @@ public class CraftQueueOverlay {
                 GuiComponent.drawString(poseStack, gui.getFont(), item.getDescription().getString(MAX_STRING_LENGTH), x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
 
                 yPos += LINE_HEIGHT + 2;
-                CraftTracker.LOGGER.debug("yPos (materials item {}): {}", i, yPos);
+                CraftTracker.LOGGER.trace("yPos (materials item {}): {}", i, yPos);
             }
         }
 
@@ -151,14 +151,14 @@ public class CraftQueueOverlay {
 
         if(!mgr.getFuel().isEmpty()) {
             yPos += (TEXT_HEIGHT * 2);
-            CraftTracker.LOGGER.debug("yPos (before fuel title): {}", yPos);
+            CraftTracker.LOGGER.trace("yPos (before fuel title): {}", yPos);
 
             // title
             GuiComponent.drawString(poseStack, gui.getFont(),
                     new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_FUEL),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
-            CraftTracker.LOGGER.debug("yPos: {}", yPos);
+            CraftTracker.LOGGER.trace("yPos: {}", yPos);
 
             // items
             for(var f : mgr.getFuel()) {

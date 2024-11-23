@@ -1,6 +1,7 @@
 package com.sweetrpg.crafttracker.common.addon.jei;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.ModIds;
@@ -9,7 +10,11 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 @JeiPlugin
 public class CTPlugin implements IModPlugin {
@@ -53,7 +58,7 @@ public class CTPlugin implements IModPlugin {
     public void registerAdvanced(IAdvancedRegistration registration) {
         CraftTracker.LOGGER.debug("CTPlugin#registerAdvanced: {}", registration);
 
-        registration.getJeiHelpers().getGuiHelper().createCraftingGridHelper(0);
+//        registration.getJeiHelpers().getGuiHelper().createCraftingGridHelper(0);
     }
 
     @Override
@@ -61,5 +66,10 @@ public class CTPlugin implements IModPlugin {
         CraftTracker.LOGGER.debug("CTPlugin#onRuntimeAvailable: {}", jeiRuntime);
 
         CTPlugin.jeiRuntime = jeiRuntime;
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            Player player = Minecraft.getInstance().player;
+            CraftingQueueManager.INSTANCE.load(player);
+        });
     }
 }
