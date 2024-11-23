@@ -63,7 +63,6 @@ public class EventHandler {
         CraftTracker.LOGGER.debug("EventHandler#onItemCrafted: {}", event);
 
         if (event.getPlayer().level.isClientSide) {
-
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = event.getCrafting().getItem().getRegistryName();
                 var quantity = event.getCrafting().getCount();

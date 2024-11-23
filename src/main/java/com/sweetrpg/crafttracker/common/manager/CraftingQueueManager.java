@@ -95,7 +95,7 @@ public class CraftingQueueManager {
         try {
             Files.createDirectories(file);
         }
-        catch(FileAlreadyExistsException e) {
+        catch (FileAlreadyExistsException e) {
             // ignore
         }
         catch (IOException e) {
@@ -186,11 +186,14 @@ public class CraftingQueueManager {
         int newQuantity = product.getQuantity() - quantity;
         if(newQuantity < 1) {
             CraftTracker.LOGGER.info("Removing item from queue storage: {}", itemId);
-//            CraftingQueueStorage.get(level).removeData(itemId);
+            this.endProducts.remove(itemId);
         }
         else {
             CraftTracker.LOGGER.info("Adjusting quantity of item in queue storage to {}: {}", quantity, itemId);
-//            CraftingQueueStorage.get(level).putData(itemId, newQuantity);
+            this.endProducts.computeIfPresent(itemId, (k, v) -> {
+                var cqp = new CraftingQueueProduct(itemId, v.getRecipes(), v.getQuantity() - quantity);
+                return cqp;
+            });
         }
 
         computeAll();
