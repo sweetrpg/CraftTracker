@@ -73,7 +73,6 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("file: {}", file);
 
         try {
-//            Files.createDirectories(file);
             try (InputStream in = Files.newInputStream(file, StandardOpenOption.READ)) {
                 var data = NbtIo.readCompressed(in);
                 var products = CraftingQueueStorage.load(data);
