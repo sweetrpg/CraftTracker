@@ -32,6 +32,7 @@ public class CTLangProvider extends LanguageProvider {
 
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE, "Craft List");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY, "The queue is empty.");
+        add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HELP, "To manage the queue:");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS, "Products");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES, "Intermediates");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS, "Materials");
@@ -39,10 +40,15 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HAVE, "have %d");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE, "Shopping List");
         add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_TITLE, "Queue Manager");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON, "Clear");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEC_BUTTON_TOOLTIP, "Decrease the amount crafted");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_INC_BUTTON_TOOLTIP, "Increase the amount crafted");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEL_BUTTON_TOOLTIP, "Delete this item from the queue");
         add(Constants.TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE, "Craft Tracker");
         add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Add to Queue");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE, "Toggle Craft List");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPINGLIST_TITLE, "Toggle Shopping List");
+        add(Constants.TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE, "Open Queue Manager");
     }
 
     private void processENGB() {
@@ -50,6 +56,7 @@ public class CTLangProvider extends LanguageProvider {
 
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE, "Craft List");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY, "The queue is empty.");
+        add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HELP, "To manage the queue:");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS, "Products");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES, "Intermediates");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS, "Materials");
@@ -57,10 +64,15 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HAVE, "have %d");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE, "Shopping List");
         add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_TITLE, "Queue Manager");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON, "Clear");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEC_BUTTON_TOOLTIP, "Decrease the amount crafted");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_INC_BUTTON_TOOLTIP, "Increase the amount crafted");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEL_BUTTON_TOOLTIP, "Delete this item from the queue");
         add(Constants.TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE, "Craft Tracker");
         add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Add to Queue");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE, "Toggle Craft List");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPINGLIST_TITLE, "Toggle Shopping List");
+        add(Constants.TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE, "Open Queue Manager");
     }
 
     private void processDEDE() {
@@ -68,6 +80,7 @@ public class CTLangProvider extends LanguageProvider {
 
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE, "Bastelliste");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY, "Die Warteschlange ist leer.");
+        add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HELP, "Die Warteschlange verwalten:");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS, "Produkte");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES, "Zwischenprodukte");
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS, "Materialien");
@@ -75,9 +88,14 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HAVE, "habe %d");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE, "Einkaufsliste");
         add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_TITLE, "Warteschlangenmanager");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON, "Alle löschen");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEC_BUTTON_TOOLTIP, "Reduzieren Sie die Menge an hergestellten");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_INC_BUTTON_TOOLTIP, "Erhöhen Sie die Menge an hergestellten");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEL_BUTTON_TOOLTIP, "Dieses Element aus der Warteschlange löschen");
         add(Constants.TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE, "Handwerks-Tracker");
         add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Zur Warteschlange hinzufügen");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE, "Handwerksliste umschalten");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPINGLIST_TITLE, "Einkaufsliste umschalten");
+        add(Constants.TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE, "Warteschlangenmanager öffnen");
     }
 }

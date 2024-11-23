@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.client.screen.QueueManagementScreen;
 import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
@@ -78,21 +79,21 @@ public class ClientEventHandler {
 
 
         }
-//        else if(ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
-//            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_CRAFT_LIST_MAPPING");
-////            craftListDisplayed = !craftListDisplayed;
-////            PacketHandler.sendToServer(new ToggleCraftListData());
-//        }
-//        else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
-//            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_SHOPPING_LIST_MAPPING");
-////            shoppingListDisplayed = !shoppingListDisplayed;
-////            PacketHandler.sendToServer(new ToggleShoppingListData());
-//        }
-//        else if(ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.matches(event.getKey(), event.getScanCode())) {
-//            CraftTracker.LOGGER.debug("#onKeyInput: OPEN_QUEUE_MANAGER_MAPPING");
-//
-//            QueueManagementScreen.open();
-//        }
+        else if(ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_CRAFT_LIST_MAPPING");
+//            craftListDisplayed = !craftListDisplayed;
+//            PacketHandler.sendToServer(new ToggleCraftListData());
+        }
+        else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_SHOPPING_LIST_MAPPING");
+//            shoppingListDisplayed = !shoppingListDisplayed;
+//            PacketHandler.sendToServer(new ToggleShoppingListData());
+        }
+        else if(ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.matches(event.getKey(), event.getScanCode())) {
+            CraftTracker.LOGGER.debug("#onKeyInput: OPEN_QUEUE_MANAGER_MAPPING");
+
+            QueueManagementScreen.open();
+        }
     }
 
     @SubscribeEvent
