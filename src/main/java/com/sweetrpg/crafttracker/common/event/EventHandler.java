@@ -3,11 +3,20 @@ package com.sweetrpg.crafttracker.common.event;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
+import com.sweetrpg.crafttracker.common.network.PacketHandler;
+import com.sweetrpg.crafttracker.common.network.packet.QueueCommandPacket;
+import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+
+import static com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData.QueueCommand.RECALCULATE;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID)
 public class EventHandler {
@@ -47,13 +56,38 @@ public class EventHandler {
     public void playerLoggedIn(final PlayerLoggedInEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#playerLoggedIn: {}", event);
 
-//        CraftingQueueManager.INSTANCE.load(event.getPlayer());
     }
 
-//    @SubscribeEvent
-//    public void onLootDrop(final LootingLevelEvent event) {
-//        CraftTracker.LOGGER.debug("EventHandler#onLootDrop: {}", event);
-//
-//    }
+    @SubscribeEvent
+    public void onItemCrafted(final ItemCraftedEvent event) {
+        CraftTracker.LOGGER.debug("EventHandler#onItemCrafted: {}", event);
+
+        if (event.getPlayer().level.isClientSide) {
+
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+                var itemId = event.getCrafting().getItem().getRegistryName();
+                var quantity = event.getCrafting().getCount();
+                var player = Minecraft.getInstance().player;
+
+                CraftingQueueManager.INSTANCE.removeProduct(player, itemId, quantity);
+            });
+        }
+        else {
+            // send packet
+            PacketHandler.sendToPlayer((ServerPlayer)event.getPlayer(), new QueueCommandData(RECALCULATE));
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemSmelted(final ItemSmeltedEvent event) {
+        CraftTracker.LOGGER.debug("EventHandler#onItemSmelted: {}", event);
+
+    }
+
+    @SubscribeEvent
+    public void onItemPickedUp(final ItemPickupEvent event) {
+        CraftTracker.LOGGER.debug("EventHandler#onItemPickedUp: {}", event);
+
+    }
 
 }
