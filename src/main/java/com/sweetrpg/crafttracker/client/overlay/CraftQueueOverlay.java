@@ -30,7 +30,7 @@ public class CraftQueueOverlay {
         CraftTracker.LOGGER.trace("CRAFT_QUEUE");
 
         if(ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_HIDE_EMPTY.get() /* TODO: || user wants it to display */) {
-//            return;
+            return;
         }
 
         var x = ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_X.get();

@@ -33,6 +33,7 @@ public class Constants {
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_FUEL = "crafttracker.screen.craft_list.section.fuel";
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_HAVE = "crafttracker.screen.craft_list.have";
     public static final String TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE = "crafttracker.screen.shopping_list.title";
+    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_TITLE = "crafttracker.screen.queuemgr.title";
     public static final String TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE = "key.categories.crafttracker";
     public static final String TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE = "key.addToQueue";
     public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE = "key.toggleCraftList";

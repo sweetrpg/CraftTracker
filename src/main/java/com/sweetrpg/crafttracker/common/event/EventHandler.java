@@ -2,11 +2,9 @@ package com.sweetrpg.crafttracker.common.event;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.lib.Constants;
-import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.network.PacketHandler;
-import com.sweetrpg.crafttracker.common.network.packet.QueueCommandPacket;
 import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
-import net.minecraft.client.Minecraft;
+import com.sweetrpg.crafttracker.client.event.CraftingEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -66,9 +64,7 @@ public class EventHandler {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = event.getCrafting().getItem().getRegistryName();
                 var quantity = event.getCrafting().getCount();
-                var player = Minecraft.getInstance().player;
-
-                CraftingQueueManager.INSTANCE.removeProduct(player, itemId, quantity);
+                CraftingEvents.removeProduct(itemId, quantity);
             });
         }
         else {
@@ -85,9 +81,7 @@ public class EventHandler {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = event.getSmelting().getItem().getRegistryName();
                 var quantity = event.getSmelting().getCount();
-                var player = Minecraft.getInstance().player;
-
-                CraftingQueueManager.INSTANCE.removeProduct(player, itemId, quantity);
+                CraftingEvents.removeProduct(itemId, quantity);
             });
         }
         else {
@@ -104,9 +98,7 @@ public class EventHandler {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = event.getStack().getItem().getRegistryName();
                 var quantity = event.getStack().getCount();
-                var player = Minecraft.getInstance().player;
-
-                CraftingQueueManager.INSTANCE.removeProduct(player, itemId, quantity);
+                CraftingEvents.removeProduct(itemId, quantity);
             });
         }
         else {
