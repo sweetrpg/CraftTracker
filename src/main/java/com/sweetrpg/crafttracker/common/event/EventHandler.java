@@ -81,12 +81,38 @@ public class EventHandler {
     public void onItemSmelted(final ItemSmeltedEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemSmelted: {}", event);
 
+        if (event.getPlayer().level.isClientSide) {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+                var itemId = event.getSmelting().getItem().getRegistryName();
+                var quantity = event.getSmelting().getCount();
+                var player = Minecraft.getInstance().player;
+
+                CraftingQueueManager.INSTANCE.removeProduct(player, itemId, quantity);
+            });
+        }
+        else {
+            // send packet
+            PacketHandler.sendToPlayer((ServerPlayer)event.getPlayer(), new QueueCommandData(RECALCULATE));
+        }
     }
 
     @SubscribeEvent
     public void onItemPickedUp(final ItemPickupEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemPickedUp: {}", event);
 
+        if (event.getPlayer().level.isClientSide) {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+                var itemId = event.getStack().getItem().getRegistryName();
+                var quantity = event.getStack().getCount();
+                var player = Minecraft.getInstance().player;
+
+                CraftingQueueManager.INSTANCE.removeProduct(player, itemId, quantity);
+            });
+        }
+        else {
+            // send packet
+            PacketHandler.sendToPlayer((ServerPlayer)event.getPlayer(), new QueueCommandData(RECALCULATE));
+        }
     }
 
 }
