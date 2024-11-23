@@ -1,5 +1,7 @@
 {
   "crafttracker.screen.craft_list.empty_message": "Die Warteschlange ist leer.",
+  "crafttracker.screen.craft_list.have": "habe %d",
+  "crafttracker.screen.craft_list.section.fuel": "Kraftstoff",
   "crafttracker.screen.craft_list.section.intermediates": "Zwischenprodukte",
   "crafttracker.screen.craft_list.section.materials": "Materialien",
   "crafttracker.screen.craft_list.section.products": "Produkte",

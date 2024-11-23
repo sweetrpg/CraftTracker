@@ -21,8 +21,7 @@
 
 ## Integrations
 
-* [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) &mdash; supports search for new recipes
-* [Patchouli](https://www.curseforge.com/minecraft/mc-mods/patchouli) &mdash; adds the Craft Tracking book
+* [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) &mdash; version 9.7.2.281 or higher
 
 ## Contributing
 

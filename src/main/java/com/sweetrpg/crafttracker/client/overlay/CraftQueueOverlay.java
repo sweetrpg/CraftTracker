@@ -6,10 +6,12 @@ import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import mezz.jei.api.constants.VanillaTypes;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 public class CraftQueueOverlay {
 
@@ -89,7 +91,7 @@ public class CraftQueueOverlay {
 
         // SECTION: intermediates
         if(!mgr.getIntermediates().isEmpty()) {
-            yPos += (TEXT_HEIGHT * 2);
+            yPos += (TEXT_HEIGHT * 1.5);
             CraftTracker.LOGGER.trace("yPos (before intermediates title): {}", yPos);
 
             // title
@@ -119,7 +121,7 @@ public class CraftQueueOverlay {
 
         // SECTION: raw materials
         if(!mgr.getRawMaterials().isEmpty()) {
-            yPos += (TEXT_HEIGHT * 2);
+            yPos += (TEXT_HEIGHT * 1.5);
             CraftTracker.LOGGER.trace("yPos (before materials title): {}", yPos);
 
             // title
@@ -128,6 +130,8 @@ public class CraftQueueOverlay {
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (after materials title): {}", yPos);
+
+            var inventory = Minecraft.getInstance().player.getInventory();
 
             // items
             for(int i = 0; i < mgr.getRawMaterials().size(); i++) {
@@ -140,7 +144,25 @@ public class CraftQueueOverlay {
                 var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
                         .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
                 drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
-                GuiComponent.drawString(poseStack, gui.getFont(), item.getDescription().getString(MAX_STRING_LENGTH), x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+
+                final int lambdaYpos = yPos;
+                if(inventory.contains(stack)) {
+                    inventory.items.stream()
+                            .filter((inv) -> inv.getItem().getRegistryName().equals(m.getItemId()))
+                            .map((inv) -> inv.getCount())
+                            .findFirst()
+                            .ifPresent((count) -> {
+                                var text = String.format("%s [%d]",
+                                        item.getDescription().getString(MAX_STRING_LENGTH),
+                                        count);
+                                CraftTracker.LOGGER.debug("text: {}", text);
+                                GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
+                            });
+                }
+                else {
+                    var text = item.getDescription().getString(MAX_STRING_LENGTH);
+                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                }
 
                 yPos += LINE_HEIGHT + 2;
                 CraftTracker.LOGGER.trace("yPos (materials item {}): {}", i, yPos);
@@ -150,7 +172,7 @@ public class CraftQueueOverlay {
         // SECTION: fuel
 
         if(!mgr.getFuel().isEmpty()) {
-            yPos += (TEXT_HEIGHT * 2);
+            yPos += (TEXT_HEIGHT * 1.5);
             CraftTracker.LOGGER.trace("yPos (before fuel title): {}", yPos);
 
             // title
