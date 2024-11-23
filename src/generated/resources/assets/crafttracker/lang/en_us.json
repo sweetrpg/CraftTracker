@@ -1,5 +1,7 @@
 {
   "crafttracker.screen.craft_list.empty_message": "The queue is empty.",
+  "crafttracker.screen.craft_list.have": "have %d",
+  "crafttracker.screen.craft_list.section.fuel": "Fuel",
   "crafttracker.screen.craft_list.section.intermediates": "Intermediates",
   "crafttracker.screen.craft_list.section.materials": "Materials",
   "crafttracker.screen.craft_list.section.products": "Products",

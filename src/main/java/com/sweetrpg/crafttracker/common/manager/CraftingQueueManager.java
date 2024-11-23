@@ -4,6 +4,7 @@ import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
 import com.sweetrpg.crafttracker.common.storage.CraftingQueueStorage;
 import com.sweetrpg.crafttracker.common.util.RecipeUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
@@ -73,7 +74,6 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("file: {}", file);
 
         try {
-//            Files.createDirectories(file);
             try (InputStream in = Files.newInputStream(file, StandardOpenOption.READ)) {
                 var data = NbtIo.readCompressed(in);
                 var products = CraftingQueueStorage.load(data);
@@ -96,7 +96,7 @@ public class CraftingQueueManager {
         try {
             Files.createDirectories(file);
         }
-        catch(FileAlreadyExistsException e) {
+        catch (FileAlreadyExistsException e) {
             // ignore
         }
         catch (IOException e) {
@@ -187,11 +187,14 @@ public class CraftingQueueManager {
         int newQuantity = product.getQuantity() - quantity;
         if(newQuantity < 1) {
             CraftTracker.LOGGER.info("Removing item from queue storage: {}", itemId);
-//            CraftingQueueStorage.get(level).removeData(itemId);
+            this.endProducts.remove(itemId);
         }
         else {
             CraftTracker.LOGGER.info("Adjusting quantity of item in queue storage to {}: {}", quantity, itemId);
-//            CraftingQueueStorage.get(level).putData(itemId, newQuantity);
+            this.endProducts.computeIfPresent(itemId, (k, v) -> {
+                var cqp = new CraftingQueueProduct(itemId, v.getRecipes(), v.getQuantity() - quantity);
+                return cqp;
+            });
         }
 
         computeAll();
@@ -231,9 +234,6 @@ public class CraftingQueueManager {
 
         if(RecipeUtil.areIngredientsSame(ingredients)) {
             CraftTracker.LOGGER.debug("ingredients are the same: {}", ingredients);
-//            if(ingredients.get(0) instanceof Ingredient ingredient) {
-//                var item = ingredient.getItems()[0];
-//                var id = item.getItem().getRegistryName();
             var id = recipe.getId();
             CraftTracker.LOGGER.debug("id: {}", id);
             if(this.intermediateProducts.containsKey(id)) {
@@ -245,7 +245,6 @@ public class CraftingQueueManager {
 
                 return;
             }
-//            }
         }
 
         ingredients.stream()
@@ -273,14 +272,34 @@ public class CraftingQueueManager {
                                     }
                                     else {
                                         CraftTracker.LOGGER.debug("subRecipes has {} items; intermediate", subRecipes.size());
-                                        // intermediate
-                                        this.intermediateProducts.compute(id, (itemId, quantity) -> {
-                                            if(quantity == null) {
-                                                return item.getCount();
-                                            }
 
-                                            return quantity + item.getCount();
-                                        });
+                                        // check if player already has the item
+                                        var inventory = Minecraft.getInstance().player.getInventory();
+                                        if(inventory.contains(item)) {
+                                            inventory.items.stream()
+                                                    .filter((inv) -> inv.getItem().getRegistryName().equals(id))
+                                                    .map((inv) -> inv.getCount())
+                                                    .findFirst()
+                                                    .ifPresent((count) -> {
+                                                        this.intermediateProducts.compute(id, (itemId, quantity) -> {
+                                                            Integer finalCount = (quantity == null ? 0 : quantity) + item.getCount() - count;
+                                                            if(finalCount < 1) {
+                                                                return null;
+                                                            }
+
+                                                            return finalCount;
+                                                        });
+                                                    });
+                                        }
+                                        else {
+                                            this.intermediateProducts.compute(id, (itemId, quantity) -> {
+                                                if(quantity == null) {
+                                                    return item.getCount();
+                                                }
+
+                                                return quantity + item.getCount();
+                                            });
+                                        }
 
                                         this.computeRecipe(subRecipes.get(0), recipeQuantity);
                                     }
