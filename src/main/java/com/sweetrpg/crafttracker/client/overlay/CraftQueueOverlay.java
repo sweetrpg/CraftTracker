@@ -113,7 +113,7 @@ public class CraftQueueOverlay {
         // SECTION: intermediates
 
         if(!mgr.getIntermediates().isEmpty()) {
-            yPos += (TEXT_HEIGHT * 1.5);
+            yPos += (int) (TEXT_HEIGHT * 1.5);
             CraftTracker.LOGGER.trace("yPos (before intermediates title): {}", yPos);
 
             // title
@@ -143,7 +143,7 @@ public class CraftQueueOverlay {
         // SECTION: raw materials
 
         if(!mgr.getRawMaterials().isEmpty()) {
-            yPos += (TEXT_HEIGHT * 1.5);
+            yPos += (int) (TEXT_HEIGHT * 1.5);
             CraftTracker.LOGGER.trace("yPos (before materials title): {}", yPos);
 
             // title
@@ -194,7 +194,7 @@ public class CraftQueueOverlay {
         // SECTION: fuel
 
         if(!mgr.getFuel().isEmpty()) {
-            yPos += (TEXT_HEIGHT * 1.5);
+            yPos += (int) (TEXT_HEIGHT * 1.5);
             CraftTracker.LOGGER.trace("yPos (before fuel title): {}", yPos);
 
             // title
