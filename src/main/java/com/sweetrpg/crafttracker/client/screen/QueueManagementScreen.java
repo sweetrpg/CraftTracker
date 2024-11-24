@@ -40,7 +40,7 @@ public class QueueManagementScreen extends Screen {
     public static final int ITEM_X_QTY_OFFSET = ITEM_X_UP_BUTTON_OFFSET - (ITEM_X_QTY_WIDTH / 2);
     public static final int ITEM_X_DOWN_BUTTON_OFFSET = ITEM_X_QTY_OFFSET - (int) (BUTTON_SIZE * 2) - 2;
 
-    final private List<CraftingQueueManager.ProductItem> productItems;
+    private List<CraftingQueueManager.ProductItem> productItems;
 
     public QueueManagementScreen(Player player) {
         super(new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_TITLE));
@@ -66,8 +66,6 @@ public class QueueManagementScreen extends Screen {
         // hide queue overlay and shopping list
         CTRuntime.INSTANCE.queueOverlayRequestedState = SUPPRESS;
         CTRuntime.INSTANCE.shoppingOverlayRequestedState = SUPPRESS;
-
-
     }
 
     @Override
@@ -113,14 +111,14 @@ public class QueueManagementScreen extends Screen {
             // quantity and adjustment buttons
             {
                 Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("-"), btn -> {
-                    this.productItems.set(itemIndex, new CraftingQueueManager.ProductItem(pItem.getItemId(), pItem.getQuantity() - 1, pItem.getCategories()));
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getItemId(), -1);
-                }) {
+                    QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
+                }) /*{
                     @Override
                     public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
                         QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEC_BUTTON_TOOLTIP), mouseX, mouseY);
                     }
-                };
+                }*/;
                 button.active = pItem.getQuantity() > 0;
                 this.addRenderableWidget(button);
             }
@@ -131,14 +129,14 @@ public class QueueManagementScreen extends Screen {
             }
             {
                 Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("+"), btn -> {
-                    this.productItems.set(itemIndex, new CraftingQueueManager.ProductItem(pItem.getItemId(), pItem.getQuantity() + 1, pItem.getCategories()));
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getItemId(), 1);
-                }) {
+                    QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
+                }) /*{
                     @Override
                     public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
                         QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_INC_BUTTON_TOOLTIP), mouseX, mouseY);
                     }
-                };
+                }*/;
                 this.addRenderableWidget(button);
             }
 
@@ -148,14 +146,14 @@ public class QueueManagementScreen extends Screen {
             // delete button
             {
                 Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("x"), btn -> {
-                    this.productItems.remove(itemIndex);
                     CraftingQueueManager.INSTANCE.removeProduct(player, pItem.getItemId());
-                }) {
+                    QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
+                }) /*{
                     @Override
                     public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
                         QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEL_BUTTON_TOOLTIP), mouseX, mouseY);
                     }
-                };
+                }*/;
                 this.addRenderableWidget(button);
             }
         }
@@ -166,12 +164,13 @@ public class QueueManagementScreen extends Screen {
                     new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON),
                     btn -> {
                         CraftingQueueManager.INSTANCE.removeAll();
-                    }) {
+                        QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
+                    }) /*{
                 @Override
                 public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
                     QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON_TOOLTIP), mouseX, mouseY);
                 }
-            };
+            }*/;
             this.addRenderableWidget(button);
         }
 
