@@ -1,0 +1,1 @@
+- `[NEW]` Added a queue manager screen
