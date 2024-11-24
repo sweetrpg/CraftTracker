@@ -27,16 +27,24 @@ public class Constants {
     // Translation keys
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_TITLE = "crafttracker.screen.craft_list.title";
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY = "crafttracker.screen.craft_list.empty_message";
+    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_HELP = "crafttracker.screen.craft_list.help_message";
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS = "crafttracker.screen.craft_list.section.products";
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES = "crafttracker.screen.craft_list.section.intermediates";
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS = "crafttracker.screen.craft_list.section.materials";
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_FUEL = "crafttracker.screen.craft_list.section.fuel";
     public static final String TRANSLATION_KEY_GUI_CRAFTLIST_HAVE = "crafttracker.screen.craft_list.have";
     public static final String TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE = "crafttracker.screen.shopping_list.title";
+    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_TITLE = "crafttracker.screen.queuemgr.title";
+    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON = "crafttracker.screen.queuemgr.button.clear";
+    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON_TOOLTIP = "crafttracker.screen.queuemgr.button.clear.tooltip";
+    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_DEC_BUTTON_TOOLTIP = "crafttracker.screen.queuemgr.button.dec.tooltip";
+    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_INC_BUTTON_TOOLTIP = "crafttracker.screen.queuemgr.button.inc.tooltip";
+    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_DEL_BUTTON_TOOLTIP = "crafttracker.screen.queuemgr.button.del.tooltip";
     public static final String TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE = "key.categories.crafttracker";
     public static final String TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE = "key.addToQueue";
     public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE = "key.toggleCraftList";
     public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPINGLIST_TITLE = "key.toggleShoppingList";
+    public static final String TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE = "key.openQueueManager";
 
     // Advancements
     public static final String TRANSLATION_KEY_ADVANCEMENT_MAKE_LIST_TITLE = "advancements.crafttracker.main.make_list.title";

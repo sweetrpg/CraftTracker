@@ -123,7 +123,7 @@ public class CraftingQueueManager {
     public List<ProductItem> getEndProducts() {
         return endProducts.entrySet()
                 .stream()
-                .map((e) ->
+                .map(e ->
                         new ProductItem(e.getKey(), e.getValue().getQuantity(), new ArrayList<>()))
                 .collect(Collectors.toUnmodifiableList());
     }
@@ -131,26 +131,28 @@ public class CraftingQueueManager {
     public List<QueueItem> getIntermediates() {
         return intermediateProducts.entrySet()
                 .stream()
-                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
+                .map(e -> new QueueItem(e.getKey(), e.getValue()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public List<QueueItem> getRawMaterials() {
         return rawMaterials.entrySet()
                 .stream()
-                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
+                .map(e -> new QueueItem(e.getKey(), e.getValue()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public List<QueueItem> getFuel() {
         return fuel.entrySet()
                 .stream()
-                .map((e) -> new QueueItem(e.getKey(), e.getValue()))
+                .map(e -> new QueueItem(e.getKey(), e.getValue()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public void addProduct(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#addProduct: {}, quantity: {}", itemId, quantity);
+
+        if(quantity < 1) return;
 
         var recipes = RecipeUtil.getRecipesFor(itemId);
 
@@ -174,8 +176,33 @@ public class CraftingQueueManager {
         this.save(player);
     }
 
+    /**
+     * A convenience method to adjust the quantity of a product.
+     * This will call the appropriate add* or remove* method.
+     *
+     * @param player
+     * @param itemId
+     * @param quantity
+     */
+    public void adjustProduct(Player player, ResourceLocation itemId, int quantity) {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#adjustProduct: {}, quantity: {}", itemId, quantity);
+
+        if(quantity < 0)
+            removeProduct(player, itemId, -quantity);
+        else if(quantity > 0)
+            addProduct(player, itemId, quantity);
+    }
+
+    public void removeProduct(Player player, ResourceLocation itemId) {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}", itemId);
+
+        this.endProducts.remove(itemId);
+    }
+
     public void removeProduct(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}, quantity: {}", itemId, quantity);
+
+        if(quantity < 1) return;
 
         var product = this.endProducts.get(itemId);
         if(product == null) {
@@ -187,7 +214,7 @@ public class CraftingQueueManager {
         int newQuantity = product.getQuantity() - quantity;
         if(newQuantity < 1) {
             CraftTracker.LOGGER.info("Removing item from queue storage: {}", itemId);
-            this.endProducts.remove(itemId);
+            this.removeProduct(player, itemId);
         }
         else {
             CraftTracker.LOGGER.info("Adjusting quantity of item in queue storage to {}: {}", quantity, itemId);
@@ -200,6 +227,15 @@ public class CraftingQueueManager {
         computeAll();
 
         this.save(player);
+    }
+
+    public void removeAll() {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#removeAll");
+
+        this.endProducts.clear();
+        this.intermediateProducts.clear();
+        this.rawMaterials.clear();
+        this.fuel.clear();
     }
 
     /**
@@ -258,7 +294,7 @@ public class CraftingQueueManager {
 
                         Arrays.stream(ingredient.getItems())
                                 .findFirst()
-                                .ifPresent((item) -> {
+                                .ifPresent(item -> {
                                     CraftTracker.LOGGER.debug("item: {}", item);
                                     var id = item.getItem().getRegistryName();
                                     CraftTracker.LOGGER.debug("id: {}", id);
@@ -277,10 +313,10 @@ public class CraftingQueueManager {
                                         var inventory = Minecraft.getInstance().player.getInventory();
                                         if(inventory.contains(item)) {
                                             inventory.items.stream()
-                                                    .filter((inv) -> inv.getItem().getRegistryName().equals(id))
-                                                    .map((inv) -> inv.getCount())
+                                                    .filter(inv -> inv.getItem().getRegistryName().equals(id))
+                                                    .map(inv -> inv.getCount())
                                                     .findFirst()
-                                                    .ifPresent((count) -> {
+                                                    .ifPresent(count -> {
                                                         this.intermediateProducts.compute(id, (itemId, quantity) -> {
                                                             Integer finalCount = (quantity == null ? 0 : quantity) + item.getCount() - count;
                                                             if(finalCount < 1) {

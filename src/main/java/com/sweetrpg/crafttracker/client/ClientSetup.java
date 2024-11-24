@@ -4,7 +4,6 @@ import com.sweetrpg.crafttracker.client.event.ClientEventHandler;
 import com.sweetrpg.crafttracker.client.overlay.CraftQueueOverlay;
 import com.sweetrpg.crafttracker.client.overlay.ShoppingListOverlay;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
-import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;

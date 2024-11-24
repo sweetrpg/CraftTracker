@@ -1,7 +1,6 @@
 package com.sweetrpg.crafttracker.common.util;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.Block;
 
 public class MathUtil {
 

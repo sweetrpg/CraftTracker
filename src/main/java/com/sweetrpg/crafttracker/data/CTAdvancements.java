@@ -1,17 +1,11 @@
 package com.sweetrpg.crafttracker.data;
 
 import com.google.common.collect.Maps;
-import com.sweetrpg.crafttracker.common.registry.ModItems;
-import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.advancements.*;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
 
 import javax.annotation.Nullable;
 import java.util.Map;

@@ -1,20 +1,7 @@
 package com.sweetrpg.crafttracker.common;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.client.overlay.CraftQueueOverlay;
-import com.sweetrpg.crafttracker.common.registry.ModItems;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkHooks;
-
-import java.util.List;
 
 public class Screens {
 

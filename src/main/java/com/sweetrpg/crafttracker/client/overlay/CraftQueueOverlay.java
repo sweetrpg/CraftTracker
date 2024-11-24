@@ -3,19 +3,22 @@ package com.sweetrpg.crafttracker.client.overlay;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
+import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
+import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 public class CraftQueueOverlay {
 
     static int TITLE_COLOR = 0x99999999;
+    static int HELP_COLOR = 0x77777777;
     static int SECTION_COLOR = 0xcccccccc;
     static int TEXT_COLOR = 0xffffffff;
     static int MESSAGE_COLOR = 0x66666666;
@@ -29,8 +32,24 @@ public class CraftQueueOverlay {
     public static final IIngameOverlay CRAFT_QUEUE = (gui, poseStack, partialTicks, width, height) -> {
         CraftTracker.LOGGER.trace("CRAFT_QUEUE");
 
-        if(ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_HIDE_EMPTY.get() /* TODO: || user wants it to display */) {
-//            return;
+        var mgr = CraftingQueueManager.INSTANCE;
+        var products = mgr.getEndProducts();
+
+        switch(CTRuntime.INSTANCE.queueOverlayRequestedState) {
+            case SHOW:
+                //
+                break;
+
+            case HIDE:
+            case SUPPRESS:
+                return;
+
+            case DO_NOT_CARE:
+                if(ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_HIDE_EMPTY.get() &&
+                        products.isEmpty()) {
+                    return;
+                }
+                break;
         }
 
         var x = ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_X.get();
@@ -47,16 +66,19 @@ public class CraftQueueOverlay {
                 new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE),
                 (x + olWidth - 8) / 2, y + 6, TITLE_COLOR);
 
-        var mgr = CraftingQueueManager.INSTANCE;
-        var products = mgr.getEndProducts();
-
         // if products list is empty, display "empty" message
-        if(products.isEmpty()) { // TODO
+        if(products.isEmpty()) {
             GuiComponent.drawCenteredString(poseStack, gui.getFont(),
                     new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY),
                     (x + olWidth - 8) / 2, (y + olHeight - 6) / 2, MESSAGE_COLOR);
             return;
         }
+
+        var helpText = String.format("%s [%s]",
+                I18n.get(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HELP),
+                ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.getTranslatedKeyMessage().getString());
+        GuiComponent.drawCenteredString(poseStack, gui.getFont(), helpText,
+                (x + olWidth - 8) / 2, olHeight - TEXT_HEIGHT, HELP_COLOR);
 
         int yPos = y + SECTION_TITLE_Y_OFFSET;
         CraftTracker.LOGGER.trace("yPos (initial): {}", yPos);
@@ -73,7 +95,6 @@ public class CraftQueueOverlay {
         // items
         for(int i = 0; i < products.size(); i++) {
             var p = products.get(i);
-//            var index = products.indexOf(p);
 
             var item = ForgeRegistries.ITEMS.getValue(p.getItemId());
             var stack = item.getDefaultInstance();
@@ -90,8 +111,9 @@ public class CraftQueueOverlay {
         }
 
         // SECTION: intermediates
+
         if(!mgr.getIntermediates().isEmpty()) {
-            yPos += (TEXT_HEIGHT * 1.5);
+            yPos += (int) (TEXT_HEIGHT * 1.5);
             CraftTracker.LOGGER.trace("yPos (before intermediates title): {}", yPos);
 
             // title
@@ -104,7 +126,6 @@ public class CraftQueueOverlay {
             // items
             for(int i = 0; i < mgr.getIntermediates().size(); i++) {
                 var inter = mgr.getIntermediates().get(i);
-//                var index = mgr.getIntermediates().indexOf(i);
 
                 var item = ForgeRegistries.ITEMS.getValue(inter.getItemId());
                 var stack = item.getDefaultInstance();
@@ -120,8 +141,9 @@ public class CraftQueueOverlay {
         }
 
         // SECTION: raw materials
+
         if(!mgr.getRawMaterials().isEmpty()) {
-            yPos += (TEXT_HEIGHT * 1.5);
+            yPos += (int) (TEXT_HEIGHT * 1.5);
             CraftTracker.LOGGER.trace("yPos (before materials title): {}", yPos);
 
             // title
@@ -136,7 +158,6 @@ public class CraftQueueOverlay {
             // items
             for(int i = 0; i < mgr.getRawMaterials().size(); i++) {
                 var m = mgr.getRawMaterials().get(i);
-//                var index = mgr.getRawMaterials().indexOf(m);
 
                 var item = ForgeRegistries.ITEMS.getValue(m.getItemId());
                 var stack = item.getDefaultInstance();
@@ -148,13 +169,14 @@ public class CraftQueueOverlay {
                 final int lambdaYpos = yPos;
                 if(inventory.contains(stack)) {
                     inventory.items.stream()
-                            .filter((inv) -> inv.getItem().getRegistryName().equals(m.getItemId()))
-                            .map((inv) -> inv.getCount())
+                            .filter(inv -> inv.getItem().getRegistryName().equals(m.getItemId()))
+                            .map(inv -> inv.getCount())
                             .findFirst()
-                            .ifPresent((count) -> {
-                                var text = String.format("%s [%d]",
+                            .ifPresent(count -> {
+                                var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HAVE, count);
+                                var text = String.format("%s [%s]",
                                         item.getDescription().getString(MAX_STRING_LENGTH),
-                                        count);
+                                        countText);
                                 CraftTracker.LOGGER.debug("text: {}", text);
                                 GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                             });
@@ -172,7 +194,7 @@ public class CraftQueueOverlay {
         // SECTION: fuel
 
         if(!mgr.getFuel().isEmpty()) {
-            yPos += (TEXT_HEIGHT * 1.5);
+            yPos += (int) (TEXT_HEIGHT * 1.5);
             CraftTracker.LOGGER.trace("yPos (before fuel title): {}", yPos);
 
             // title

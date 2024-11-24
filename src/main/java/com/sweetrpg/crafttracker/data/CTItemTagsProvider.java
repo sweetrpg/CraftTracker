@@ -1,16 +1,11 @@
 package com.sweetrpg.crafttracker.data;
 
-import com.sweetrpg.crafttracker.common.registry.ModBlocks;
-import com.sweetrpg.crafttracker.common.registry.ModItems;
-import com.sweetrpg.crafttracker.common.registry.ModTags;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.data.ExistingFileHelper;
 

@@ -1,2 +1,1 @@
-- `[NEW]` Remove items from the queue when they've been crafted or picked up
-- `[NEW]` Show count of inventory items in the materials list
+- `[NEW]` Added a queue manager screen
