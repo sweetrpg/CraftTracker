@@ -110,6 +110,8 @@ public class CraftQueueOverlay {
             CraftTracker.LOGGER.trace("yPos (product item {}): {}", i, yPos);
         }
 
+        var inventory = Minecraft.getInstance().player.getInventory();
+
         // SECTION: intermediates
 
         if(!mgr.getIntermediates().isEmpty()) {
@@ -133,7 +135,26 @@ public class CraftQueueOverlay {
                 var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
                         .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
                 drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
-                GuiComponent.drawString(poseStack, gui.getFont(), item.getDescription().getString(MAX_STRING_LENGTH), x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+
+                final int lambdaYpos = yPos;
+                if(inventory.contains(stack)) {
+                    inventory.items.stream()
+                            .filter(inv -> inv.getItem().getRegistryName().equals(inter.getItemId()))
+                            .map(inv -> inv.getCount())
+                            .findFirst()
+                            .ifPresent(count -> {
+                                var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HAVE, count);
+                                var text = String.format("%s [%s]",
+                                        item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
+                                        countText);
+                                CraftTracker.LOGGER.debug("text: {}", text);
+                                GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
+                            });
+                }
+                else {
+                    var text = item.getDescription().getString(MAX_STRING_LENGTH);
+                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                }
 
                 yPos += LINE_HEIGHT + 2;
                 CraftTracker.LOGGER.trace("yPos (intermediates item {}): {}", i, yPos);
@@ -152,8 +173,6 @@ public class CraftQueueOverlay {
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (after materials title): {}", yPos);
-
-            var inventory = Minecraft.getInstance().player.getInventory();
 
             // items
             for(int i = 0; i < mgr.getRawMaterials().size(); i++) {
@@ -175,7 +194,7 @@ public class CraftQueueOverlay {
                             .ifPresent(count -> {
                                 var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HAVE, count);
                                 var text = String.format("%s [%s]",
-                                        item.getDescription().getString(MAX_STRING_LENGTH),
+                                        item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
                                         countText);
                                 CraftTracker.LOGGER.debug("text: {}", text);
                                 GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
