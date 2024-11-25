@@ -19,7 +19,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-import static com.sweetrpg.crafttracker.common.lib.CTRuntime.OverlayState.DO_NOT_CARE;
 import static com.sweetrpg.crafttracker.common.lib.CTRuntime.OverlayState.SUPPRESS;
 
 public class QueueManagementScreen extends Screen {
@@ -41,6 +40,8 @@ public class QueueManagementScreen extends Screen {
     public static final int ITEM_X_DOWN_BUTTON_OFFSET = ITEM_X_QTY_OFFSET - (int) (BUTTON_SIZE * 2) - 2;
 
     private List<CraftingQueueManager.ProductItem> productItems;
+    private CTRuntime.OverlayState queueState;
+    private CTRuntime.OverlayState shoppingState;
 
     public QueueManagementScreen(Player player) {
         super(new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_TITLE));
@@ -64,7 +65,9 @@ public class QueueManagementScreen extends Screen {
         int topY = this.height / 2;
 
         // hide queue overlay and shopping list
+        this.queueState = CTRuntime.INSTANCE.queueOverlayRequestedState;
         CTRuntime.INSTANCE.queueOverlayRequestedState = SUPPRESS;
+        this.shoppingState = CTRuntime.INSTANCE.shoppingOverlayRequestedState;
         CTRuntime.INSTANCE.shoppingOverlayRequestedState = SUPPRESS;
     }
 
@@ -196,8 +199,8 @@ public class QueueManagementScreen extends Screen {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
 
         // restore queue overlay and shopping list
-        CTRuntime.INSTANCE.queueOverlayRequestedState = DO_NOT_CARE;
-        CTRuntime.INSTANCE.shoppingOverlayRequestedState = DO_NOT_CARE;
+        CTRuntime.INSTANCE.queueOverlayRequestedState = this.queueState;
+        CTRuntime.INSTANCE.shoppingOverlayRequestedState = this.shoppingState;
     }
 
     @Override
