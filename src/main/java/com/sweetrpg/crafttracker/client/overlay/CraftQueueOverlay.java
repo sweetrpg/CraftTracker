@@ -191,7 +191,6 @@ public class CraftQueueOverlay {
                 var stack = item.getDefaultInstance();
                 stack.setCount(m.getQuantity());
 
-
                 int playerHasQuantity = 0;
                 if(inventory.contains(stack)) {
                     playerHasQuantity = inventory.items.stream()
@@ -243,8 +242,47 @@ public class CraftQueueOverlay {
             CraftTracker.LOGGER.trace("yPos: {}", yPos);
 
             // items
-            for(var f : mgr.getFuel()) {
+            for(int i = 0; i < mgr.getFuel().size(); i++) {
+                var f = mgr.getFuel().get(i);
 
+                var item = ForgeRegistries.ITEMS.getValue(f.getItemId());
+                var stack = item.getDefaultInstance();
+                stack.setCount(f.getQuantity());
+
+                int playerHasQuantity = 0;
+                if(inventory.contains(stack)) {
+                    playerHasQuantity = inventory.items.stream()
+                            .filter(inv -> inv.getItem().getRegistryName().equals(m.getItemId()))
+                            .map(inv -> inv.getCount())
+                            .findFirst()
+                            .orElse(0);
+                }
+
+                if(playerHasQuantity >= f.getQuantity()) {
+                    // don't need to display this intermediate, since the user doesn't need to make it
+                    continue;
+                }
+
+                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+
+                final int lambdaYpos = yPos;
+                if(playerHasQuantity > 0) {
+                    var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HAVE, playerHasQuantity);
+                    var text = String.format("%s [%s]",
+                            item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
+                            countText);
+                    CraftTracker.LOGGER.debug("text: {}", text);
+                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
+                }
+                else {
+                    var text = item.getDescription().getString(MAX_STRING_LENGTH);
+                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                }
+
+                yPos += LINE_HEIGHT + 2;
+                CraftTracker.LOGGER.trace("yPos (materials item {}): {}", i, yPos);
             }
         }
     };
