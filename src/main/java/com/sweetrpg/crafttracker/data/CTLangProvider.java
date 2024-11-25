@@ -49,6 +49,7 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE, "Toggle Craft List");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPINGLIST_TITLE, "Toggle Shopping List");
         add(Constants.TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE, "Open Queue Manager");
+        add(Constants.TRANSLATION_KEY_BINDINGS_POPULATE_SHOPPING_LIST_TITLE, "Populate Shopping List");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE, "The craft list overlay will now be hidden.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW, "The craft list overlay will now be shown.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC, "The craft list overlay mode is dynamic.");
@@ -76,6 +77,7 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE, "Toggle Craft List");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPINGLIST_TITLE, "Toggle Shopping List");
         add(Constants.TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE, "Open Queue Manager");
+        add(Constants.TRANSLATION_KEY_BINDINGS_POPULATE_SHOPPING_LIST_TITLE, "Populate Shopping List");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE, "The craft list overlay will now be hidden.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW, "The craft list overlay will now be shown.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC, "The craft list overlay mode is dynamic.");
@@ -103,6 +105,7 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE, "Handwerksliste umschalten");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPINGLIST_TITLE, "Einkaufsliste umschalten");
         add(Constants.TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE, "Warteschlangenmanager öffnen");
+        add(Constants.TRANSLATION_KEY_BINDINGS_POPULATE_SHOPPING_LIST_TITLE, "Einkaufsliste füllen");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE, "Die Überlagerung der Handwerksliste wird nun ausgeblendet.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW, "Jetzt wird die Überlagerung mit der Handwerksliste angezeigt.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC, "Der Überlagerungsmodus der Handwerksliste ist dynamisch.");
