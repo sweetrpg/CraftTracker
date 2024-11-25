@@ -157,7 +157,7 @@ public class CraftQueueOverlay {
                     var text = String.format("%s [%s]",
                             item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
                             countText);
-                    CraftTracker.LOGGER.debug("text: {}", text);
+                    CraftTracker.LOGGER.trace("text: {}", text);
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                 }
                 else {
@@ -215,7 +215,7 @@ public class CraftQueueOverlay {
                     var text = String.format("%s [%s]",
                             item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
                             countText);
-                    CraftTracker.LOGGER.debug("text: {}", text);
+                    CraftTracker.LOGGER.trace("text: {}", text);
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                 }
                 else {
@@ -273,7 +273,7 @@ public class CraftQueueOverlay {
                     var text = String.format("%s [%s]",
                             item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
                             countText);
-                    CraftTracker.LOGGER.debug("text: {}", text);
+                    CraftTracker.LOGGER.trace("text: {}", text);
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                 }
                 else {

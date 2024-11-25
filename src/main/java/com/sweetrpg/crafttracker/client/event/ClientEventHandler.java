@@ -7,6 +7,7 @@ import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
+import com.sweetrpg.crafttracker.common.util.KeyUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -18,8 +19,6 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.UUID;
 
 public class ClientEventHandler {
 
@@ -62,44 +61,54 @@ public class ClientEventHandler {
 
             handleAddToQueue();
         }
-        else if(ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+        else if(KeyUtil.isKeyDown(event.getKey()) &&
+                ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
             CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_CRAFT_LIST_MAPPING");
 
             handleToggleCraftList();
         }
-        else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+        else if(KeyUtil.isKeyDown(event.getKey()) &&
+                ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
             CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_SHOPPING_LIST_MAPPING");
 
             handleToggleShoppingList();
         }
-        else if(ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.matches(event.getKey(), event.getScanCode())) {
+        else if(KeyUtil.isKeyDown(event.getKey()) &&
+                ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.matches(event.getKey(), event.getScanCode())) {
             CraftTracker.LOGGER.debug("#onKeyInput: OPEN_QUEUE_MANAGER_MAPPING");
 
             QueueManagementScreen.open();
+        }
+        else if(KeyUtil.isKeyDown(event.getKey()) &&
+                ModKeyBindings.POPULATE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+            CraftTracker.LOGGER.debug("#onKeyInput: POPULATE_SHOPPING_LIST_MAPPING");
+
+            // TODO
         }
     }
 
     private static void handleToggleCraftList() {
         CraftTracker.LOGGER.debug("#handleToggleCraftList");
 
+        var player = Minecraft.getInstance().player;
         TranslatableComponent msg;
         switch(CTRuntime.INSTANCE.queueOverlayRequestedState) {
             case SHOW:
                 CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.HIDE;
                 msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE);
-                Minecraft.getInstance().player.sendMessage(msg, UUID.randomUUID());
+                player.displayClientMessage(msg, true);
                 break;
 
             case HIDE:
                 CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.DYNAMIC;
                 msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC);
-                Minecraft.getInstance().player.sendMessage(msg, UUID.randomUUID());
+                player.displayClientMessage(msg, true);
                 break;
 
             case DYNAMIC:
                 CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.SHOW;
                 msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW);
-                Minecraft.getInstance().player.sendMessage(msg, UUID.randomUUID());
+                player.displayClientMessage(msg, true);
                 break;
         }
     }

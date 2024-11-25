@@ -45,6 +45,7 @@ public class Constants {
     public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE = "key.toggleCraftList";
     public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPINGLIST_TITLE = "key.toggleShoppingList";
     public static final String TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE = "key.openQueueManager";
+    public static final String TRANSLATION_KEY_BINDINGS_POPULATE_SHOPPING_LIST_TITLE = "key.populateShoppingList";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE = "crafttracker.msg.queue_overlay_mode.hide";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW = "crafttracker.msg.queue_overlay_mode.show";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC = "crafttracker.msg.queue_overlay_mode.dynamic";
