@@ -1,4 +1,7 @@
 {
+  "crafttracker.msg.queue_overlay_mode.dynamic": "The craft list overlay mode is dynamic.",
+  "crafttracker.msg.queue_overlay_mode.hide": "The craft list overlay will now be hidden.",
+  "crafttracker.msg.queue_overlay_mode.show": "The craft list overlay will now be shown.",
   "crafttracker.screen.craft_list.empty_message": "The queue is empty.",
   "crafttracker.screen.craft_list.have": "have %d",
   "crafttracker.screen.craft_list.help_message": "To manage the queue:",

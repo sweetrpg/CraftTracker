@@ -1,4 +1,7 @@
 {
+  "crafttracker.msg.queue_overlay_mode.dynamic": "Der \u00DCberlagerungsmodus der Handwerksliste ist dynamisch.",
+  "crafttracker.msg.queue_overlay_mode.hide": "Die \u00DCberlagerung der Handwerksliste wird nun ausgeblendet.",
+  "crafttracker.msg.queue_overlay_mode.show": "Jetzt wird die \u00DCberlagerung mit der Handwerksliste angezeigt.",
   "crafttracker.screen.craft_list.empty_message": "Die Warteschlange ist leer.",
   "crafttracker.screen.craft_list.have": "habe %d",
   "crafttracker.screen.craft_list.help_message": "Die Warteschlange verwalten:",
