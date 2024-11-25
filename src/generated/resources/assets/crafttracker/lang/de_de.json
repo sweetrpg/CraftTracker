@@ -1,6 +1,7 @@
 {
   "crafttracker.screen.craft_list.empty_message": "Die Warteschlange ist leer.",
   "crafttracker.screen.craft_list.have": "habe %d",
+  "crafttracker.screen.craft_list.help_message": "Die Warteschlange verwalten:",
   "crafttracker.screen.craft_list.section.fuel": "Kraftstoff",
   "crafttracker.screen.craft_list.section.intermediates": "Zwischenprodukte",
   "crafttracker.screen.craft_list.section.materials": "Materialien",
@@ -14,6 +15,7 @@
   "crafttracker.screen.shopping_list.title": "Einkaufsliste",
   "key.addToQueue": "Zur Warteschlange hinzuf\u00FCgen",
   "key.categories.crafttracker": "Handwerks-Tracker",
+  "key.openQueueManager": "Warteschlangenmanager \u00F6ffnen",
   "key.toggleCraftList": "Handwerksliste umschalten",
   "key.toggleShoppingList": "Einkaufsliste umschalten"
 }

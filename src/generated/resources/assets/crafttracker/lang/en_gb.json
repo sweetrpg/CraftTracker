@@ -1,6 +1,7 @@
 {
   "crafttracker.screen.craft_list.empty_message": "The queue is empty.",
   "crafttracker.screen.craft_list.have": "have %d",
+  "crafttracker.screen.craft_list.help_message": "To manage the queue:",
   "crafttracker.screen.craft_list.section.fuel": "Fuel",
   "crafttracker.screen.craft_list.section.intermediates": "Intermediates",
   "crafttracker.screen.craft_list.section.materials": "Materials",
@@ -14,6 +15,7 @@
   "crafttracker.screen.shopping_list.title": "Shopping List",
   "key.addToQueue": "Add to Queue",
   "key.categories.crafttracker": "Craft Tracker",
+  "key.openQueueManager": "Open Queue Manager",
   "key.toggleCraftList": "Toggle Craft List",
   "key.toggleShoppingList": "Toggle Shopping List"
 }

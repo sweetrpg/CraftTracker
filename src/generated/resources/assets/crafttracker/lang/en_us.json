@@ -15,6 +15,7 @@
   "crafttracker.screen.shopping_list.title": "Shopping List",
   "key.addToQueue": "Add to Queue",
   "key.categories.crafttracker": "Craft Tracker",
+  "key.openQueueManager": "Open Queue Manager",
   "key.toggleCraftList": "Toggle Craft List",
   "key.toggleShoppingList": "Toggle Shopping List"
 }
