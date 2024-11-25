@@ -1,0 +1,1 @@
+- `[FIX]` Remove lingering widgets when deleting a recipe from the queue
