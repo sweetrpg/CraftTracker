@@ -1,7 +1,5 @@
 package com.sweetrpg.crafttracker.common.lib;
 
-import com.sweetrpg.crafttracker.common.config.ConfigHandler;
-
 public class CTRuntime {
 
     public static CTRuntime INSTANCE = new CTRuntime();
@@ -10,7 +8,7 @@ public class CTRuntime {
         SHOW,
         HIDE,
         SUPPRESS,
-        DO_NOT_CARE,
+        DYNAMIC,
     }
 
     public OverlayState queueOverlayRequestedState;
@@ -21,7 +19,7 @@ public class CTRuntime {
     }
 
     private void init() {
-        this.queueOverlayRequestedState = OverlayState.DO_NOT_CARE;
-        this.shoppingOverlayRequestedState = OverlayState.DO_NOT_CARE;
+        this.queueOverlayRequestedState = OverlayState.DYNAMIC;
+        this.shoppingOverlayRequestedState = OverlayState.DYNAMIC;
     }
 }

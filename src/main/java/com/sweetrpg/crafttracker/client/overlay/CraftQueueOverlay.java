@@ -44,7 +44,7 @@ public class CraftQueueOverlay {
             case SUPPRESS:
                 return;
 
-            case DO_NOT_CARE:
+            case DYNAMIC:
                 if(ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_HIDE_EMPTY.get() &&
                         products.isEmpty()) {
                     return;
@@ -252,7 +252,7 @@ public class CraftQueueOverlay {
                 int playerHasQuantity = 0;
                 if(inventory.contains(stack)) {
                     playerHasQuantity = inventory.items.stream()
-                            .filter(inv -> inv.getItem().getRegistryName().equals(m.getItemId()))
+                            .filter(inv -> inv.getItem().getRegistryName().equals(f.getItemId()))
                             .map(inv -> inv.getCount())
                             .findFirst()
                             .orElse(0);
