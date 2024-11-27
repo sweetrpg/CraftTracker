@@ -1,6 +1,9 @@
 package com.sweetrpg.crafttracker.common.manager;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.model.CraftingQueueFuel;
+import com.sweetrpg.crafttracker.common.model.CraftingQueueIntermediate;
+import com.sweetrpg.crafttracker.common.model.CraftingQueueMaterial;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
 import com.sweetrpg.crafttracker.common.storage.CraftingQueueStorage;
 import com.sweetrpg.crafttracker.common.util.RecipeUtil;
@@ -33,9 +36,9 @@ public class CraftingQueueManager {
     public static final Path STORAGE_DIR = FMLPaths.GAMEDIR.get().resolve("craft_tracker");
 
     private Map<ResourceLocation, CraftingQueueProduct> endProducts = new HashMap<>();
-    private Map<ResourceLocation, Integer> intermediateProducts = new HashMap<>();
-    private Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
-    private Map<ResourceLocation, Integer> fuel = new HashMap<>();
+    private Map<ResourceLocation, CraftingQueueIntermediate> intermediateProducts = new HashMap<>();
+    private Map<ResourceLocation, CraftingQueueMaterial> rawMaterials = new HashMap<>();
+    private Map<ResourceLocation, CraftingQueueFuel> fuel = new HashMap<>();
 
     private ServerPlayer player;
 //    private CraftingQueueStorage storage;
@@ -342,16 +345,29 @@ public class CraftingQueueManager {
                                 });
                     }
                 });
+
+        this.updateFuels(recipe);
     }
 
     private void updateRawMaterials(ResourceLocation id, ItemStack item, int recipeQuantity) {
-        this.rawMaterials.compute(id, (itemId, quantity) -> {
-            if(quantity == null) {
-                return item.getCount() * recipeQuantity;
+        CraftTracker.LOGGER.debug("CraftingQueueManager#updateRawMaterials: {}, item {}, recipe quantity {}", id, item, recipeQuantity);
+
+        this.rawMaterials.compute(id, (itemId, material) -> {
+            if(material == null) {
+                return new CraftingQueueMaterial(Map.of(itemId, recipeQuantity));
             }
 
-            return quantity + (item.getCount() * recipeQuantity);
+            return material.getQuantities().compute(itemId, (materialId, materialQuantity) -> {
+
+            }));
+            return new CraftingQueueMaterial(item) + (item.getCount() * recipeQuantity);
         });
+    }
+
+    private void updateFuels(Recipe<?> recipe) {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#updateFuels: {}", recipe);
+
+        // TODO
     }
 
     public static class ProductItem {
@@ -379,28 +395,18 @@ public class CraftingQueueManager {
     }
 
     public class QueueItem {
-        private ResourceLocation itemId;
-        private int quantity;
+        private Map<ResourceLocation, Integer> quantities;
 
-        public QueueItem(ResourceLocation itemId, int quantity) {
-            this.itemId = itemId;
-            this.quantity = quantity;
+        public QueueItem(Map<ResourceLocation, Integer> quantities) {
+            this.quantities = quantities;
         }
 
-        public ResourceLocation getItemId() {
-            return itemId;
+        public Map<ResourceLocation, Integer> getQuantities() {
+            return quantities;
         }
 
-        public void setItemId(ResourceLocation itemId) {
-            this.itemId = itemId;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
+        public void setQuantities(Map<ResourceLocation, Integer> quantities) {
+            this.quantities = quantities;
         }
     }
 }
