@@ -28,9 +28,13 @@ public class QueueCommandPacket implements IPacket<QueueCommandData> {
         CraftTracker.LOGGER.debug("AddToQueuePacket#handle: {}", data);
 
         ctx.get().enqueueWork(() -> {
-            LogicalSide side = ctx.get().getDirection().getReceptionSide();
-            if(side.isClient()) {
-                CraftingQueueManager.INSTANCE.computeAll();
+            switch(data.command) {
+                case RECALCULATE:
+                    LogicalSide side = ctx.get().getDirection().getReceptionSide();
+                    if(side.isClient()) {
+                        CraftingQueueManager.INSTANCE.computeAll();
+                    }
+                    break;
             }
         });
 
