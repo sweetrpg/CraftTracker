@@ -270,7 +270,7 @@ public class CraftingQueueManager {
 
         if(RecipeUtil.areIngredientsSame(ingredients)) {
             CraftTracker.LOGGER.debug("ingredients are the same: {}", ingredients);
-            var id = recipe.getId();
+            var id = recipe.getResultItem().getItem().getRegistryName();
             CraftTracker.LOGGER.debug("id: {}", id);
             if(this.intermediateProducts.containsKey(id)) {
                 CraftTracker.LOGGER.debug("intermediates has this ingredient already: {}", id);
