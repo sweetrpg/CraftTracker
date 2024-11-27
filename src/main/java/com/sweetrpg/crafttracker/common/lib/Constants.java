@@ -11,6 +11,8 @@ public class Constants {
     public static final String VANILLA_ID = "minecraft";
     public static final String VANILLA_NAME = "Minecraft";
 
+    public static final String JEI_PLUGIN_ID = "jei_plugin";
+
     // Network
     public static final ResourceLocation CHANNEL_NAME = Util.getResource("channel");
     public static final String PROTOCOL_VERSION = Integer.toString(1);
