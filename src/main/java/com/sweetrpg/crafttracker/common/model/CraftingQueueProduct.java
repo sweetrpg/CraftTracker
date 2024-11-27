@@ -8,11 +8,11 @@ import java.util.List;
 public class CraftingQueueProduct {
 
     ResourceLocation itemId;
-    List<Recipe> recipes;
+    List<? extends Recipe<?>> recipes;
     int quantity;
     int index;
 
-    public CraftingQueueProduct(ResourceLocation itemId, List<Recipe> recipes, int quantity) {
+    public CraftingQueueProduct(ResourceLocation itemId, List<? extends Recipe<?>> recipes, int quantity) {
         this.itemId = itemId;
         this.recipes = recipes;
         this.quantity = quantity;
@@ -27,11 +27,11 @@ public class CraftingQueueProduct {
         this.itemId = itemId;
     }
 
-    public List<Recipe> getRecipes() {
+    public List<? extends Recipe<?>> getRecipes() {
         return recipes;
     }
 
-    public void setRecipes(List<Recipe> recipes) {
+    public void setRecipes(List<? extends Recipe<?>> recipes) {
         this.recipes = recipes;
     }
 
