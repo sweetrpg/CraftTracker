@@ -3,6 +3,7 @@ package com.sweetrpg.crafttracker.common.event;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.client.event.CraftingEvents;
 import com.sweetrpg.crafttracker.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.network.PacketHandler;
 import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
 import net.minecraft.server.level.ServerPlayer;
@@ -102,6 +103,7 @@ public class EventHandler {
                 var itemId = event.getStack().getItem().getRegistryName();
                 var quantity = event.getStack().getCount();
                 CraftingEvents.removeProduct(itemId, quantity);
+                CraftingQueueManager.INSTANCE.computeAll();
             });
         }
         else {
