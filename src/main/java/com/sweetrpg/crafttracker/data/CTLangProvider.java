@@ -53,6 +53,9 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE, "The craft list overlay will now be hidden.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW, "The craft list overlay will now be shown.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC, "The craft list overlay mode is dynamic.");
+        add(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_HIDE, "The shopping list overlay will now be hidden.");
+        add(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW, "The shopping list overlay will now be shown.");
+        add(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC, "The shopping list overlay mode is dynamic.");
     }
 
     private void processENGB() {
@@ -81,6 +84,9 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE, "The craft list overlay will now be hidden.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW, "The craft list overlay will now be shown.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC, "The craft list overlay mode is dynamic.");
+        add(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_HIDE, "The shopping list overlay will now be hidden.");
+        add(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW, "The shopping list overlay will now be shown.");
+        add(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC, "The shopping list overlay mode is dynamic.");
     }
 
     private void processDEDE() {
@@ -109,5 +115,8 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE, "Die Überlagerung der Handwerksliste wird nun ausgeblendet.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW, "Jetzt wird die Überlagerung mit der Handwerksliste angezeigt.");
         add(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC, "Der Überlagerungsmodus der Handwerksliste ist dynamisch.");
+        add(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_HIDE, "Die Einkaufslisten-Overlay wird nun ausgeblendet.");
+        add(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW, "Nun wird das Overlay mit der Einkaufsliste angezeigt.");
+        add(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC, "Der Einkaufslisten-Overlay-Modus ist dynamisch.");
     }
 }

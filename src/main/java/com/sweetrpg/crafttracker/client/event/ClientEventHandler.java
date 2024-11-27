@@ -115,6 +115,28 @@ public class ClientEventHandler {
 
     private static void handleToggleShoppingList() {
         CraftTracker.LOGGER.debug("#handleToggleShoppingList");
+
+        var player = Minecraft.getInstance().player;
+        TranslatableComponent msg;
+        switch(CTRuntime.INSTANCE.shoppingOverlayRequestedState) {
+            case SHOW:
+                CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.HIDE;
+                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_HIDE);
+                player.displayClientMessage(msg, true);
+                break;
+
+            case HIDE:
+                CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.DYNAMIC;
+                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC);
+                player.displayClientMessage(msg, true);
+                break;
+
+            case DYNAMIC:
+                CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.SHOW;
+                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW);
+                player.displayClientMessage(msg, true);
+                break;
+        }
     }
 
     private static void handleAddToQueue() {
