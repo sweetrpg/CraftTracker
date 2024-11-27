@@ -51,6 +51,9 @@ public class Constants {
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE = "crafttracker.msg.queue_overlay_mode.hide";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW = "crafttracker.msg.queue_overlay_mode.show";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC = "crafttracker.msg.queue_overlay_mode.dynamic";
+    public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_HIDE = "crafttracker.msg.shopping_list_overlay_mode.hide";
+    public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW = "crafttracker.msg.shopping_list_overlay_mode.show";
+    public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC = "crafttracker.msg.shopping_list_overlay_mode.dynamic";
 
     // Advancements
     public static final String TRANSLATION_KEY_ADVANCEMENT_MAKE_LIST_TITLE = "advancements.crafttracker.main.make_list.title";
