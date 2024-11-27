@@ -2,3 +2,4 @@
 - `[NEW]` Enabled key bindings to manage display of craft list and shopping list
 - `[FIX]` Fixed how recipes are looked up, so that some intermediates and raw materials
   show up correctly
+- `[NEW]` Enable shopping list display
