@@ -12,11 +12,4 @@ public class CraftingEvents {
         CraftingQueueManager.INSTANCE.removeProduct(player, itemId, quantity);
     }
 
-    public static void handleAddToQueue() {
-
-    }
-
-    public static void handleToggleCraftOverlay() {
-
-    }
 }
