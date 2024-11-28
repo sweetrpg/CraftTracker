@@ -92,8 +92,13 @@ public class ShoppingListOverlay {
         var inventory = Minecraft.getInstance().player.getInventory();
 
         // items
-        for(int i = 0; i < mgr.getItems().size(); i++) {
-            var m = mgr.getItems().get(i);
+        var sortedItems = mgr.getItems().stream().sorted((i1, i2) -> {
+            var item1 = ForgeRegistries.ITEMS.getValue(i1.getItemId());
+            var item2 = ForgeRegistries.ITEMS.getValue(i2.getItemId());
+            return item1.getDescription().getString().compareTo(item2.getDescription().getString());
+        }).toList();
+        for(int i = 0; i < sortedItems.size(); i++) {
+            var m = sortedItems.get(i);
 
             var item = ForgeRegistries.ITEMS.getValue(m.getItemId());
             var stack = item.getDefaultInstance();
