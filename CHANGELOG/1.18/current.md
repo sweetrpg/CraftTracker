@@ -1,1 +1,2 @@
+- `[NEW]` Added hotkey to clear the shopping list
 - `[NEW]` Items in the queue and shopping list are now sorted by name
