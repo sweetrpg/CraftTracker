@@ -1,0 +1,1 @@
+- `[NEW]` Added hotkey to clear the shopping list
