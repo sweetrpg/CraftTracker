@@ -167,6 +167,10 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}", itemId);
 
         this.endProducts.remove(itemId);
+
+        computeAll();
+
+        this.save(player);
     }
 
     public void removeProduct(Player player, ResourceLocation itemId, int quantity) {
