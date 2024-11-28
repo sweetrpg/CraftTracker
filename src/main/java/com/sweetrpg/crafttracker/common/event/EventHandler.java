@@ -101,7 +101,7 @@ public class EventHandler {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = event.getStack().getItem().getRegistryName();
                 var quantity = event.getStack().getCount();
-                CraftingEvents.removeProduct(itemId, quantity);
+                CraftingEvents.pickupItem(itemId, quantity);
             });
         }
         else {

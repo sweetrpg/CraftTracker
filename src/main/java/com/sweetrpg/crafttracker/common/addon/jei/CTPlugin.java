@@ -1,14 +1,12 @@
 package com.sweetrpg.crafttracker.common.addon.jei;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
+import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.ModIds;
-import mezz.jei.api.registration.IAdvancedRegistration;
-import mezz.jei.api.registration.IGuiHandlerRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +21,7 @@ public class CTPlugin implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid() {
-        return new ResourceLocation(ModIds.JEI_ID, "crafttracker");
+        return new ResourceLocation(Constants.MOD_ID, Constants.JEI_PLUGIN_ID);
     }
 
     @Override
@@ -49,6 +47,36 @@ public class CTPlugin implements IModPlugin {
     }
 
     @Override
+    public void registerFluidSubtypes(ISubtypeRegistration registration) {
+        CraftTracker.LOGGER.debug("CTPlugin#registerFluidSubtypes: {}", registration);
+    }
+
+    @Override
+    public void registerIngredients(IModIngredientRegistration registration) {
+        CraftTracker.LOGGER.debug("CTPlugin#registerIngredients: {}", registration);
+    }
+
+    @Override
+    public void registerCategories(IRecipeCategoryRegistration registration) {
+        CraftTracker.LOGGER.debug("CTPlugin#registerCategories: {}", registration);
+    }
+
+    @Override
+    public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
+        CraftTracker.LOGGER.debug("CTPlugin#registerVanillaCategoryExtensions: {}", registration);
+    }
+
+    @Override
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        CraftTracker.LOGGER.debug("CTPlugin#registerRecipeTransferHandlers: {}", registration);
+    }
+
+    @Override
+    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        CraftTracker.LOGGER.debug("CTPlugin#registerRecipeCatalysts: {}", registration);
+    }
+
+    @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         CraftTracker.LOGGER.debug("CTPlugin#registerGuiHandlers: {}", registration);
 
@@ -67,9 +95,11 @@ public class CTPlugin implements IModPlugin {
 
         CTPlugin.jeiRuntime = jeiRuntime;
 
+        // TODO: move this elsewhere to remove hard dependency on JEI
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             Player player = Minecraft.getInstance().player;
             CraftingQueueManager.INSTANCE.load(player);
+            ShoppingListManager.INSTANCE.load(player);
         });
     }
 }

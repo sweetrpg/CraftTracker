@@ -29,6 +29,8 @@ public class ClientSetup {
 
     public static void addKeyBindings(final FMLClientSetupEvent event) {
 
+        MinecraftForge.EVENT_BUS.addListener(ClientEventHandler::onClientTick);
+        MinecraftForge.EVENT_BUS.addListener(ClientEventHandler::onScreenInit);
         MinecraftForge.EVENT_BUS.addListener(ClientEventHandler::onKeyInput);
 
         OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "craft_queue", CraftQueueOverlay.CRAFT_QUEUE);

@@ -1,99 +1,206 @@
 package com.sweetrpg.crafttracker.client.event;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.client.screen.QueueManagementScreen;
 import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
+import com.sweetrpg.crafttracker.common.lib.CTRuntime;
+import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
+import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
+import com.sweetrpg.crafttracker.common.util.InventoryUtil;
+import com.sweetrpg.crafttracker.common.util.KeyUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ClientEventHandler {
 
-//    static boolean craftListDisplayed = true;
-//    static boolean shoppingListDisplayed = true;
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
+        CraftTracker.LOGGER.trace("#onClientTick: {}", event);
 
-//    public static void onModelBakeEvent(final ModelBakeEvent event) {
-//        Map<ResourceLocation, BakedModel> modelRegistry = event.getModelRegistry();
+//        if(event.phase != TickEvent.Phase.END) return;
 //
-////        // cat tree
-////        try {
-////            ResourceLocation resourceLocation = ForgeRegistries.BLOCKS.getKey(ModBlocks.CAT_TREE.get());
-////            ResourceLocation unbakedModelLoc = new ResourceLocation(resourceLocation.getNamespace(), "block/" + resourceLocation.getPath());
-////
-////            BlockModel model = (BlockModel) event.getModelLoader().getModel(unbakedModelLoc);
-////            BakedModel customModel = new CatTreeModel(event.getModelLoader(), model, model.bake(event.getModelLoader(), model, ForgeModelBakery.defaultTextureGetter(), BlockModelRotation.X180_Y180, unbakedModelLoc, true));
-////
-////            // Replace all valid block states
-////            ModBlocks.CAT_TREE.get().getStateDefinition().getPossibleStates().forEach(state -> {
-////                modelRegistry.put(BlockModelShaper.stateToModelLocation(state), customModel);
-////            });
-////
-////            // Replace inventory model
-////            modelRegistry.put(new ModelResourceLocation(resourceLocation, "inventory"), customModel);
-////        }
-////        catch(Exception e) {
-////            CraftTracker.LOGGER.warn("Could not get base Cat Tree model. Reverting to default textures...");
-////            e.printStackTrace();
-////        }
+//        if(ModKeyBindings.ADD_TO_QUEUE_MAPPING.consumeClick()) {
+//            CraftTracker.LOGGER.debug("#onKeyInput: ADD_TO_QUEUE_MAPPING");
 //
-//    }
+//            handleAddToQueue();
+//        }
+//        else if(ModKeyBindings.TOGGLE_CRAFT_QUEUE_MAPPING.consumeClick()) {
+//            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_CRAFT_LIST_MAPPING");
+//
+//            handleToggleCraftList();
+//        }
+//        else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.consumeClick()) {
+//            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_SHOPPING_LIST_MAPPING");
+//
+//            handleToggleShoppingList();
+//        }
+//        else if(ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.consumeClick()) {
+//            CraftTracker.LOGGER.debug("#onKeyInput: OPEN_QUEUE_MANAGER_MAPPING");
+//
+//            QueueManagementScreen.open();
+//        }
+//        else if(ModKeyBindings.POPULATE_SHOPPING_LIST_MAPPING.consumeClick()) {
+//            CraftTracker.LOGGER.debug("#onKeyInput: POPULATE_SHOPPING_LIST_MAPPING");
+//
+//            handlePopulateShoppingList();
+//        }
+    }
 
     //    @SubscribeEvent
     public static void onKeyInput(final InputEvent.KeyInputEvent event) {
         CraftTracker.LOGGER.trace("#onKeyInput: {}", event);
 
-        if(ModKeyBindings.ADD_TO_QUEUE_MAPPING.matches(event.getKey(), event.getScanCode())) {
-            CraftTracker.LOGGER.debug("#onKeyInput: ADD_TO_QUEUE_MAPPING");
+        var screen = Minecraft.getInstance().screen;
+        if(screen == null) {
+            // in the game world
 
-            CTPlugin.jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse()
-                    .ifPresent(ingredient -> {
-                        CraftTracker.LOGGER.debug("AddToQueuePacket#handle: type {}", ingredient.getType());
-                        CraftTracker.LOGGER.debug("AddToQueuePacket#handle: ingredient {}", ingredient.getIngredient());
+            if(KeyUtil.isKeyDown(event.getKey()) &&
+                    ModKeyBindings.TOGGLE_CRAFT_QUEUE_MAPPING.matches(event.getKey(), event.getScanCode())) {
+                CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_CRAFT_LIST_MAPPING");
 
-                        if(ingredient.getIngredient() instanceof ItemStack itemStack) {
-                            ResourceLocation res = itemStack.getItem().getRegistryName();
-                            CraftTracker.LOGGER.debug("AddToQueuePacket#handle: res {}", res);
+                handleToggleCraftList();
+            }
+            else if(KeyUtil.isKeyDown(event.getKey()) &&
+                    ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+                CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_SHOPPING_LIST_MAPPING");
 
-                            var player = Minecraft.getInstance().player;
-                            CraftingQueueManager.INSTANCE.addProduct(player, res, 1);
+                handleToggleShoppingList();
+            }
+            else if(KeyUtil.isKeyDown(event.getKey()) &&
+                    ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.matches(event.getKey(), event.getScanCode())) {
+                CraftTracker.LOGGER.debug("#onKeyInput: OPEN_QUEUE_MANAGER_MAPPING");
+
+                QueueManagementScreen.open();
+            }
+            else if(KeyUtil.isKeyDown(event.getKey()) &&
+                    ModKeyBindings.POPULATE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+                CraftTracker.LOGGER.debug("#onKeyInput: POPULATE_SHOPPING_LIST_MAPPING");
+
+                handlePopulateShoppingList();
+            }
+
+            return;
+        }
+
+        if(screen instanceof CraftingScreen ||
+                screen instanceof InventoryScreen) { // TODO: others?
+            if(ModKeyBindings.ADD_TO_QUEUE_MAPPING.matches(event.getKey(), event.getScanCode())) {
+                CraftTracker.LOGGER.debug("#onKeyInput: ADD_TO_QUEUE_MAPPING");
+
+                handleAddToQueue();
+            }
+        }
+    }
+
+    private static void handleToggleCraftList() {
+        CraftTracker.LOGGER.debug("#handleToggleCraftList");
+
+        var player = Minecraft.getInstance().player;
+        TranslatableComponent msg;
+        switch(CTRuntime.INSTANCE.queueOverlayRequestedState) {
+            case SHOW:
+                CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.HIDE;
+                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE);
+                player.displayClientMessage(msg, true);
+                break;
+
+            case HIDE:
+                CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.DYNAMIC;
+                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC);
+                player.displayClientMessage(msg, true);
+                break;
+
+            case DYNAMIC:
+                CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.SHOW;
+                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW);
+                player.displayClientMessage(msg, true);
+                break;
+        }
+    }
+
+    private static void handlePopulateShoppingList() {
+        CraftTracker.LOGGER.debug("#handlePopulateShoppingList");
+
+        var player = Minecraft.getInstance().player;
+        var sMgr = ShoppingListManager.INSTANCE;
+        var qMgr = CraftingQueueManager.INSTANCE;
+
+        sMgr.clearItems(player);
+
+        var materials = qMgr.getRawMaterials();
+        var fuel = qMgr.getFuel();
+
+        materials.forEach(m -> {
+            var haveQty = InventoryUtil.getQuantityOf(player, m.getItemId());
+            var needed = m.getQuantity() - haveQty;
+
+            if(needed > 0)
+                sMgr.addItem(player, m.getItemId(), needed);
+        });
+        fuel.forEach(f -> {
+            var haveQty = InventoryUtil.getQuantityOf(player, f.getItemId());
+            var needed = f.getQuantity() - haveQty;
+
+            if(needed > 0)
+                sMgr.addItem(player, f.getItemId(), needed);
+        });
+    }
+
+    private static void handleToggleShoppingList() {
+        CraftTracker.LOGGER.debug("#handleToggleShoppingList");
+
+        var player = Minecraft.getInstance().player;
+        TranslatableComponent msg;
+        switch(CTRuntime.INSTANCE.shoppingOverlayRequestedState) {
+            case SHOW:
+                CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.HIDE;
+                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_HIDE);
+                player.displayClientMessage(msg, true);
+                break;
+
+            case HIDE:
+                CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.DYNAMIC;
+                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC);
+                player.displayClientMessage(msg, true);
+                break;
+
+            case DYNAMIC:
+                CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.SHOW;
+                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW);
+                player.displayClientMessage(msg, true);
+                break;
+        }
+    }
+
+    private static void handleAddToQueue() {
+        CraftTracker.LOGGER.debug("#handleToggleCraftList");
+
+        CTPlugin.jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse()
+                .ifPresent(ingredient -> {
+                    CraftTracker.LOGGER.debug("AddToQueuePacket#handle: type {}", ingredient.getType());
+                    CraftTracker.LOGGER.debug("AddToQueuePacket#handle: ingredient {}", ingredient.getIngredient());
+
+                    if(ingredient.getIngredient() instanceof ItemStack itemStack) {
+                        ResourceLocation res = itemStack.getItem().getRegistryName();
+                        CraftTracker.LOGGER.debug("AddToQueuePacket#handle: res {}", res);
+
+                        var player = Minecraft.getInstance().player;
+                        CraftingQueueManager.INSTANCE.addProduct(player, res, 1);
 //                            PacketHandler.sendToServer(new AddToQueueData(res, 1));
-                        }
-                    });
-
-
-        }
-        else if(ModKeyBindings.TOGGLE_CRAFT_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
-            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_CRAFT_LIST_MAPPING");
-//            craftListDisplayed = !craftListDisplayed;
-//            PacketHandler.sendToServer(new ToggleCraftListData());
-        }
-        else if(ModKeyBindings.TOGGLE_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
-            CraftTracker.LOGGER.debug("#onKeyInput: TOGGLE_SHOPPING_LIST_MAPPING");
-//            shoppingListDisplayed = !shoppingListDisplayed;
-//            PacketHandler.sendToServer(new ToggleShoppingListData());
-        }
-        else if(ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.matches(event.getKey(), event.getScanCode())) {
-            CraftTracker.LOGGER.debug("#onKeyInput: OPEN_QUEUE_MANAGER_MAPPING");
-
-            QueueManagementScreen.open();
-        }
+                    }
+                });
     }
 
     @SubscribeEvent
@@ -102,9 +209,17 @@ public class ClientEventHandler {
 
     }
 
+//    public static void onScreenRemove() {
+//        CraftTracker.LOGGER.trace("#onScreenRemove: {}", event);
+//
+//        CTRuntime.INSTANCE.screenOpen = false;
+//    }
+
     @SubscribeEvent
-    public void onScreenInit(final ScreenEvent.InitScreenEvent.Post event) {
+    public static void onScreenInit(final ScreenEvent.InitScreenEvent.Post event) {
         CraftTracker.LOGGER.trace("#onScreenInit: {}", event);
+
+//        CTRuntime.INSTANCE.screenOpen = true;
 
 //        Screen screen = event.getScreen();
 //        if(screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
@@ -172,36 +287,36 @@ public class ClientEventHandler {
         }
     }
 
-    public void drawSelectionBox(PoseStack matrixStackIn, Player player, float particleTicks, AABB boundingBox) {
-        CraftTracker.LOGGER.debug("#drawSelectionBox: {}, player: {}", matrixStackIn, player);
-
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        // RenderSystem.disableAlphaTest();
-        RenderSystem.depthMask(false);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 0.7F);
-        //TODO Used when drawing outline of bounding box
-        RenderSystem.lineWidth(2.0F);
-
-
-        RenderSystem.disableTexture();
-        Vec3 vec3d = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        double d0 = vec3d.x();
-        double d1 = vec3d.y();
-        double d2 = vec3d.z();
-
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        LevelRenderer.renderLineBox(matrixStackIn, bufferbuilder, boundingBox.move(-d0, -d1, -d2), 1F, 1F, 0F, 0.8F);
-        Tesselator.getInstance().end();
-        RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 0.3F);
-        RenderSystem.depthMask(true);
-        RenderSystem.enableTexture();
-        RenderSystem.disableBlend();
-        //RenderSystem.enableAlphaTest();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-    }
+//    public void drawSelectionBox(PoseStack matrixStackIn, Player player, float particleTicks, AABB boundingBox) {
+//        CraftTracker.LOGGER.debug("#drawSelectionBox: {}, player: {}", matrixStackIn, player);
+//
+//        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//        // RenderSystem.disableAlphaTest();
+//        RenderSystem.depthMask(false);
+//        RenderSystem.enableBlend();
+//        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+//        RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 0.7F);
+//        //TODO Used when drawing outline of bounding box
+//        RenderSystem.lineWidth(2.0F);
+//
+//
+//        RenderSystem.disableTexture();
+//        Vec3 vec3d = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+//        double d0 = vec3d.x();
+//        double d1 = vec3d.y();
+//        double d2 = vec3d.z();
+//
+//        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+//        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+//        LevelRenderer.renderLineBox(matrixStackIn, bufferbuilder, boundingBox.move(-d0, -d1, -d2), 1F, 1F, 0F, 0.8F);
+//        Tesselator.getInstance().end();
+//        RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 0.3F);
+//        RenderSystem.depthMask(true);
+//        RenderSystem.enableTexture();
+//        RenderSystem.disableBlend();
+//        //RenderSystem.enableAlphaTest();
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//    }
 
 }

@@ -19,7 +19,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-import static com.sweetrpg.crafttracker.common.lib.CTRuntime.OverlayState.DO_NOT_CARE;
 import static com.sweetrpg.crafttracker.common.lib.CTRuntime.OverlayState.SUPPRESS;
 
 public class QueueManagementScreen extends Screen {
@@ -41,9 +40,11 @@ public class QueueManagementScreen extends Screen {
     public static final int ITEM_X_DOWN_BUTTON_OFFSET = ITEM_X_QTY_OFFSET - (int) (BUTTON_SIZE * 2) - 2;
 
     private List<CraftingQueueManager.ProductItem> productItems;
+    private CTRuntime.OverlayState queueState;
+    private CTRuntime.OverlayState shoppingState;
 
     public QueueManagementScreen(Player player) {
-        super(new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_TITLE));
+        super(new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE));
         this.player = player;
 
         this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
@@ -64,7 +65,9 @@ public class QueueManagementScreen extends Screen {
         int topY = this.height / 2;
 
         // hide queue overlay and shopping list
+        this.queueState = CTRuntime.INSTANCE.queueOverlayRequestedState;
         CTRuntime.INSTANCE.queueOverlayRequestedState = SUPPRESS;
+        this.shoppingState = CTRuntime.INSTANCE.shoppingOverlayRequestedState;
         CTRuntime.INSTANCE.shoppingOverlayRequestedState = SUPPRESS;
     }
 
@@ -81,7 +84,7 @@ public class QueueManagementScreen extends Screen {
 //        GuiComponent.fill(poseStack, topX, topY, width, height, BACKGROUND_COLOR);
 
         // title
-        GuiComponent.drawCenteredString(poseStack, this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
+        GuiComponent.drawCenteredString(poseStack, this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
 
         // products
         for(int i = 0; i < this.productItems.size(); i++) {
@@ -119,7 +122,7 @@ public class QueueManagementScreen extends Screen {
                         QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEC_BUTTON_TOOLTIP), mouseX, mouseY);
                     }
                 }*/;
-                button.active = pItem.getQuantity() > 0;
+                button.active = pItem.getQuantity() > 1;
                 this.addRenderableWidget(button);
             }
             {
@@ -148,6 +151,7 @@ public class QueueManagementScreen extends Screen {
                 Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("x"), btn -> {
                     CraftingQueueManager.INSTANCE.removeProduct(player, pItem.getItemId());
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
+                    this.renderables.clear();
                 }) /*{
                     @Override
                     public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
@@ -161,10 +165,11 @@ public class QueueManagementScreen extends Screen {
         // clear all button
         {
             Button button = new Button(topX + (width / 2) - 50, topY + height - BUTTON_SIZE - 4, 100, BUTTON_SIZE + 2,
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON),
+                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_CLEAR_BUTTON),
                     btn -> {
                         CraftingQueueManager.INSTANCE.removeAll();
                         QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
+                        this.renderables.clear();
                     }) /*{
                 @Override
                 public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
@@ -194,8 +199,8 @@ public class QueueManagementScreen extends Screen {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
 
         // restore queue overlay and shopping list
-        CTRuntime.INSTANCE.queueOverlayRequestedState = DO_NOT_CARE;
-        CTRuntime.INSTANCE.shoppingOverlayRequestedState = DO_NOT_CARE;
+        CTRuntime.INSTANCE.queueOverlayRequestedState = this.queueState;
+        CTRuntime.INSTANCE.shoppingOverlayRequestedState = this.shoppingState;
     }
 
     @Override

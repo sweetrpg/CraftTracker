@@ -29,26 +29,10 @@ public class CraftingQueueStorage extends SavedData {
     private @Nullable UUID ownerId;
     private Vec3 craftingQueuePosition;
     private boolean craftingQueueVisible;
-    private Vec3 shoppingListPosition;
-    private boolean shoppingListVisible;
-    //    private Map<ResourceLocation, CraftingQueueData> queueData = Maps.newConcurrentMap();
     private Map<ResourceLocation, CraftingQueueProduct> products = new HashMap<>();
 
     public CraftingQueueStorage() {
     }
-
-//    public static CraftingQueueStorage get(Level world) {
-//        CraftTracker.LOGGER.debug("CraftingQueueStorage#get: {}", world);
-//
-//        if (!(world instanceof ServerLevel)) {
-//            throw new RuntimeException("Tried to access crafting queue data from the client. This should not happen...");
-//        }
-//
-//        ServerLevel overworld = world.getServer().getLevel(Level.OVERWORLD);
-//
-//        DimensionDataStorage storage = overworld.getDataStorage();
-//        return storage.computeIfAbsent(CraftingQueueStorage::load, CraftingQueueStorage::new, Constants.STORAGE_CRAFTING_QUEUE);
-//    }
 
     public void putData(Map<ResourceLocation, CraftingQueueProduct> products) {
         CraftTracker.LOGGER.debug("CraftingQueueStorage#putData: {}", products);
@@ -67,8 +51,6 @@ public class CraftingQueueStorage extends SavedData {
         store.ownerId = NBTUtil.getUniqueId(nbt, Keys.OWNER_ID);
         store.craftingQueuePosition = NBTUtil.getVector3d(nbt);
         store.craftingQueueVisible = nbt.getBoolean(Keys.CRAFTING_QUEUE_VISIBLE);
-        store.shoppingListPosition = NBTUtil.getVector3d(nbt);
-        store.shoppingListVisible = nbt.getBoolean(Keys.SHOPPING_LIST_VISIBLE);
 
         ListTag list = nbt.getList(Keys.QUEUE_DATA, Tag.TAG_COMPOUND);
 
@@ -94,8 +76,6 @@ public class CraftingQueueStorage extends SavedData {
         NBTUtil.putUniqueId(compound, Keys.OWNER_ID, this.ownerId);
         NBTUtil.putVector3d(compound, this.craftingQueuePosition);
         compound.putBoolean(Keys.CRAFTING_QUEUE_VISIBLE, this.craftingQueueVisible);
-        NBTUtil.putVector3d(compound, this.shoppingListPosition);
-        compound.putBoolean(Keys.SHOPPING_LIST_VISIBLE, this.shoppingListVisible);
 
         ListTag list = new ListTag();
 
@@ -117,7 +97,6 @@ public class CraftingQueueStorage extends SavedData {
     static class Keys {
         static String OWNER_ID = "owner_id";
         static String CRAFTING_QUEUE_VISIBLE = "crafting_queue_visible";
-        static String SHOPPING_LIST_VISIBLE = "shopping_list_visible";
         static String QUEUE_DATA = "queue_data";
         static String ITEM_ID = "item_id";
         static String QUANTITY = "quantity";

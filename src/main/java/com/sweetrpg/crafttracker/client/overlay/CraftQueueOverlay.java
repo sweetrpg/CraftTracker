@@ -7,11 +7,13 @@ import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
+import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -44,7 +46,7 @@ public class CraftQueueOverlay {
             case SUPPRESS:
                 return;
 
-            case DO_NOT_CARE:
+            case DYNAMIC:
                 if(ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_HIDE_EMPTY.get() &&
                         products.isEmpty()) {
                     return;
@@ -63,19 +65,19 @@ public class CraftQueueOverlay {
         GuiComponent.fill(poseStack, x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
 
         GuiComponent.drawCenteredString(poseStack, gui.getFont(),
-                new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_TITLE),
+                new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_TITLE),
                 (x + olWidth - 8) / 2, y + 6, TITLE_COLOR);
 
         // if products list is empty, display "empty" message
         if(products.isEmpty()) {
             GuiComponent.drawCenteredString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY),
+                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_EMPTY),
                     (x + olWidth - 8) / 2, (y + olHeight - 6) / 2, MESSAGE_COLOR);
             return;
         }
 
         var helpText = String.format("%s [%s]",
-                I18n.get(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HELP),
+                I18n.get(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_HELP),
                 ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.getTranslatedKeyMessage().getString());
         GuiComponent.drawCenteredString(poseStack, gui.getFont(), helpText,
                 (x + olWidth - 8) / 2, olHeight - TEXT_HEIGHT, HELP_COLOR);
@@ -87,7 +89,7 @@ public class CraftQueueOverlay {
 
         // title
         GuiComponent.drawString(poseStack, gui.getFont(),
-                new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS),
+                new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_PRODUCTS),
                 x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
         yPos += TEXT_HEIGHT + 2;
         CraftTracker.LOGGER.trace("yPos (after product title): {}", yPos);
@@ -110,6 +112,9 @@ public class CraftQueueOverlay {
             CraftTracker.LOGGER.trace("yPos (product item {}): {}", i, yPos);
         }
 
+        Player player = Minecraft.getInstance().player;
+        var inventory = player.getInventory();
+
         // SECTION: intermediates
 
         if(!mgr.getIntermediates().isEmpty()) {
@@ -118,7 +123,7 @@ public class CraftQueueOverlay {
 
             // title
             GuiComponent.drawString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES),
+                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_INTERMEDIATES),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (after intermediates title): {}", yPos);
@@ -130,10 +135,30 @@ public class CraftQueueOverlay {
                 var item = ForgeRegistries.ITEMS.getValue(inter.getItemId());
                 var stack = item.getDefaultInstance();
                 stack.setCount(inter.getQuantity());
+
+                int playerHasQuantity = InventoryUtil.getQuantityOf(player, inter.getItemId());
+                if(playerHasQuantity >= inter.getQuantity()) {
+                    // don't need to display this intermediate, since the user doesn't need to make it
+                    continue;
+                }
+
                 var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
                         .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
                 drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
-                GuiComponent.drawString(poseStack, gui.getFont(), item.getDescription().getString(MAX_STRING_LENGTH), x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+
+                final int lambdaYpos = yPos;
+                if(playerHasQuantity > 0) {
+                    var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_HAVE, playerHasQuantity);
+                    var text = String.format("%s [%s]",
+                            item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
+                            countText);
+                    CraftTracker.LOGGER.trace("text: {}", text);
+                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
+                }
+                else {
+                    var text = item.getDescription().getString(MAX_STRING_LENGTH);
+                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                }
 
                 yPos += LINE_HEIGHT + 2;
                 CraftTracker.LOGGER.trace("yPos (intermediates item {}): {}", i, yPos);
@@ -148,12 +173,10 @@ public class CraftQueueOverlay {
 
             // title
             GuiComponent.drawString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS),
+                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_MATERIALS),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (after materials title): {}", yPos);
-
-            var inventory = Minecraft.getInstance().player.getInventory();
 
             // items
             for(int i = 0; i < mgr.getRawMaterials().size(); i++) {
@@ -162,24 +185,25 @@ public class CraftQueueOverlay {
                 var item = ForgeRegistries.ITEMS.getValue(m.getItemId());
                 var stack = item.getDefaultInstance();
                 stack.setCount(m.getQuantity());
+
+                int playerHasQuantity = InventoryUtil.getQuantityOf(player, m.getItemId());
+                if(playerHasQuantity >= m.getQuantity()) {
+                    // don't need to display this intermediate, since the user doesn't need to make it
+                    continue;
+                }
+
                 var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
                         .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
                 drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
-                if(inventory.contains(stack)) {
-                    inventory.items.stream()
-                            .filter(inv -> inv.getItem().getRegistryName().equals(m.getItemId()))
-                            .map(inv -> inv.getCount())
-                            .findFirst()
-                            .ifPresent(count -> {
-                                var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_HAVE, count);
-                                var text = String.format("%s [%s]",
-                                        item.getDescription().getString(MAX_STRING_LENGTH),
-                                        countText);
-                                CraftTracker.LOGGER.debug("text: {}", text);
-                                GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
-                            });
+                if(playerHasQuantity > 0) {
+                    var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_HAVE, playerHasQuantity);
+                    var text = String.format("%s [%s]",
+                            item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
+                            countText);
+                    CraftTracker.LOGGER.trace("text: {}", text);
+                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                 }
                 else {
                     var text = item.getDescription().getString(MAX_STRING_LENGTH);
@@ -199,14 +223,45 @@ public class CraftQueueOverlay {
 
             // title
             GuiComponent.drawString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_FUEL),
+                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_FUEL),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos: {}", yPos);
 
             // items
-            for(var f : mgr.getFuel()) {
+            for(int i = 0; i < mgr.getFuel().size(); i++) {
+                var f = mgr.getFuel().get(i);
 
+                var item = ForgeRegistries.ITEMS.getValue(f.getItemId());
+                var stack = item.getDefaultInstance();
+                stack.setCount(f.getQuantity());
+
+                int playerHasQuantity = InventoryUtil.getQuantityOf(player, f.getItemId());
+                if(playerHasQuantity >= f.getQuantity()) {
+                    // don't need to display this intermediate, since the user doesn't need to make it
+                    continue;
+                }
+
+                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+
+                final int lambdaYpos = yPos;
+                if(playerHasQuantity > 0) {
+                    var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_HAVE, playerHasQuantity);
+                    var text = String.format("%s [%s]",
+                            item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
+                            countText);
+                    CraftTracker.LOGGER.trace("text: {}", text);
+                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
+                }
+                else {
+                    var text = item.getDescription().getString(MAX_STRING_LENGTH);
+                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                }
+
+                yPos += LINE_HEIGHT + 2;
+                CraftTracker.LOGGER.trace("yPos (materials item {}): {}", i, yPos);
             }
         }
     };
