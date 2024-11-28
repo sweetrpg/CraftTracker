@@ -81,19 +81,18 @@ public class QueueManagementScreen extends Screen {
 
         this.renderBackground(poseStack);
 
-//        GuiComponent.fill(poseStack, topX, topY, width, height, BACKGROUND_COLOR);
-
         // title
         GuiComponent.drawCenteredString(poseStack, this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
+        topY += TITLE_HEIGHT;
 
         // products
         for(int i = 0; i < this.productItems.size(); i++) {
             var pItem = this.productItems.get(i);
-            final var itemIndex = i;
+//            final var itemIndex = i;
 
             var item = ForgeRegistries.ITEMS.getValue(pItem.getItemId());
             var itemStack = item.getDefaultInstance();
-            var y = topY + TITLE_HEIGHT + (i * (ITEM_HEIGHT + 4));
+            var y = topY; // + TITLE_HEIGHT + (i * (ITEM_HEIGHT + 4));
 
             if(y + ITEM_HEIGHT > height) {
                 CraftTracker.LOGGER.debug("too many items for display (stopping at item {}, y {}", i, y);
@@ -101,7 +100,12 @@ public class QueueManagementScreen extends Screen {
             }
 
             // background
-            GuiComponent.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
+            var rowHeight = ITEM_HEIGHT + 2;
+            if(pItem.getMethods().size() > 1) {
+                // increase row height if there are multiple ways to craft the item
+                rowHeight += ITEM_HEIGHT;
+            }
+            GuiComponent.fill(poseStack, topX, y, topX + width, y + rowHeight, BACKGROUND_COLOR);
 
             // icon
             var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
@@ -113,7 +117,7 @@ public class QueueManagementScreen extends Screen {
 
             // quantity and adjustment buttons
             {
-                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("-"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE, new TextComponent("-"), btn -> {
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getItemId(), -1);
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                 }) /*{
@@ -143,8 +147,21 @@ public class QueueManagementScreen extends Screen {
                 this.addRenderableWidget(button);
             }
 
-            // variations
-            // TODO
+            // methods
+            if(pItem.getMethods().size() > 1) {
+                for(int j = 0; j < pItem.getMethods().size(); j++) {
+                    var method = pItem.getMethods().get(j);
+                    CraftTracker.LOGGER.debug("methods: {}, {} ({})", j, method, method.getGroup());
+
+                    var methodItem = ForgeRegistries.ITEMS.getValue(method.getId());
+                    var methodItemStack = methodItem.getDefaultInstance();
+
+                    // icon
+                    var methodDrawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+                            .createDrawableIngredient(VanillaTypes.ITEM_STACK, methodItemStack);
+                    methodDrawable.draw(poseStack, topX + ITEM_X_ICON_OFFSET + 20 + (j * BUTTON_SIZE + 2), y + ITEM_HEIGHT + 2);
+                }
+            }
 
             // delete button
             {
@@ -160,6 +177,8 @@ public class QueueManagementScreen extends Screen {
                 }*/;
                 this.addRenderableWidget(button);
             }
+
+            topY += rowHeight + 2;
         }
 
         // clear all button
@@ -179,17 +198,7 @@ public class QueueManagementScreen extends Screen {
             this.addRenderableWidget(button);
         }
 
-        // buttons
-
         super.render(poseStack, mouseX, mouseY, partialTicks);
-        //RenderHelper.disableStandardItemLighting(); // 1.14 enableGUIStandardItemLighting
-
-//        for(Widget widget : this.renderables) {
-//            if(widget instanceof AbstractWidget w && w.isHoveredOrFocused()) {
-//                w.renderToolTip(poseStack, mouseX, mouseY);
-//                break;
-//            }
-//        }
     }
 
     @Override

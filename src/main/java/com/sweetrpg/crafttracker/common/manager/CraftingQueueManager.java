@@ -22,7 +22,10 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CraftingQueueManager {
@@ -94,7 +97,8 @@ public class CraftingQueueManager {
         return endProducts.entrySet()
                 .stream()
                 .map(e ->
-                        new ProductItem(e.getKey(), e.getValue().getQuantity(), new ArrayList<>()))
+                        new ProductItem(e.getKey(), e.getValue().getQuantity(),
+                                e.getValue().getRecipes()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -133,11 +137,7 @@ public class CraftingQueueManager {
             endProducts.compute(itemId, (rl, p) -> p == null ? product :
                     new CraftingQueueProduct(p.getItemId(), p.getRecipes(), p.getQuantity() + quantity));
 
-//            CraftingQueueStorage.get(level).putData(itemId, quantity);
-
             computeAll();
-
-//            PacketHandler.sendToPlayer(this.player, new UpdateCraftQueueData(this.getEndProducts()));
         }
         else {
             CraftTracker.LOGGER.info("Not adding {} to queue, since there are no recipes for it.", itemId);
@@ -258,9 +258,9 @@ public class CraftingQueueManager {
         }
 
         ingredients.stream()
-                .filter((i) -> i instanceof Ingredient)
-                .map((i) -> Ingredient.class.cast(i))
-                .forEach((i) -> {
+                .filter(i -> i instanceof Ingredient)
+                .map(i -> Ingredient.class.cast(i))
+                .forEach(i -> {
                     CraftTracker.LOGGER.debug("i: {}", i);
 
                     if(i instanceof Ingredient ingredient) {
@@ -331,12 +331,12 @@ public class CraftingQueueManager {
     public static class ProductItem {
         private ResourceLocation itemId;
         private int quantity;
-        private List<ResourceLocation> categories;
+        private List<? extends Recipe<?>> methods;
 
-        public ProductItem(ResourceLocation itemId, int quantity, List<ResourceLocation> categories) {
+        public ProductItem(ResourceLocation itemId, int quantity, List<? extends Recipe<?>> methods) {
             this.itemId = itemId;
             this.quantity = quantity;
-            this.categories = categories;
+            this.methods = methods;
         }
 
         public ResourceLocation getItemId() {
@@ -347,8 +347,8 @@ public class CraftingQueueManager {
             return quantity;
         }
 
-        public List<ResourceLocation> getCategories() {
-            return categories;
+        public List<? extends Recipe<?>> getMethods() {
+            return methods;
         }
     }
 
