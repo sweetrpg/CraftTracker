@@ -44,7 +44,7 @@ public class QueueManagementScreen extends Screen {
     private CTRuntime.OverlayState shoppingState;
 
     public QueueManagementScreen(Player player) {
-        super(new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_TITLE));
+        super(new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE));
         this.player = player;
 
         this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
@@ -84,7 +84,7 @@ public class QueueManagementScreen extends Screen {
 //        GuiComponent.fill(poseStack, topX, topY, width, height, BACKGROUND_COLOR);
 
         // title
-        GuiComponent.drawCenteredString(poseStack, this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
+        GuiComponent.drawCenteredString(poseStack, this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
 
         // products
         for(int i = 0; i < this.productItems.size(); i++) {
@@ -165,7 +165,7 @@ public class QueueManagementScreen extends Screen {
         // clear all button
         {
             Button button = new Button(topX + (width / 2) - 50, topY + height - BUTTON_SIZE - 4, 100, BUTTON_SIZE + 2,
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON),
+                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_CLEAR_BUTTON),
                     btn -> {
                         CraftingQueueManager.INSTANCE.removeAll();
                         QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();

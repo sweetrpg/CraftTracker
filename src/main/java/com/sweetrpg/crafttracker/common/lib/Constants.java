@@ -17,43 +17,55 @@ public class Constants {
     public static final ResourceLocation CHANNEL_NAME = Util.getResource("channel");
     public static final String PROTOCOL_VERSION = Integer.toString(1);
 
-    // Storage
-    public static final String STORAGE_CRAFTING_QUEUE = "crafting_queue";
-    public static final String STORAGE_SHOPPING_LIST = "shopping_list";
-
     // Language
     public static final String LOCALE_EN_US = "en_us";
     public static final String LOCALE_EN_GB = "en_gb";
     public static final String LOCALE_DE_DE = "de_de";
 
+    // Key bindings
+    public static final String KEY_BINDINGS_CATEGORY_TITLE = "key.categories.crafttracker";
+
     // Translation keys
-    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_TITLE = "crafttracker.screen.craft_list.title";
-    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_EMPTY = "crafttracker.screen.craft_list.empty_message";
-    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_HELP = "crafttracker.screen.craft_list.help_message";
-    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_PRODUCTS = "crafttracker.screen.craft_list.section.products";
-    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_INTERMEDIATES = "crafttracker.screen.craft_list.section.intermediates";
-    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_MATERIALS = "crafttracker.screen.craft_list.section.materials";
-    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_SECTION_FUEL = "crafttracker.screen.craft_list.section.fuel";
-    public static final String TRANSLATION_KEY_GUI_CRAFTLIST_HAVE = "crafttracker.screen.craft_list.have";
-    public static final String TRANSLATION_KEY_GUI_SHOPPINGLIST_TITLE = "crafttracker.screen.shopping_list.title";
-    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_TITLE = "crafttracker.screen.queuemgr.title";
-    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON = "crafttracker.screen.queuemgr.button.clear";
-    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON_TOOLTIP = "crafttracker.screen.queuemgr.button.clear.tooltip";
-    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_DEC_BUTTON_TOOLTIP = "crafttracker.screen.queuemgr.button.dec.tooltip";
-    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_INC_BUTTON_TOOLTIP = "crafttracker.screen.queuemgr.button.inc.tooltip";
-    public static final String TRANSLATION_KEY_GUI_QUEUEMGR_DEL_BUTTON_TOOLTIP = "crafttracker.screen.queuemgr.button.del.tooltip";
-    public static final String TRANSLATION_KEY_BINDINGS_CATEGORY_TITLE = "key.categories.crafttracker";
+    public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_TITLE = "crafttracker.screen.craft_queue.title";
+    public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_EMPTY = "crafttracker.screen.craft_queue.empty_message";
+    public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_HELP = "crafttracker.screen.craft_queue.help_message";
+    public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_PRODUCTS = "crafttracker.screen.craft_queue.section.products";
+    public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_INTERMEDIATES = "crafttracker.screen.craft_queue.section.intermediates";
+    public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_MATERIALS = "crafttracker.screen.craft_queue.section.materials";
+    public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_FUEL = "crafttracker.screen.craft_queue.section.fuel";
+    public static final String TRANSLATION_KEY_GUI_HAVE = "crafttracker.screen.have";
+    public static final String TRANSLATION_KEY_GUI_SHOPPING_LIST_TITLE = "crafttracker.screen.shopping_list.title";
+    public static final String TRANSLATION_KEY_GUI_SHOPPING_LIST_EMPTY = "crafttracker.screen.shopping_list.empty_message";
+    public static final String TRANSLATION_KEY_GUI_SHOPPING_LIST_HELP = "crafttracker.screen.shopping_list.help_message";
+    public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE = "crafttracker.screen.queue_mgr.title";
+    public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_CLEAR_BUTTON = "crafttracker.screen.queue_mgr.button.clear";
+    public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_CLEAR_BUTTON_TOOLTIP = "crafttracker.screen.queue_mgr.button.clear.tooltip";
+    public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_DEC_BUTTON_TOOLTIP = "crafttracker.screen.queue_mgr.button.dec.tooltip";
+    public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_INC_BUTTON_TOOLTIP = "crafttracker.screen.queue_mgr.button.inc.tooltip";
+    public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_DEL_BUTTON_TOOLTIP = "crafttracker.screen.queue_mgr.button.del.tooltip";
     public static final String TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE = "key.addToQueue";
-    public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFTLIST_TITLE = "key.toggleCraftList";
-    public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPINGLIST_TITLE = "key.toggleShoppingList";
+    public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFT_QUEUE_TITLE = "key.toggleCraftQueue";
+    public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPING_LIST_TITLE = "key.toggleShoppingList";
     public static final String TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE = "key.openQueueManager";
     public static final String TRANSLATION_KEY_BINDINGS_POPULATE_SHOPPING_LIST_TITLE = "key.populateShoppingList";
+    public static final String TRANSLATION_KEY_BINDINGS_CLEAR_SHOPPING_LIST_TITLE = "key.clearShoppingList";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE = "crafttracker.msg.queue_overlay_mode.hide";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW = "crafttracker.msg.queue_overlay_mode.show";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC = "crafttracker.msg.queue_overlay_mode.dynamic";
     public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_HIDE = "crafttracker.msg.shopping_list_overlay_mode.hide";
     public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW = "crafttracker.msg.shopping_list_overlay_mode.show";
     public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC = "crafttracker.msg.shopping_list_overlay_mode.dynamic";
+
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_X = "crafttracker.config.client.craft_queue_x";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y = "crafttracker.config.client.craft_queue_y";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH = "crafttracker.config.client.craft_queue_width";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HEIGHT = "crafttracker.config.client.craft_queue_height";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_X = "crafttracker.config.client.shopping_list_x";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_Y = "crafttracker.config.client.shopping_list_y";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_WIDTH = "crafttracker.config.client.shopping_list_width";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT = "crafttracker.config.client.shopping_list_height";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY = "crafttracker.config.client.craft_queue_hide_empty";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY = "crafttracker.config.client.shopping_list_hide_empty";
 
     // Advancements
     public static final String TRANSLATION_KEY_ADVANCEMENT_MAKE_LIST_TITLE = "advancements.crafttracker.main.make_list.title";
