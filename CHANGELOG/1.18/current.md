@@ -1,2 +1,0 @@
-- `[NEW]` The craft queue and shopping list overlays may now be positioned relative to the
-  right-edge or bottom-edge of the screen by specifying negative X or Y positions (respectively)
