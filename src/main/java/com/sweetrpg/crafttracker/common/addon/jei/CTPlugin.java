@@ -3,6 +3,7 @@ package com.sweetrpg.crafttracker.common.addon.jei;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
+import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.*;
@@ -94,9 +95,11 @@ public class CTPlugin implements IModPlugin {
 
         CTPlugin.jeiRuntime = jeiRuntime;
 
+        // TODO: move this elsewhere to remove hard dependency on JEI
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             Player player = Minecraft.getInstance().player;
             CraftingQueueManager.INSTANCE.load(player);
+            ShoppingListManager.INSTANCE.load(player);
         });
     }
 }
