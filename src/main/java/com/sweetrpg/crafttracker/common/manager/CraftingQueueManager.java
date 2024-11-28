@@ -242,6 +242,9 @@ public class CraftingQueueManager {
         var ingredients = recipe.getIngredients();
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients);
 
+        var fuels = RecipeUtil.getFuelFor(recipe.getId());
+        CraftTracker.LOGGER.debug("fuels: {}", fuels);
+
         if(RecipeUtil.areIngredientsSame(ingredients)) {
             CraftTracker.LOGGER.debug("ingredients are the same: {}", ingredients);
             var id = recipe.getResultItem().getItem().getRegistryName();
@@ -311,7 +314,9 @@ public class CraftingQueueManager {
                                             });
                                         }
 
-                                        this.computeRecipe(subRecipes.get(0), recipeQuantity);
+                                        int cheapestIndex = 0;
+                                        // TODO: find cheapest recipe
+                                        this.computeRecipe(subRecipes.get(cheapestIndex), recipeQuantity);
                                     }
                                 });
                     }

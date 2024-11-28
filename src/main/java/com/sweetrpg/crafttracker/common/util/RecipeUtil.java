@@ -1,6 +1,7 @@
 package com.sweetrpg.crafttracker.common.util;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -24,6 +25,18 @@ public class RecipeUtil {
 
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: recipes {}", recipes);
         return recipes;
+    }
+
+    public static List<?> getFuelFor(ResourceLocation recipeId) {
+        CraftTracker.LOGGER.debug("RecipeUtil#getFuelFor: {}", recipeId);
+
+        var mgr = CTPlugin.jeiRuntime.getRecipeManager();
+        var ingredients = mgr.createRecipeCategoryLookup().get()
+                .flatMap(c -> mgr.createRecipeCatalystLookup(c.getRecipeType()).get())
+                .map(r -> r.getIngredient())
+                .toList();
+
+        return ingredients;
     }
 
     public static boolean areIngredientsSame(NonNullList<Ingredient> ingredients) {

@@ -3,7 +3,7 @@ loaderVersion="${fml_version_range}"
 license="MIT"
 issueTrackerURL="https://github.com/sweetrpg/CraftTracker/issues"
 displayURL="https://minecraft.curseforge.com/projects/craft-tracker/"
-logoFile= "ct_logo.png"
+logoFile = "ct_logo.png"
 
 [[mods]]
     modId="crafttracker"
@@ -50,6 +50,6 @@ logoFile= "ct_logo.png"
     ordering="NONE"
     side="BOTH"
 
-[modproperties.configured]
-    catalogueImageIcon="configured_icon.png"
-    configuredBackground="minecraft:textures/block/gray_wool.png"
+#[modproperties.configured]
+#    catalogueImageIcon="configured_icon.png"
+#    configuredBackground="minecraft:textures/block/gray_wool.png"
