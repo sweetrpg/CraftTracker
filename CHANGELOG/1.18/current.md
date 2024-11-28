@@ -3,3 +3,5 @@
 - `[FIX]` Fixed how recipes are looked up, so that some intermediates and raw materials
   show up correctly
 - `[NEW]` Enable shopping list display
+- `[NEW]` Enable populating the shopping list
+- `[FIX]` Fixed issue with keybinds triggering all the time

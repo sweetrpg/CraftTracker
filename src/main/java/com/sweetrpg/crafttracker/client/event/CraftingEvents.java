@@ -12,4 +12,11 @@ public class CraftingEvents {
         CraftingQueueManager.INSTANCE.removeProduct(player, itemId, quantity);
     }
 
+    public static void pickupItem(ResourceLocation itemId, int quantity) {
+        var player = Minecraft.getInstance().player;
+
+        CraftingQueueManager.INSTANCE.removeProduct(player, itemId, quantity);
+        CraftingQueueManager.INSTANCE.computeAll();
+    }
+
 }

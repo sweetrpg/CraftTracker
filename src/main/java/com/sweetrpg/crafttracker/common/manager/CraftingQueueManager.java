@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -36,33 +35,6 @@ public class CraftingQueueManager {
     private Map<ResourceLocation, Integer> intermediateProducts = new HashMap<>();
     private Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
     private Map<ResourceLocation, Integer> fuel = new HashMap<>();
-
-    private ServerPlayer player;
-//    private CraftingQueueStorage storage;
-
-//    public static CraftingQueueManager get(ServerPlayer player, Level level) {
-//        CraftTracker.LOGGER.debug("CraftingQueueManager#get: {}, level: {}", player, level);
-//
-//        if(INSTANCE == null) {
-//            var storage = CraftingQueueStorage.get(level);
-//            INSTANCE = new CraftingQueueManager(player, storage);
-//        }
-//
-//        return INSTANCE;
-//    }
-//
-//    CraftingQueueManager(ServerPlayer player, CraftingQueueStorage storage) {
-//        CraftTracker.LOGGER.debug("CraftingQueueManager: {}, level: {}", player, storage);
-//
-//        this.player = player;
-//
-//        storage.getAll().stream()
-//                .map((data) -> {
-//                    var recipes = RecipeUtil.getRecipesFor(data.getItemId());
-//                    return new CraftingQueueProduct(data.getItemId(), recipes, data.getQuantity());
-//                })
-//                .forEach((p) -> this.endProducts.put(p.getItemId(), p));
-//
 
     public CraftingQueueManager() {
     }
@@ -118,8 +90,6 @@ public class CraftingQueueManager {
         }
     }
 
-    /// /        this.storage = new CraftingQueueStorage();
-//    }
     public List<ProductItem> getEndProducts() {
         return endProducts.entrySet()
                 .stream()
