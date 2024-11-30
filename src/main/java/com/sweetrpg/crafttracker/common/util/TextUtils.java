@@ -9,7 +9,7 @@ public class TextUtils {
     private static final MutableComponent NO_EFFECTS = (new TranslatableComponent("effect.none")).withStyle(ChatFormatting.GRAY);
 
     /**
-     * Syntactic sugar for custom translation keys. Always prefixed with the mod's ID in lang files (e.g. farmersdelight.your.key.here).
+     * Syntactic sugar for custom translation keys. Always prefixed with the mod's ID in lang files (e.g. crafttracker.your.key.here).
      */
     public static MutableComponent getTranslation(String type, String key, Object... args) {
         return new TranslatableComponent(type + "." + Constants.MOD_ID + "." + key, args);
