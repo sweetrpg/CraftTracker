@@ -90,6 +90,12 @@ public class ClientEventHandler {
 
                 handlePopulateShoppingList();
             }
+            else if(KeyUtil.isKeyDown(event.getKey()) &&
+                    ModKeyBindings.CLEAR_SHOPPING_LIST_MAPPING.matches(event.getKey(), event.getScanCode())) {
+                CraftTracker.LOGGER.debug("#onKeyInput: CLEAR_SHOPPING_LIST_MAPPING");
+
+                handleClearShoppingList();
+            }
 
             return;
         }
@@ -128,6 +134,15 @@ public class ClientEventHandler {
                 player.displayClientMessage(msg, true);
                 break;
         }
+    }
+
+    private static void handleClearShoppingList() {
+        CraftTracker.LOGGER.debug("#handleClearShoppingList");
+
+        var player = Minecraft.getInstance().player;
+        var sMgr = ShoppingListManager.INSTANCE;
+
+        sMgr.clearItems(player);
     }
 
     private static void handlePopulateShoppingList() {
