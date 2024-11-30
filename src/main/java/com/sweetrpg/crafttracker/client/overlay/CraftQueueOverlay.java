@@ -35,7 +35,11 @@ public class CraftQueueOverlay {
         CraftTracker.LOGGER.trace("CRAFT_QUEUE");
 
         var mgr = CraftingQueueManager.INSTANCE;
-        var products = mgr.getEndProducts();
+        var products = mgr.getEndProducts().stream().sorted((i1, i2) -> {
+            var item1 = ForgeRegistries.ITEMS.getValue(i1.getItemId());
+            var item2 = ForgeRegistries.ITEMS.getValue(i2.getItemId());
+            return item1.getDescription().getString().compareTo(item2.getDescription().getString());
+        }).toList();
 
         switch(CTRuntime.INSTANCE.queueOverlayRequestedState) {
             case SHOW:
@@ -129,8 +133,13 @@ public class CraftQueueOverlay {
             CraftTracker.LOGGER.trace("yPos (after intermediates title): {}", yPos);
 
             // items
-            for(int i = 0; i < mgr.getIntermediates().size(); i++) {
-                var inter = mgr.getIntermediates().get(i);
+            var sortedIntermediates = mgr.getIntermediates().stream().sorted((i1, i2) -> {
+                var item1 = ForgeRegistries.ITEMS.getValue(i1.getItemId());
+                var item2 = ForgeRegistries.ITEMS.getValue(i2.getItemId());
+                return item1.getDescription().getString().compareTo(item2.getDescription().getString());
+            }).toList();
+            for(int i = 0; i < sortedIntermediates.size(); i++) {
+                var inter = sortedIntermediates.get(i);
 
                 var item = ForgeRegistries.ITEMS.getValue(inter.getItemId());
                 var stack = item.getDefaultInstance();
@@ -179,8 +188,13 @@ public class CraftQueueOverlay {
             CraftTracker.LOGGER.trace("yPos (after materials title): {}", yPos);
 
             // items
-            for(int i = 0; i < mgr.getRawMaterials().size(); i++) {
-                var m = mgr.getRawMaterials().get(i);
+            var sortedMaterials = mgr.getRawMaterials().stream().sorted((i1, i2) -> {
+                var item1 = ForgeRegistries.ITEMS.getValue(i1.getItemId());
+                var item2 = ForgeRegistries.ITEMS.getValue(i2.getItemId());
+                return item1.getDescription().getString().compareTo(item2.getDescription().getString());
+            }).toList();
+            for(int i = 0; i < sortedMaterials.size(); i++) {
+                var m = sortedMaterials.get(i);
 
                 var item = ForgeRegistries.ITEMS.getValue(m.getItemId());
                 var stack = item.getDefaultInstance();
@@ -229,8 +243,13 @@ public class CraftQueueOverlay {
             CraftTracker.LOGGER.trace("yPos: {}", yPos);
 
             // items
-            for(int i = 0; i < mgr.getFuel().size(); i++) {
-                var f = mgr.getFuel().get(i);
+            var sortedFuels = mgr.getFuel().stream().sorted((i1, i2) -> {
+                var item1 = ForgeRegistries.ITEMS.getValue(i1.getItemId());
+                var item2 = ForgeRegistries.ITEMS.getValue(i2.getItemId());
+                return item1.getDescription().getString().compareTo(item2.getDescription().getString());
+            }).toList();
+            for(int i = 0; i < sortedFuels.size(); i++) {
+                var f = sortedFuels.get(i);
 
                 var item = ForgeRegistries.ITEMS.getValue(f.getItemId());
                 var stack = item.getDefaultInstance();

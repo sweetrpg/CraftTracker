@@ -1,2 +1,4 @@
-- `[NEW]` The craft queue and shopping list overlays may now be positioned relative to the
-  right-edge or bottom-edge of the screen by specifying negative X or Y positions (respectively)
+- `[NEW]` When an end product's recipe intermediates have multiple variations, the "least expensive"
+  one is chosen
+- `[NEW]` Added hotkey to clear the shopping list
+- `[NEW]` Items in the queue and shopping list are now sorted by name
