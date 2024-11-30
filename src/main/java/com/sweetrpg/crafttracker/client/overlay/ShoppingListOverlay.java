@@ -52,11 +52,16 @@ public class ShoppingListOverlay {
                 break;
         }
 
-
         var x = ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_X.get();
+        if(x < 0) {
+            x = width - (ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_WIDTH.get() + Math.abs(x));
+        }
         var y = ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_Y.get();
-        var olWidth = Math.min((ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_X.get() + ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_WIDTH.get()), width - 10);
-        var olHeight = Math.min((ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_Y.get() + ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_HEIGHT.get()), height - 10);
+        if(x < 0) {
+            y = width - (ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_HEIGHT.get() + Math.abs(y));
+        }
+        var olWidth = Math.min((x + ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_WIDTH.get()), width - 10);
+        var olHeight = Math.min((y + ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_HEIGHT.get()), height - 10);
         var backgroundColor = 0x5f5f5f5f; // TODO: get from config?
         var borderColor = 0x1f1f1f1f; // TODO: get from config?
 
@@ -87,8 +92,13 @@ public class ShoppingListOverlay {
         var inventory = Minecraft.getInstance().player.getInventory();
 
         // items
-        for(int i = 0; i < mgr.getItems().size(); i++) {
-            var m = mgr.getItems().get(i);
+        var sortedItems = mgr.getItems().stream().sorted((i1, i2) -> {
+            var item1 = ForgeRegistries.ITEMS.getValue(i1.getItemId());
+            var item2 = ForgeRegistries.ITEMS.getValue(i2.getItemId());
+            return item1.getDescription().getString().compareTo(item2.getDescription().getString());
+        }).toList();
+        for(int i = 0; i < sortedItems.size(); i++) {
+            var m = sortedItems.get(i);
 
             var item = ForgeRegistries.ITEMS.getValue(m.getItemId());
             var stack = item.getDefaultInstance();

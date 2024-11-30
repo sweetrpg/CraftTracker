@@ -53,8 +53,8 @@ public class ConfigHandler {
                 builder.push("CraftQueue");
 
                 CRAFT_QUEUE_OVERLAY_HIDE_EMPTY = builder.comment("Sets whether the craft queue overlay should be displayed only when it has items in it.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY).define("craft_queue_hide_empty", true);
-                CRAFT_QUEUE_OVERLAY_X = builder.comment("Sets the X screen location for the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_X).defineInRange("craft_queue_x", 10, 0, 10000);
-                CRAFT_QUEUE_OVERLAY_Y = builder.comment("Sets the Y screen location for the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y).defineInRange("craft_queue_y", 60, 0, 10000);
+                CRAFT_QUEUE_OVERLAY_X = builder.comment("Sets the X screen location for the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_X).defineInRange("craft_queue_x", 10, -1000, 10000);
+                CRAFT_QUEUE_OVERLAY_Y = builder.comment("Sets the Y screen location for the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y).defineInRange("craft_queue_y", 60, -1000, 10000);
                 CRAFT_QUEUE_OVERLAY_WIDTH = builder.comment("Sets the width of the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH).defineInRange("craft_queue_width", 300, 100, 10000);
                 CRAFT_QUEUE_OVERLAY_HEIGHT = builder.comment("Sets the height of the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HEIGHT).defineInRange("craft_queue_height", 500, 100, 10000);
 
@@ -65,8 +65,8 @@ public class ConfigHandler {
                 builder.push("ShoppingList");
 
                 SHOPPING_LIST_OVERLAY_HIDE_EMPTY = builder.comment("Sets whether the 'shopping list' overlay should be displayed only when it has items in it.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY).define("shopping_list_hide_empty", true);
-                SHOPPING_LIST_OVERLAY_X = builder.comment("Sets the X screen location for the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_X).defineInRange("shopping_list_x", 10, 0, 10000);
-                SHOPPING_LIST_OVERLAY_Y = builder.comment("Sets the Y screen location for the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_Y).defineInRange("shopping_list_y", 60, 0, 10000);
+                SHOPPING_LIST_OVERLAY_X = builder.comment("Sets the X screen location for the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_X).defineInRange("shopping_list_x", -10, -1000, 10000);
+                SHOPPING_LIST_OVERLAY_Y = builder.comment("Sets the Y screen location for the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_Y).defineInRange("shopping_list_y", 60, -1000, 10000);
                 SHOPPING_LIST_OVERLAY_WIDTH = builder.comment("Sets the width of the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_WIDTH).defineInRange("shopping_list_width", 300, 100, 10000);
                 SHOPPING_LIST_OVERLAY_HEIGHT = builder.comment("Sets the height of the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT).defineInRange("shopping_list_height", 500, 100, 10000);
 

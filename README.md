@@ -25,7 +25,4 @@
 
 ## Contributing
 
-
 Download it from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/craft-tracker) or [Modrinth](https://modrinth.com/mod/craft-tracker).
-
-Want to know more about the mod? Take a peek at the [wiki](https://github.com/sweetrpg/CraftTracker/wiki)!
