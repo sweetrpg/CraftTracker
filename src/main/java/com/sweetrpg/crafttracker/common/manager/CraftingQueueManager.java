@@ -133,11 +133,7 @@ public class CraftingQueueManager {
             endProducts.compute(itemId, (rl, p) -> p == null ? product :
                     new CraftingQueueProduct(p.getItemId(), p.getRecipes(), p.getQuantity() + quantity));
 
-//            CraftingQueueStorage.get(level).putData(itemId, quantity);
-
             computeAll();
-
-//            PacketHandler.sendToPlayer(this.player, new UpdateCraftQueueData(this.getEndProducts()));
         }
         else {
             CraftTracker.LOGGER.info("Not adding {} to queue, since there are no recipes for it.", itemId);
@@ -311,7 +307,8 @@ public class CraftingQueueManager {
                                             });
                                         }
 
-                                        this.computeRecipe(subRecipes.get(0), recipeQuantity);
+                                        int subIndex = RecipeUtil.chooseLeastExpensiveOf(subRecipes);
+                                        this.computeRecipe(subRecipes.get(subIndex), recipeQuantity);
                                     }
                                 });
                     }
