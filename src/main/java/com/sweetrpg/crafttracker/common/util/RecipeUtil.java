@@ -84,19 +84,21 @@ public class RecipeUtil {
         CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", recipe);
 
         return recipe.getIngredients().stream()
-                .map(RecipeUtil::getIngredientCost)
+                .map(RecipeUtil::calculateIngredientCost)
                 .reduce(0, Integer::sum);
     }
 
-    public static int getIngredientCost(Ingredient ingredient) {
+    public static int calculateIngredientCost(Ingredient ingredient) {
         CraftTracker.LOGGER.debug("RecipeUtil#getIngredientCost: {}", ingredient);
 
         for(ItemStack stack : ingredient.getItems()) {
             // is the item in the override list?
             var itemId = stack.getItem().getRegistryName();
+            var count = stack.getCount();
+
             if(ingredientCostOverrides.containsKey(itemId)) {
                 CraftTracker.LOGGER.debug("found item {} in override list", itemId);
-                return ingredientCostOverrides.get(itemId);
+                return ingredientCostOverrides.get(itemId) * count;
             }
 
             // it's not, so check its tags
@@ -105,13 +107,39 @@ public class RecipeUtil {
                     var tagId = tag.location();
                     if(ingredientCostsByTag.containsKey(tagId)) {
                         CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                        return ingredientCostsByTag.get(tagId);
+                        return ingredientCostsByTag.get(tagId) * count;
                     }
                 }
             }
         }
 
         return 1;
+    }
+
+    public static int calculateItemCost(ItemStack stack) {
+        CraftTracker.LOGGER.debug("#calculateItemCost: {}", stack);
+
+        var itemId = stack.getItem().getRegistryName();
+        var count = stack.getCount();
+
+        if(ingredientCostOverrides.containsKey(itemId)) {
+            CraftTracker.LOGGER.debug("found item {} in override list", itemId);
+            return ingredientCostOverrides.get(itemId) * count;
+        }
+
+        // it's not, so check its tags
+        if(stack.hasTag()) {
+            for(TagKey<Item> tag : stack.getTags().toList()) {
+                var tagId = tag.location();
+                if(ingredientCostsByTag.containsKey(tagId)) {
+                    CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
+                    return ingredientCostsByTag.get(tagId) * count;
+                }
+            }
+        }
+
+        var rarity = stack.getItem().getRarity(stack);
+        return rarity.ordinal();
     }
 
     public static int chooseLeastExpensiveOf(List<? extends Recipe<?>> recipes) {
@@ -138,4 +166,30 @@ public class RecipeUtil {
 
         return lowestCostIndex;
     }
+
+    public static int chooseLeastExpensiveOf(ItemStack[] stacks) {
+        CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", stacks);
+
+        List<Tuple<ResourceLocation, Integer>> itemCosts = new ArrayList<>();
+
+        for(ItemStack stack : stacks) {
+            var cost = RecipeUtil.calculateItemCost(stack);
+            var tuple = new Tuple<>(stack.getItem().getRegistryName(), cost);
+
+            itemCosts.add(tuple);
+        }
+
+        int lowestCostIndex = 0;
+        int lowestCost = Integer.MAX_VALUE;
+        for(int i = 0; i < itemCosts.size(); i++) {
+            var cost = itemCosts.get(i).getB();
+            if(cost < lowestCost) {
+                lowestCostIndex = i;
+                lowestCost = cost;
+            }
+        }
+
+        return lowestCostIndex;
+    }
+
 }
