@@ -1,0 +1,1 @@
+- `[FIX]` Fix endless loop when calculating recipes

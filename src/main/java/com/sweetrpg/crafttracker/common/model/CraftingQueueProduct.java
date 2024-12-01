@@ -3,6 +3,7 @@ package com.sweetrpg.crafttracker.common.model;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 public class CraftingQueueProduct {
@@ -49,5 +50,18 @@ public class CraftingQueueProduct {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    @Override
+    public String toString() {
+        return MessageFormat.format("""
+                        CraftingQueueProduct[
+                          itemId={0}
+                          recipes={1}
+                          quantity={2}
+                          index={3}
+                        ]
+                        """,
+                itemId, recipes, quantity, index);
     }
 }

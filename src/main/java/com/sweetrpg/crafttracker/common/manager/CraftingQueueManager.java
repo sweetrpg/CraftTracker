@@ -23,6 +23,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -224,12 +225,14 @@ public class CraftingQueueManager {
         ProcessingContext ctx = new ProcessingContext();
 
         this.endProducts.forEach((k, v) -> {
+            CraftTracker.LOGGER.debug("product: {}", v);
             this.computeProduct(ctx, v);
+            CraftTracker.LOGGER.debug("context after computation of product {}: {}", v, ctx);
         });
 
-        this.intermediateProducts = ctx.intermediateProducts;
-        this.rawMaterials = ctx.rawMaterials;
-        this.fuel = ctx.fuel;
+        coalesceProducts(ctx);
+
+        CraftTracker.LOGGER.debug("final state after computation: {}", this);
     }
 
     void computeProduct(ProcessingContext ctx, CraftingQueueProduct product) {
@@ -238,74 +241,71 @@ public class CraftingQueueManager {
         var index = Math.min(product.getIndex(), product.getRecipes().size());
         var recipe = product.getRecipes().get(index);
 
-        this.computeRecipe(ctx, recipe, product.getQuantity());
+        var computedRecipe = this.computeRecipe(recipe, product.getQuantity(), 0);
+        ctx.computedRecipes.add(computedRecipe);
     }
 
-    void computeRecipe(ProcessingContext ctx, Recipe<?> recipe, int recipeQuantity) {
+    void coalesceProducts(ProcessingContext ctx) {
+        CraftTracker.LOGGER.debug("#coalesceProducts: {}", ctx);
+
+        this.intermediateProducts.clear();
+        this.rawMaterials.clear();
+        this.fuel.clear();
+
+        ctx.computedRecipes.forEach(r -> {
+            CraftTracker.LOGGER.debug("coalescing recipe: {}", r);
+
+            r.intermediateProducts.forEach((ik, iv) -> {
+                this.intermediateProducts.compute(ik, (ik1, iv1) -> {
+                    return ObjectUtils.defaultIfNull(iv1, 0) + iv;
+                });
+            });
+            r.rawMaterials.forEach((rk, rv) -> {
+                this.rawMaterials.compute(rk, (rk1, rv1) -> {
+                    return ObjectUtils.defaultIfNull(rv1, 0) + rv;
+                });
+            });
+            r.fuel.forEach((fk, fv) -> {
+                this.fuel.compute(fk, (fk1, fv1) -> {
+                    return ObjectUtils.defaultIfNull(fv1, 0) + fv;
+                });
+            });
+        });
+
+        CraftTracker.LOGGER.debug("coalesce complete: {}", this);
+    }
+
+    ComputedRecipe computeRecipe(Recipe<?> recipe, int recipeQuantity, int depth) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", recipe);
+
+        var computedRecipe = new ComputedRecipe(recipe.getId());
+
+//        var recipeItemId = recipe.getResultItem().getItem().getRegistryName();
+//        if(ctx.handledItems.contains(recipeItemId)) {
+//            CraftTracker.LOGGER.debug("context has already processed item: {}", recipeItemId);
+//            return;
+//        }
 
         var ingredients = recipe.getIngredients();
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients);
 
-        if(RecipeUtil.areIngredientsSame(ingredients)) {
-            CraftTracker.LOGGER.debug("ingredients are the same: {}", ingredients);
-            var id = recipe.getResultItem().getItem().getRegistryName();
-            CraftTracker.LOGGER.debug("id: {}", id);
-            if(this.intermediateProducts.containsKey(id)) {
-                CraftTracker.LOGGER.debug("intermediates has this ingredient already: {}", id);
-                var quantity = ctx.intermediateProducts.remove(id);
-//                var item = ForgeRegistries.ITEMS.getValue(id);
-                ctx.intermediateProducts.remove(id);
-                this.updateRawMaterials(ctx, id, quantity * recipeQuantity);
-
-                return;
-            }
-        }
-
-        // assemble ingredients
-//        Map<ResourceLocation, Tuple<Ingredient, Integer>> ingredientCounts = new HashMap<>();
-//        for(Ingredient ingredient : ingredients) {
-//            CraftTracker.LOGGER.debug("ingredient: {}", ingredient);
+//        if(RecipeUtil.areIngredientsSame(ingredients)) {
+//            CraftTracker.LOGGER.debug("ingredients are the same: {}", ingredients);
+//            var id = recipe.getResultItem().getItem().getRegistryName();
+//            CraftTracker.LOGGER.debug("id: {}", id);
+//            if(this.intermediateProducts.containsKey(id)) {
+//                CraftTracker.LOGGER.debug("intermediates has this ingredient already: {}", id);
+//                var quantity = ctx.intermediateProducts.remove(id);
+//                ctx.intermediateProducts.remove(id);
+//                this.updateRawMaterials(ctx, id, quantity * recipeQuantity);
 //
-//            if(ingredient.isEmpty()) {
-//                CraftTracker.LOGGER.debug("no ingredients for: {}", ingredient);
-//                continue;
+//                return;
 //            }
-//
-////            var info = new IngredientInfo();
-////            info.ingredient = ingredient;
-////
-////            var ingredientRecipes = Arrays.stream(ingredient.getItems())
-////                    .map(itemStack -> itemStack.getItem())
-////                    .flatMap(item -> RecipeUtil.getRecipesFor(item.getRegistryName()).stream())
-////                    .toList();
-////            CraftTracker.LOGGER.debug("ingredientRecipes: {}", ingredientRecipes);
-////            info.recipeIndex = RecipeUtil.chooseLeastExpensiveOf(ingredientRecipes);
-////            info.recipe = ingredientRecipes.get(info.recipeIndex);
-////            info.amount = recipe.getResultItem().getCount();
-//
-//            Arrays.stream(ingredient.getItems())
-//                    .findFirst()
-//                    .map(stack -> stack.getItem())
-//                    .ifPresent(item -> {
-//                        ingredientCounts.compute(item.getRegistryName(), (itemId, tuple) -> {
-//                            if(tuple == null) {
-//                                return new Tuple<>(ingredient, 1);
-//                            }
-//
-//                            return new Tuple<>(ingredient, tuple.getB() + 1);
-//                        });
-//                    });
-//
-////            ingredientInfos.add(info);
 //        }
-//        CraftTracker.LOGGER.debug("ingredientCounts: {}", ingredientCounts);
 
         // process ingredients
         for(Ingredient ingredient : ingredients) {
-//        ingredientCounts.forEach((ingredientId, tuple) -> {
-//            Ingredient ingredient = tuple.getA(); // info.ingredient;
-//            int amountRequired = tuple.getB(); // info.amount;
+            CraftTracker.LOGGER.debug("ingredient: {}", ingredient);
 
             if(ingredient.isEmpty() || ingredient.getItems().length == 0) {
                 continue;
@@ -315,12 +315,8 @@ public class CraftingQueueManager {
             Item item = ingredient.getItems()[itemIndex].getItem();
             int amountRequired = 1; // TODO?
 
-//            ctx.handledItems.add(info.recipe.getResultItem().getItem().getRegistryName());
-            ctx.handledItems.add(item.getRegistryName());
+//            ctx.handledItems.add(item.getRegistryName());
 
-//            Arrays.stream(ingredient.getItems())
-//                    .findFirst()
-//                    .ifPresent(item -> {
             CraftTracker.LOGGER.debug("item: {}", item);
             var id = item.getRegistryName();
             CraftTracker.LOGGER.debug("id: {}", id);
@@ -334,102 +330,58 @@ public class CraftingQueueManager {
 
             if(needsQty < 1) {
                 CraftTracker.LOGGER.debug("player already has enough of item {} ({} >= {})", id, hasInInventory, amountRequired);
-                return;
+                continue;
             }
 
-            if(subRecipes.isEmpty() || ctx.processingLevel >= MAX_PROCESSING_LEVEL) {
-                CraftTracker.LOGGER.debug("subRecipes is empty; raw material");
+            if(subRecipes.isEmpty() || depth >= MAX_PROCESSING_LEVEL) {
+                CraftTracker.LOGGER.debug("subRecipes is empty; ingredient {} is a raw material", ingredient);
                 // no recipes for this ingredient, so it's a raw material
-                this.updateRawMaterials(ctx, id, needsQty);
+//                this.updateRawMaterials(ctx, id, needsQty);
+                computedRecipe.rawMaterials.compute(id,
+                        (itemId, quantity) ->
+                                ObjectUtils.defaultIfNull(quantity, 0) + amountRequired);
             }
             else {
-                CraftTracker.LOGGER.debug("subRecipes has {} items; intermediate", subRecipes.size());
+                CraftTracker.LOGGER.debug("subRecipes has {} items; ingredient {} is an intermediate product", subRecipes.size(), ingredient);
 
                 int subIndex = RecipeUtil.chooseLeastExpensiveOf(subRecipes);
                 CraftTracker.LOGGER.debug("least expensive item index: {}", subIndex);
                 var chosenSubRecipe = subRecipes.get(subIndex);
+                CraftTracker.LOGGER.debug("chosenSubRecipe: {}", chosenSubRecipe);
 
 //                            var amountProduced = chosenSubRecipe.getResultItem().getCount();
 
-                ctx.intermediateProducts.compute(id,
+                computedRecipe.intermediateProducts.compute(id,
                         (itemId, quantity) ->
                                 ObjectUtils.defaultIfNull(quantity, 0) + needsQty);
 
-                ctx.processingLevel++;
-                this.computeRecipe(ctx, chosenSubRecipe, recipeQuantity);
-                ctx.processingLevel--;
+//                ctx.processingLevel++;
+                var computedSubRecipe = this.computeRecipe(chosenSubRecipe, recipeQuantity, depth + 1);
+
+                // merge subrecipe items into this
+                CraftTracker.LOGGER.debug("merging subrecipe contents: {} into this: {}", computedSubRecipe, computedRecipe);
+                computedSubRecipe.intermediateProducts.forEach((itemId, amount) -> {
+                    computedRecipe.intermediateProducts.compute(itemId, (k1, v1) -> {
+                        return ObjectUtils.defaultIfNull(v1, 0) + amount;
+                    });
+                });
+                computedSubRecipe.rawMaterials.forEach((itemId, amount) -> {
+                    computedRecipe.rawMaterials.compute(itemId, (k1, v1) -> {
+                        return ObjectUtils.defaultIfNull(v1, 0) + amount;
+                    });
+                });
+                computedSubRecipe.fuel.forEach((itemId, amount) -> {
+                    computedRecipe.fuel.compute(itemId, (k1, v1) -> {
+                        return ObjectUtils.defaultIfNull(v1, 0) + amount;
+                    });
+                });
+//                ctx.processingLevel--;
+
+                CraftTracker.LOGGER.debug("this looks like: {}", this);
             }
-//                    });
         }
 
-//        for(Ingredient ingredient : ingredients) {
-//            CraftTracker.LOGGER.debug("ingredient: {}", ingredient);
-//
-//            Arrays.stream(ingredient.getItems())
-//                    .findFirst()
-//                    .ifPresent(item -> {
-//                        CraftTracker.LOGGER.debug("item: {}", item);
-//                        var id = item.getItem().getRegistryName();
-//                        CraftTracker.LOGGER.debug("id: {}", id);
-//                        var subRecipes = RecipeUtil.getRecipesFor(id);
-//                        CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes);
-//
-//                        if(subRecipes.isEmpty()) {
-//                            CraftTracker.LOGGER.debug("subRecipes is empty; raw material");
-//                            // no recipes for this ingredient, so it's a raw material
-//                            this.updateRawMaterials(id, item, recipeQuantity);
-//                        }
-//                        else {
-//                            CraftTracker.LOGGER.debug("subRecipes has {} items; intermediate", subRecipes.size());
-//
-//                            // check if player already has the item
-//                            var player = Minecraft.getInstance().player;
-//                            var hasInInventory = InventoryUtil.getQuantityOf(player, item.getItem().getRegistryName());
-//                            var needsToMake = item.getCount() - hasInInventory;
-////                            var inventory = .getInventory();
-////                            if(inventory.contains(item)) {
-////                                CraftTracker.LOGGER.debug("player has item in inventory: {}", item);
-////                                inventory.items.stream()
-////                                        .filter(inv -> inv.getItem().getRegistryName().equals(id))
-////                                        .map(inv -> inv.getCount())
-////                                        .findFirst()
-////                                        .ifPresent(count -> {
-////                                            CraftTracker.LOGGER.debug("adjusting count of item {} to: {}", id, count);
-////
-////                                            this.intermediateProducts.compute(id, (itemId, quantity) -> {
-////                                                Integer finalCount = (quantity == null ? 0 : quantity) + item.getCount() - count;
-////                                                if(finalCount < 1) {
-////                                                    CraftTracker.LOGGER.debug("final count less than 1, removing: {}", id);
-////                                                    return null;
-////                                                }
-////
-////                                                processedItems.add(itemId);
-////
-////                                                CraftTracker.LOGGER.debug("adjusting count of intermediate item {} to: {}", itemId, finalCount);
-////                                                return finalCount;
-////                                            });
-////                                        });
-////                            }
-////                            else {
-////                            CraftTracker.LOGGER.debug("player DOES NOT have item in inventory: {}", item);
-//
-//                            this.intermediateProducts.compute(id, (itemId, quantity) -> {
-//                                if(quantity == null) {
-//                                    return needsToMake;
-//                                }
-//
-//                                processedItems.add(itemId);
-//
-//                                return quantity + needsToMake;
-//                            });
-////                            }
-//
-//                            int subIndex = RecipeUtil.chooseLeastExpensiveOf(subRecipes);
-//                            CraftTracker.LOGGER.debug("least expensive item index: {}", subIndex);
-//                            this.computeRecipe(ctx, subRecipes.get(subIndex), recipeQuantity, processedItems);
-//                        }
-//                    });
-//        }
+        return computedRecipe;
     }
 
     private void updateRawMaterials(ProcessingContext ctx, ResourceLocation id, int amountNeeded) {
@@ -460,6 +412,15 @@ public class CraftingQueueManager {
         public List<ResourceLocation> getCategories() {
             return categories;
         }
+
+        @Override
+        public String toString() {
+            return "ProductItem{" +
+                    "itemId=" + itemId +
+                    ", quantity=" + quantity +
+                    ", categories=" + categories +
+                    '}';
+        }
     }
 
     public class QueueItem {
@@ -486,6 +447,14 @@ public class CraftingQueueManager {
         public void setQuantity(int quantity) {
             this.quantity = quantity;
         }
+
+        @Override
+        public String toString() {
+            return "QueueItem{" +
+                    "itemId=" + itemId +
+                    ", quantity=" + quantity +
+                    '}';
+        }
     }
 
     class ProcessingContext {
@@ -493,13 +462,58 @@ public class CraftingQueueManager {
         Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
         Map<ResourceLocation, Integer> fuel = new HashMap<>();
         Set<ResourceLocation> handledItems = new HashSet<>();
-        int processingLevel;
+        //        int processingLevel;
+        List<ComputedRecipe> computedRecipes = new ArrayList<>();
+
+        @Override
+        public String toString() {
+            return MessageFormat.format("""
+                            ProcessingContext[
+                              intermediateProducts={0}
+                              rawMaterials={1}
+                              fuel={2}
+                              handledItems={3}
+                              computedRecipes={4}
+                            ]
+                            """,
+                    intermediateProducts, rawMaterials, fuel, handledItems, computedRecipes);
+        }
     }
 
-    class IngredientInfo {
-        Ingredient ingredient;
-        Recipe<?> recipe;
-        int recipeIndex;
-        int amount;
+    class ComputedRecipe {
+        ResourceLocation recipeId;
+        Map<ResourceLocation, Integer> intermediateProducts = new HashMap<>();
+        Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
+        Map<ResourceLocation, Integer> fuel = new HashMap<>();
+
+        ComputedRecipe(ResourceLocation recipeId) {
+            this.recipeId = recipeId;
+        }
+
+        @Override
+        public String toString() {
+            return MessageFormat.format("""
+                            ComputedRecipe[
+                              recipeId={0}
+                              intermediateProducts={1}
+                              rawMaterials={2}
+                              fuel={3}
+                            ]
+                            """,
+                    recipeId, intermediateProducts, rawMaterials, fuel);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return MessageFormat.format("""                
+                        CraftingQueueManager[
+                          endProducts={0}
+                          intermediateProducts={1}
+                          rawMaterials={2}
+                          fuel={3}
+                        ]
+                        """,
+                endProducts, intermediateProducts, rawMaterials, fuel);
     }
 }

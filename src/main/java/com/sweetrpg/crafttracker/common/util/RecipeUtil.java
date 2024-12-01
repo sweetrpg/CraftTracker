@@ -102,14 +102,19 @@ public class RecipeUtil {
             }
 
             // it's not, so check its tags
-            if(stack.hasTag()) {
-                for(TagKey<Item> tag : stack.getTags().toList()) {
-                    var tagId = tag.location();
-                    if(ingredientCostsByTag.containsKey(tagId)) {
-                        CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                        return ingredientCostsByTag.get(tagId) * count;
+            int highestCost = 0;
+            for(TagKey<Item> tag : stack.getTags().toList()) {
+                var tagId = tag.location();
+                if(ingredientCostsByTag.containsKey(tagId)) {
+                    CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
+                    var cost = ingredientCostsByTag.get(tagId) * count;
+                    if(cost > highestCost) {
+                        highestCost = cost;
                     }
                 }
+            }
+            if(highestCost > 0) {
+                return highestCost;
             }
         }
 
@@ -128,18 +133,23 @@ public class RecipeUtil {
         }
 
         // it's not, so check its tags
-        if(stack.hasTag()) {
-            for(TagKey<Item> tag : stack.getTags().toList()) {
-                var tagId = tag.location();
-                if(ingredientCostsByTag.containsKey(tagId)) {
-                    CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                    return ingredientCostsByTag.get(tagId) * count;
+        int highestCost = 0;
+        for(TagKey<Item> tag : stack.getTags().toList()) {
+            var tagId = tag.location();
+            if(ingredientCostsByTag.containsKey(tagId)) {
+                CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
+                var cost = ingredientCostsByTag.get(tagId) * count;
+                if(cost > highestCost) {
+                    highestCost = cost;
                 }
             }
         }
+        if(highestCost > 0) {
+            return highestCost;
+        }
 
         var rarity = stack.getItem().getRarity(stack);
-        return rarity.ordinal();
+        return Math.max(rarity.ordinal() * count, count);
     }
 
     public static int chooseLeastExpensiveOf(List<? extends Recipe<?>> recipes) {
