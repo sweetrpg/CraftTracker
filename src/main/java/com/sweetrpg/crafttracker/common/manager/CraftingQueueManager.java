@@ -3,6 +3,7 @@ package com.sweetrpg.crafttracker.common.manager;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
 import com.sweetrpg.crafttracker.common.storage.CraftingQueueStorage;
+import com.sweetrpg.crafttracker.common.util.DebugUtil;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.RecipeUtil;
 import net.minecraft.client.Minecraft;
@@ -98,7 +99,7 @@ public class CraftingQueueManager {
         return endProducts.entrySet()
                 .stream()
                 .map(e ->
-                        new ProductItem(e.getKey(), e.getValue().getQuantity(), new ArrayList<>()))
+                        new ProductItem(e.getKey(), e.getValue().getIterations(), new ArrayList<>()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -131,19 +132,19 @@ public class CraftingQueueManager {
         var recipes = RecipeUtil.getRecipesFor(itemId);
 
         if(recipes.size() > 0) {
-            CraftTracker.LOGGER.debug("recipes: {}", recipes);
+            CraftTracker.LOGGER.debug("recipes: {}", recipes.stream().map(DebugUtil::printRecipe));
 
             var product = new CraftingQueueProduct(itemId, recipes, quantity);
             endProducts.compute(itemId, (rl, p) -> p == null ? product :
-                    new CraftingQueueProduct(p.getItemId(), p.getRecipes(), p.getQuantity() + quantity));
+                    new CraftingQueueProduct(p.getProductId(), p.getRecipes(), p.getIterations() + quantity));
 
             computeAll();
+
+            this.save(player);
         }
         else {
             CraftTracker.LOGGER.info("Not adding {} to queue, since there are no recipes for it.", itemId);
         }
-
-        this.save(player);
     }
 
     /**
@@ -185,7 +186,7 @@ public class CraftingQueueManager {
         }
 
         // if we would remove more than what's left in the queue, remove it entirely
-        int newQuantity = product.getQuantity() - quantity;
+        int newQuantity = product.getIterations() - quantity;
         if(newQuantity < 1) {
             CraftTracker.LOGGER.info("Removing item from queue storage: {}", itemId);
             this.removeProduct(player, itemId);
@@ -193,7 +194,7 @@ public class CraftingQueueManager {
         else {
             CraftTracker.LOGGER.info("Adjusting quantity of item in queue storage to {}: {}", quantity, itemId);
             this.endProducts.computeIfPresent(itemId, (k, v) -> {
-                var cqp = new CraftingQueueProduct(itemId, v.getRecipes(), v.getQuantity() - quantity);
+                var cqp = new CraftingQueueProduct(itemId, v.getRecipes(), v.getIterations() - quantity);
                 return cqp;
             });
         }
@@ -241,7 +242,8 @@ public class CraftingQueueManager {
         var index = Math.min(product.getIndex(), product.getRecipes().size());
         var recipe = product.getRecipes().get(index);
 
-        var computedRecipe = this.computeRecipe(recipe, product.getQuantity(), 0);
+        var computedRecipe = this.computeRecipe(recipe, product.getIterations(), 0);
+        CraftTracker.LOGGER.debug("#computeProduct: computedRecipe {}", computedRecipe);
         ctx.computedRecipes.add(computedRecipe);
     }
 
@@ -275,8 +277,8 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("coalesce complete: {}", this);
     }
 
-    ComputedRecipe computeRecipe(Recipe<?> recipe, int recipeQuantity, int depth) {
-        CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", recipe);
+    ComputedRecipe computeRecipe(Recipe<?> recipe, int iterations, int depth) {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", DebugUtil.printRecipe(recipe));
 
         var computedRecipe = new ComputedRecipe(recipe.getId());
 
@@ -287,7 +289,7 @@ public class CraftingQueueManager {
 //        }
 
         var ingredients = recipe.getIngredients();
-        CraftTracker.LOGGER.debug("ingredients: {}", ingredients);
+        CraftTracker.LOGGER.debug("ingredients: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
 //        if(RecipeUtil.areIngredientsSame(ingredients)) {
 //            CraftTracker.LOGGER.debug("ingredients are the same: {}", ingredients);
@@ -297,7 +299,7 @@ public class CraftingQueueManager {
 //                CraftTracker.LOGGER.debug("intermediates has this ingredient already: {}", id);
 //                var quantity = ctx.intermediateProducts.remove(id);
 //                ctx.intermediateProducts.remove(id);
-//                this.updateRawMaterials(ctx, id, quantity * recipeQuantity);
+//                this.updateRawMaterials(ctx, id, quantity * iterations);
 //
 //                return;
 //            }
@@ -305,7 +307,7 @@ public class CraftingQueueManager {
 
         // process ingredients
         for(Ingredient ingredient : ingredients) {
-            CraftTracker.LOGGER.debug("ingredient: {}", ingredient);
+            CraftTracker.LOGGER.debug("ingredient: {}", DebugUtil.printIngredient(ingredient));
 
             if(ingredient.isEmpty() || ingredient.getItems().length == 0) {
                 continue;
@@ -317,16 +319,16 @@ public class CraftingQueueManager {
 
 //            ctx.handledItems.add(item.getRegistryName());
 
-            CraftTracker.LOGGER.debug("item: {}", item);
+            CraftTracker.LOGGER.debug("item: {}", DebugUtil.printItem(item));
             var id = item.getRegistryName();
             CraftTracker.LOGGER.debug("id: {}", id);
             var subRecipes = RecipeUtil.getRecipesFor(id);
-            CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes);
+            CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes.stream().map(DebugUtil::printRecipe).toList());
 
             // check if player already has the item
             var player = Minecraft.getInstance().player;
             var hasInInventory = InventoryUtil.getQuantityOf(player, item.getRegistryName());
-            var needsQty = (amountRequired * recipeQuantity) - hasInInventory;
+            var needsQty = (amountRequired * iterations) - hasInInventory;
 
             if(needsQty < 1) {
                 CraftTracker.LOGGER.debug("player already has enough of item {} ({} >= {})", id, hasInInventory, amountRequired);
@@ -334,7 +336,7 @@ public class CraftingQueueManager {
             }
 
             if(subRecipes.isEmpty() || depth >= MAX_PROCESSING_LEVEL) {
-                CraftTracker.LOGGER.debug("subRecipes is empty; ingredient {} is a raw material", ingredient);
+                CraftTracker.LOGGER.debug("subRecipes is empty; ingredient {} is a raw material", DebugUtil.printIngredient(ingredient));
                 // no recipes for this ingredient, so it's a raw material
 //                this.updateRawMaterials(ctx, id, needsQty);
                 computedRecipe.rawMaterials.compute(id,
@@ -342,12 +344,12 @@ public class CraftingQueueManager {
                                 ObjectUtils.defaultIfNull(quantity, 0) + amountRequired);
             }
             else {
-                CraftTracker.LOGGER.debug("subRecipes has {} items; ingredient {} is an intermediate product", subRecipes.size(), ingredient);
+                CraftTracker.LOGGER.debug("subRecipes has {} items; ingredient {} is an intermediate product", subRecipes.size(), DebugUtil.printIngredient(ingredient));
 
                 int subIndex = RecipeUtil.chooseLeastExpensiveOf(subRecipes);
                 CraftTracker.LOGGER.debug("least expensive item index: {}", subIndex);
                 var chosenSubRecipe = subRecipes.get(subIndex);
-                CraftTracker.LOGGER.debug("chosenSubRecipe: {}", chosenSubRecipe);
+                CraftTracker.LOGGER.debug("chosenSubRecipe: {}", DebugUtil.printRecipe(chosenSubRecipe));
 
 //                            var amountProduced = chosenSubRecipe.getResultItem().getCount();
 
@@ -356,7 +358,7 @@ public class CraftingQueueManager {
                                 ObjectUtils.defaultIfNull(quantity, 0) + needsQty);
 
 //                ctx.processingLevel++;
-                var computedSubRecipe = this.computeRecipe(chosenSubRecipe, recipeQuantity, depth + 1);
+                var computedSubRecipe = this.computeRecipe(chosenSubRecipe, iterations, depth + 1);
 
                 // merge subrecipe items into this
                 CraftTracker.LOGGER.debug("merging subrecipe contents: {} into this: {}", computedSubRecipe, computedRecipe);

@@ -63,12 +63,12 @@ public class RecipeUtil {
                 .filter(r -> r.getResultItem().getItem().getRegistryName().equals(itemId))
                 .toList();
 
-        CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: recipes {}", recipes);
+        CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: recipes {}", recipes.stream().map(DebugUtil::printRecipe).toList());
         return recipes;
     }
 
     public static boolean areIngredientsSame(NonNullList<Ingredient> ingredients) {
-        CraftTracker.LOGGER.debug("RecipeUtil#areIngredientsSame: {}", ingredients);
+        CraftTracker.LOGGER.debug("RecipeUtil#areIngredientsSame: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
         Set<String> ing = ingredients.stream()
                 .map(i -> Arrays.asList(i.getItems()))
@@ -81,7 +81,7 @@ public class RecipeUtil {
     }
 
     public static int calculateRecipeCost(Recipe<?> recipe) {
-        CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", recipe);
+        CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", DebugUtil.printRecipe(recipe));
 
         return recipe.getIngredients().stream()
                 .map(RecipeUtil::calculateIngredientCost)
@@ -89,7 +89,7 @@ public class RecipeUtil {
     }
 
     public static int calculateIngredientCost(Ingredient ingredient) {
-        CraftTracker.LOGGER.debug("RecipeUtil#getIngredientCost: {}", ingredient);
+        CraftTracker.LOGGER.debug("RecipeUtil#getIngredientCost: {}", DebugUtil.printIngredient(ingredient));
 
         for(ItemStack stack : ingredient.getItems()) {
             // is the item in the override list?
@@ -122,7 +122,7 @@ public class RecipeUtil {
     }
 
     public static int calculateItemCost(ItemStack stack) {
-        CraftTracker.LOGGER.debug("#calculateItemCost: {}", stack);
+        CraftTracker.LOGGER.debug("#calculateItemCost: {}", DebugUtil.printItemStack(stack));
 
         var itemId = stack.getItem().getRegistryName();
         var count = stack.getCount();
@@ -153,7 +153,7 @@ public class RecipeUtil {
     }
 
     public static int chooseLeastExpensiveOf(List<? extends Recipe<?>> recipes) {
-        CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", recipes);
+        CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", recipes.stream().map(DebugUtil::printRecipe).toList());
 
         List<Tuple<ResourceLocation, Integer>> recipeCosts = new ArrayList<>();
 
@@ -178,7 +178,7 @@ public class RecipeUtil {
     }
 
     public static int chooseLeastExpensiveOf(ItemStack[] stacks) {
-        CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", stacks);
+        CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", Arrays.stream(stacks).map(DebugUtil::printItemStack).toList());
 
         List<Tuple<ResourceLocation, Integer>> itemCosts = new ArrayList<>();
 
