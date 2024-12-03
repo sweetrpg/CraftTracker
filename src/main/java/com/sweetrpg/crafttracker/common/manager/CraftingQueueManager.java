@@ -360,6 +360,19 @@ public class CraftingQueueManager {
                                 ObjectUtils.defaultIfNull(quantity, 0) + needsQty);
 
                 var computedSubRecipe = this.computeRecipe(chosenSubRecipe, amountRequired * iterations, depth + 1);
+                CraftTracker.LOGGER.debug("computedSubRecipe: {}", computedSubRecipe);
+                if(computedSubRecipe == null) {
+                    CraftTracker.LOGGER.debug("computed sub-recipe for {} returned is null; treat as raw material", DebugUtil.printRecipe(chosenSubRecipe));
+                    // if the sub-recipe comes back null, then treat the result item as a raw material
+                    computedRecipe.rawMaterials.compute(id,
+                            (itemId, quantity) ->
+                                    ObjectUtils.defaultIfNull(quantity, 0) + (amountRequired * iterations));
+                    return;
+                }
+
+                computedRecipe.intermediateProducts.compute(id,
+                        (itemId, quantity) ->
+                                ObjectUtils.defaultIfNull(quantity, 0) + needsQty);
 
                 // merge subrecipe items into this
                 CraftTracker.LOGGER.debug("merging subrecipe contents: {} into this: {}", computedSubRecipe, computedRecipe);
