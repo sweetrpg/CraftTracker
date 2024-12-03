@@ -23,6 +23,6 @@
 
 * [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) &mdash; version 9.7.2.281 or higher
 
-## Contributing
+## Where To Get It
 
 Download it from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/craft-tracker) or [Modrinth](https://modrinth.com/mod/craft-tracker).
