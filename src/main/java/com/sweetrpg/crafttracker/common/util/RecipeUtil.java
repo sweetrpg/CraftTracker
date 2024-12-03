@@ -118,6 +118,7 @@ public class RecipeUtil {
             }
         }
 
+        CraftTracker.LOGGER.debug("#calculateIngredientCost: fell through to default cost");
         return 1;
     }
 
@@ -148,58 +149,64 @@ public class RecipeUtil {
             return highestCost;
         }
 
+        CraftTracker.LOGGER.debug("#calculateIngredientCost: fell through to rarity");
         var rarity = stack.getItem().getRarity(stack);
         return Math.max(rarity.ordinal() * count, count);
     }
 
-    public static int chooseLeastExpensiveOf(List<? extends Recipe<?>> recipes) {
+    public static Recipe<?> chooseLeastExpensiveOf(List<? extends Recipe<?>> recipes) {
         CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", recipes.stream().map(DebugUtil::printRecipe).toList());
 
-        List<Tuple<ResourceLocation, Integer>> recipeCosts = new ArrayList<>();
+        if(recipes.size() == 1) {
+            return recipes.get(0);
+        }
+
+        List<Tuple<? extends Recipe<?>, Integer>> recipeCosts = new ArrayList<>();
 
         for(Recipe<?> recipe : recipes) {
             var cost = RecipeUtil.calculateRecipeCost(recipe);
-            var tuple = new Tuple<>(recipe.getId(), cost);
+            var tuple = new Tuple<>(recipe, cost);
 
             recipeCosts.add(tuple);
         }
 
-        int lowestCostIndex = 0;
-        int lowestCost = Integer.MAX_VALUE;
-        for(int i = 0; i < recipeCosts.size(); i++) {
-            var cost = recipeCosts.get(i).getB();
-            if(cost < lowestCost) {
-                lowestCostIndex = i;
-                lowestCost = cost;
+        recipeCosts.sort((rc1, rc2) -> {
+            var result = rc1.getB().compareTo(rc2.getB());
+            if(result == 0) {
+                return rc1.getA().getId().compareTo(rc2.getA().getId());
             }
-        }
+            return result;
+        });
 
-        return lowestCostIndex;
+        return recipeCosts.get(0).getA();
     }
 
-    public static int chooseLeastExpensiveOf(ItemStack[] stacks) {
+    public static ItemStack chooseLeastExpensiveOf(ItemStack[] stacks) {
         CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", Arrays.stream(stacks).map(DebugUtil::printItemStack).toList());
 
-        List<Tuple<ResourceLocation, Integer>> itemCosts = new ArrayList<>();
+        if(stacks.length == 1) {
+            return stacks[0];
+        }
+
+        List<Tuple<ItemStack, Integer>> itemCosts = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
             var cost = RecipeUtil.calculateItemCost(stack);
-            var tuple = new Tuple<>(stack.getItem().getRegistryName(), cost);
+            var tuple = new Tuple<>(stack, cost);
 
             itemCosts.add(tuple);
         }
 
-        int lowestCostIndex = 0;
-        int lowestCost = Integer.MAX_VALUE;
-        for(int i = 0; i < itemCosts.size(); i++) {
-            var cost = itemCosts.get(i).getB();
-            if(cost < lowestCost) {
-                lowestCostIndex = i;
-                lowestCost = cost;
+        itemCosts.sort((rc1, rc2) -> {
+            var result = rc1.getB().compareTo(rc2.getB());
+            if(result == 0) {
+                return rc1.getA().getItem().getRegistryName().toString()
+                        .compareTo(rc2.getA().getItem().getRegistryName().toString());
             }
-        }
+            return result;
+        });
 
-        return lowestCostIndex;
+        return itemCosts.get(0).getA();
     }
 
 }

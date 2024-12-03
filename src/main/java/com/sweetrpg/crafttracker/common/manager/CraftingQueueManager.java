@@ -6,15 +6,17 @@ import com.sweetrpg.crafttracker.common.storage.CraftingQueueStorage;
 import com.sweetrpg.crafttracker.common.util.DebugUtil;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.RecipeUtil;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.IOException;
@@ -34,8 +36,6 @@ public class CraftingQueueManager {
 
     private static final int MAX_PROCESSING_LEVEL = 2;
 
-    public static final Path STORAGE_DIR = FMLPaths.GAMEDIR.get().resolve("craft_tracker");
-
     private Map<ResourceLocation, CraftingQueueProduct> endProducts = new HashMap<>();
     private Map<ResourceLocation, Integer> intermediateProducts = new HashMap<>();
     private Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
@@ -47,7 +47,7 @@ public class CraftingQueueManager {
     public void load(Player player) {
         CraftTracker.LOGGER.info("Loading crafting queue for {}", player);
 
-        Path file = STORAGE_DIR.resolve("queue.nbt").toAbsolutePath();
+        Path file = Util.getStoragePath().resolve("queue.nbt").toAbsolutePath();
         CraftTracker.LOGGER.debug("file: {}", file);
 
         try {
@@ -67,7 +67,7 @@ public class CraftingQueueManager {
     public void save(Player player) {
         CraftTracker.LOGGER.info("Saving crafting queue for {}", player);
 
-        Path file = STORAGE_DIR.resolve("queue.nbt").toAbsolutePath();
+        Path file = Util.getStoragePath().resolve("queue.nbt").toAbsolutePath();
         CraftTracker.LOGGER.debug("file: {}", file);
 
         try {
@@ -95,12 +95,11 @@ public class CraftingQueueManager {
         }
     }
 
-    public List<ProductItem> getEndProducts() {
+    public List<CraftingQueueProduct> getEndProducts() {
         return endProducts.entrySet()
                 .stream()
-                .map(e ->
-                        new ProductItem(e.getKey(), e.getValue().getIterations(), new ArrayList<>()))
-                .collect(Collectors.toUnmodifiableList());
+                .map(e -> e.getValue())
+                .toList();
     }
 
     public List<QueueItem> getIntermediates() {
@@ -282,30 +281,11 @@ public class CraftingQueueManager {
 
         var computedRecipe = new ComputedRecipe(recipe.getId());
 
-//        var recipeItemId = recipe.getResultItem().getItem().getRegistryName();
-//        if(ctx.handledItems.contains(recipeItemId)) {
-//            CraftTracker.LOGGER.debug("context has already processed item: {}", recipeItemId);
-//            return;
-//        }
-
         var ingredients = recipe.getIngredients();
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
-//        if(RecipeUtil.areIngredientsSame(ingredients)) {
-//            CraftTracker.LOGGER.debug("ingredients are the same: {}", ingredients);
-//            var id = recipe.getResultItem().getItem().getRegistryName();
-//            CraftTracker.LOGGER.debug("id: {}", id);
-//            if(this.intermediateProducts.containsKey(id)) {
-//                CraftTracker.LOGGER.debug("intermediates has this ingredient already: {}", id);
-//                var quantity = ctx.intermediateProducts.remove(id);
-//                ctx.intermediateProducts.remove(id);
-//                this.updateRawMaterials(ctx, id, quantity * iterations);
-//
-//                return;
-//            }
-//        }
-
-        // process ingredients
+        // tally ingredients
+        Map<ResourceLocation, Integer> ingredientTally = new HashMap<>();
         for(Ingredient ingredient : ingredients) {
             CraftTracker.LOGGER.debug("ingredient: {}", DebugUtil.printIngredient(ingredient));
 
@@ -313,52 +293,62 @@ public class CraftingQueueManager {
                 continue;
             }
 
-            int itemIndex = RecipeUtil.chooseLeastExpensiveOf(ingredient.getItems());
-            Item item = ingredient.getItems()[itemIndex].getItem();
-            int amountRequired = 1; // TODO?
+            ItemStack chosenStack = RecipeUtil.chooseLeastExpensiveOf(ingredient.getItems());
+            ingredientTally.compute(chosenStack.getItem().getRegistryName(), (ingredientId, amount) -> {
+                return ObjectUtils.defaultIfNull(amount, 0) + 1;
+            });
+        }
 
-//            ctx.handledItems.add(item.getRegistryName());
+        // process ingredients
+//        for(Ingredient ingredient : ingredients) {
+        ingredientTally.forEach((ingredientId, ingredientAmount) -> {
+            CraftTracker.LOGGER.debug("ingredient: id {}, amount {}", ingredientId, ingredientAmount);
 
+//            ItemStack chosenStack = RecipeUtil.chooseLeastExpensiveOf(ingredient.getItems());
+            Item item = ForgeRegistries.ITEMS.getValue(ingredientId);
+//            Item item = chosenStack.getItem();
             CraftTracker.LOGGER.debug("item: {}", DebugUtil.printItem(item));
+            int amountRequired = ingredientAmount; // chosenStack.getCount();
+            CraftTracker.LOGGER.debug("amountRequired: {}", amountRequired);
+
+            // check if player already has the item
+            CraftTracker.LOGGER.debug("check if player already has {}", DebugUtil.printItem(item));
+            var player = Minecraft.getInstance().player;
+            var hasInInventory = InventoryUtil.getQuantityOf(player, item.getRegistryName());
+            CraftTracker.LOGGER.debug("hasInInventory: {}", hasInInventory);
+            var needsQty = (amountRequired * iterations) - hasInInventory;
+            CraftTracker.LOGGER.debug("needsQty: {}", needsQty);
+
+            if(needsQty < 1) {
+                CraftTracker.LOGGER.debug("player already has enough of item {} ({} >= {})", item.getRegistryName(), hasInInventory, amountRequired);
+                return;
+            }
+
             var id = item.getRegistryName();
             CraftTracker.LOGGER.debug("id: {}", id);
             var subRecipes = RecipeUtil.getRecipesFor(id);
             CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes.stream().map(DebugUtil::printRecipe).toList());
 
-            // check if player already has the item
-            var player = Minecraft.getInstance().player;
-            var hasInInventory = InventoryUtil.getQuantityOf(player, item.getRegistryName());
-            var needsQty = (amountRequired * iterations) - hasInInventory;
-
-            if(needsQty < 1) {
-                CraftTracker.LOGGER.debug("player already has enough of item {} ({} >= {})", id, hasInInventory, amountRequired);
-                continue;
-            }
-
             if(subRecipes.isEmpty() || depth >= MAX_PROCESSING_LEVEL) {
-                CraftTracker.LOGGER.debug("subRecipes is empty; ingredient {} is a raw material", DebugUtil.printIngredient(ingredient));
+                CraftTracker.LOGGER.debug("subRecipes is empty; ingredient {} is a raw material", ingredientId);
                 // no recipes for this ingredient, so it's a raw material
-//                this.updateRawMaterials(ctx, id, needsQty);
                 computedRecipe.rawMaterials.compute(id,
                         (itemId, quantity) ->
-                                ObjectUtils.defaultIfNull(quantity, 0) + amountRequired);
+                                ObjectUtils.defaultIfNull(quantity, 0) + (amountRequired * iterations));
             }
             else {
-                CraftTracker.LOGGER.debug("subRecipes has {} items; ingredient {} is an intermediate product", subRecipes.size(), DebugUtil.printIngredient(ingredient));
+                CraftTracker.LOGGER.debug("subRecipes has {} items; ingredient {} is an intermediate product", subRecipes.size(), ingredientId);
 
-                int subIndex = RecipeUtil.chooseLeastExpensiveOf(subRecipes);
-                CraftTracker.LOGGER.debug("least expensive item index: {}", subIndex);
-                var chosenSubRecipe = subRecipes.get(subIndex);
+                var chosenSubRecipe = RecipeUtil.chooseLeastExpensiveOf(subRecipes);
+//                CraftTracker.LOGGER.debug("least expensive item index: {}", subIndex);
+//                var chosenSubRecipe = subRecipes.get(subIndex);
                 CraftTracker.LOGGER.debug("chosenSubRecipe: {}", DebugUtil.printRecipe(chosenSubRecipe));
-
-//                            var amountProduced = chosenSubRecipe.getResultItem().getCount();
 
                 computedRecipe.intermediateProducts.compute(id,
                         (itemId, quantity) ->
                                 ObjectUtils.defaultIfNull(quantity, 0) + needsQty);
 
-//                ctx.processingLevel++;
-                var computedSubRecipe = this.computeRecipe(chosenSubRecipe, iterations, depth + 1);
+                var computedSubRecipe = this.computeRecipe(chosenSubRecipe, amountRequired * iterations, depth + 1);
 
                 // merge subrecipe items into this
                 CraftTracker.LOGGER.debug("merging subrecipe contents: {} into this: {}", computedSubRecipe, computedRecipe);
@@ -377,53 +367,46 @@ public class CraftingQueueManager {
                         return ObjectUtils.defaultIfNull(v1, 0) + amount;
                     });
                 });
-//                ctx.processingLevel--;
 
                 CraftTracker.LOGGER.debug("this looks like: {}", this);
             }
-        }
+        });
 
         return computedRecipe;
     }
 
-    private void updateRawMaterials(ProcessingContext ctx, ResourceLocation id, int amountNeeded) {
-        ctx.rawMaterials.compute(id,
-                (itemId, quantity) ->
-                        ObjectUtils.defaultIfNull(quantity, 0) + amountNeeded);
-    }
-
-    public static class ProductItem {
-        private ResourceLocation itemId;
-        private int quantity;
-        private List<ResourceLocation> categories;
-
-        public ProductItem(ResourceLocation itemId, int quantity, List<ResourceLocation> categories) {
-            this.itemId = itemId;
-            this.quantity = quantity;
-            this.categories = categories;
-        }
-
-        public ResourceLocation getItemId() {
-            return itemId;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public List<ResourceLocation> getCategories() {
-            return categories;
-        }
-
-        @Override
-        public String toString() {
-            return "ProductItem{" +
-                    "itemId=" + itemId +
-                    ", quantity=" + quantity +
-                    ", categories=" + categories +
-                    '}';
-        }
-    }
+//    public static class ProductItem {
+//        private ResourceLocation itemId;
+//        private int iterations;
+//        private List<ResourceLocation> categories;
+//
+//        public ProductItem(ResourceLocation itemId, int iterations, List<ResourceLocation> categories) {
+//            this.itemId = itemId;
+//            this.iterations = iterations;
+//            this.categories = categories;
+//        }
+//
+//        public ResourceLocation getItemId() {
+//            return itemId;
+//        }
+//
+//        public int getIterations() {
+//            return iterations;
+//        }
+//
+//        public List<ResourceLocation> getCategories() {
+//            return categories;
+//        }
+//
+//        @Override
+//        public String toString() {
+//            return "ProductItem{" +
+//                    "itemId=" + itemId +
+//                    ", iterations=" + iterations +
+//                    ", categories=" + categories +
+//                    '}';
+//        }
+//    }
 
     public class QueueItem {
         private ResourceLocation itemId;
@@ -464,7 +447,6 @@ public class CraftingQueueManager {
         Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
         Map<ResourceLocation, Integer> fuel = new HashMap<>();
         Set<ResourceLocation> handledItems = new HashSet<>();
-        //        int processingLevel;
         List<ComputedRecipe> computedRecipes = new ArrayList<>();
 
         @Override
