@@ -200,16 +200,16 @@ public class ClientEventHandler {
     }
 
     private static void handleAddToQueue() {
-        CraftTracker.LOGGER.debug("#handleToggleCraftList");
+        CraftTracker.LOGGER.debug("#handleAddToQueue");
 
         CTPlugin.jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse()
                 .ifPresent(ingredient -> {
-                    CraftTracker.LOGGER.debug("AddToQueuePacket#handle: type {}", ingredient.getType());
-                    CraftTracker.LOGGER.debug("AddToQueuePacket#handle: ingredient {}", ingredient.getIngredient());
+                    CraftTracker.LOGGER.debug("#handleAddToQueue: type {}", ingredient.getType());
+                    CraftTracker.LOGGER.debug("#handleAddToQueue: ingredient {}", ingredient.getIngredient());
 
                     if(ingredient.getIngredient() instanceof ItemStack itemStack) {
                         ResourceLocation res = itemStack.getItem().getRegistryName();
-                        CraftTracker.LOGGER.debug("AddToQueuePacket#handle: res {}", res);
+                        CraftTracker.LOGGER.debug("#handleAddToQueue: res {}", res);
 
                         var player = Minecraft.getInstance().player;
                         CraftingQueueManager.INSTANCE.addProduct(player, res, 1);

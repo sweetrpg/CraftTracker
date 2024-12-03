@@ -36,8 +36,8 @@ public class CraftQueueOverlay {
 
         var mgr = CraftingQueueManager.INSTANCE;
         var products = mgr.getEndProducts().stream().sorted((i1, i2) -> {
-            var item1 = ForgeRegistries.ITEMS.getValue(i1.getItemId());
-            var item2 = ForgeRegistries.ITEMS.getValue(i2.getItemId());
+            var item1 = ForgeRegistries.ITEMS.getValue(i1.getProductId());
+            var item2 = ForgeRegistries.ITEMS.getValue(i2.getProductId());
             return item1.getDescription().getString().compareTo(item2.getDescription().getString());
         }).toList();
 
@@ -102,14 +102,15 @@ public class CraftQueueOverlay {
         for(int i = 0; i < products.size(); i++) {
             var p = products.get(i);
 
-            var item = ForgeRegistries.ITEMS.getValue(p.getItemId());
+            var item = ForgeRegistries.ITEMS.getValue(p.getProductId());
             var stack = item.getDefaultInstance();
-            // TODO: count overlay on icon is amount produced by recipe
-            //  stack.setCount(stack.getCount());
+            var selectedRecipe = p.getRecipes().get(p.getIndex());
+            var amountProduced = selectedRecipe.getResultItem().getCount() * p.getIterations();
+            stack.setCount(amountProduced);
             var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
                     .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
             drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
-            var text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getQuantity());
+            var text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getIterations());
             GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
 
             yPos += LINE_HEIGHT + 2;

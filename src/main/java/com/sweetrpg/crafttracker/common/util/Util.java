@@ -3,18 +3,19 @@ package com.sweetrpg.crafttracker.common.util;
 import com.google.common.collect.Lists;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import io.netty.buffer.Unpooled;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.IRegistryDelegate;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -22,8 +23,37 @@ import java.util.stream.Collectors;
 
 public class Util {
 
+    public static final Path STORAGE_DIR = FMLPaths.GAMEDIR.get().resolve("craft_tracker");
+
     private static final DecimalFormat dfShort = new DecimalFormat("0.0");
     private static final DecimalFormat dfShortDouble = new DecimalFormat("0.00");
+
+    public static Path getStoragePath() {
+        var addressPath = "";
+
+        var server = Minecraft.getInstance().getCurrentServer();
+        if(server != null) {
+            addressPath = server.ip
+                    .replace(".", "_")
+                    .replace(":", "_")
+                    .replace(File.pathSeparator, "_")
+                    .trim()
+                    .toLowerCase(Locale.ROOT);
+        }
+        else {
+            addressPath = Minecraft.getInstance()
+                    .getSingleplayerServer()
+                    .getServerDirectory().getName()
+                    .replace(".", "_")
+                    .replace(":", "_")
+                    .replace(" ", "_")
+                    .replace(File.pathSeparator, "_")
+                    .trim()
+                    .toLowerCase(Locale.ROOT);
+        }
+
+        return STORAGE_DIR.resolve(addressPath).normalize();
+    }
 
     public static String format1DP(double value) {
         return Util.dfShort.format(value);

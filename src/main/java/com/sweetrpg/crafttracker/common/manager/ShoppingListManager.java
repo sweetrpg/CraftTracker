@@ -2,11 +2,11 @@ package com.sweetrpg.crafttracker.common.manager;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.storage.ShoppingListStorage;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +24,6 @@ public class ShoppingListManager {
 
     public static ShoppingListManager INSTANCE = new ShoppingListManager();
 
-    public static final Path STORAGE_DIR = FMLPaths.GAMEDIR.get().resolve("craft_tracker");
-
     private Map<ResourceLocation, Integer> items = new HashMap<>();
 
     public ShoppingListManager() {
@@ -34,7 +32,7 @@ public class ShoppingListManager {
     public void load(Player player) {
         CraftTracker.LOGGER.info("Loading shopping list for {}", player);
 
-        Path file = STORAGE_DIR.resolve("shopping.nbt").toAbsolutePath();
+        Path file = Util.getStoragePath().resolve("shopping.nbt").toAbsolutePath();
         CraftTracker.LOGGER.debug("file: {}", file);
 
         try {
@@ -52,7 +50,7 @@ public class ShoppingListManager {
     public void save(Player player) {
         CraftTracker.LOGGER.info("Saving shopping list for {}", player);
 
-        Path file = STORAGE_DIR.resolve("shopping.nbt").toAbsolutePath();
+        Path file = Util.getStoragePath().resolve("shopping.nbt").toAbsolutePath();
         CraftTracker.LOGGER.debug("file: {}", file);
 
         try {

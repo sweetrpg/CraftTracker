@@ -82,8 +82,8 @@ public class CraftingQueueStorage extends SavedData {
         this.products.forEach((k, v) -> {
             CompoundTag productData = new CompoundTag();
 
-            NBTUtil.putResourceLocation(productData, Keys.ITEM_ID, v.getItemId());
-            productData.putInt(Keys.QUANTITY, v.getQuantity());
+            NBTUtil.putResourceLocation(productData, Keys.ITEM_ID, v.getProductId());
+            productData.putInt(Keys.QUANTITY, v.getIterations());
             productData.putInt(Keys.INDEX, v.getIndex());
 
             list.add(productData);

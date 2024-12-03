@@ -3,28 +3,29 @@ package com.sweetrpg.crafttracker.common.model;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 public class CraftingQueueProduct {
 
-    ResourceLocation itemId;
+    ResourceLocation productId;
+    int iterations;
     List<? extends Recipe<?>> recipes;
-    int quantity;
     int index;
 
-    public CraftingQueueProduct(ResourceLocation itemId, List<? extends Recipe<?>> recipes, int quantity) {
-        this.itemId = itemId;
+    public CraftingQueueProduct(ResourceLocation productId, List<? extends Recipe<?>> recipes, int iterations) {
+        this.productId = productId;
+        this.iterations = iterations;
         this.recipes = recipes;
-        this.quantity = quantity;
         this.index = 0;
     }
 
-    public ResourceLocation getItemId() {
-        return itemId;
+    public ResourceLocation getProductId() {
+        return productId;
     }
 
-    public void setItemId(ResourceLocation itemId) {
-        this.itemId = itemId;
+    public void setProductId(ResourceLocation productId) {
+        this.productId = productId;
     }
 
     public List<? extends Recipe<?>> getRecipes() {
@@ -35,12 +36,12 @@ public class CraftingQueueProduct {
         this.recipes = recipes;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getIterations() {
+        return iterations;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setIterations(int iterations) {
+        this.iterations = iterations;
     }
 
     public int getIndex() {
@@ -49,5 +50,18 @@ public class CraftingQueueProduct {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    @Override
+    public String toString() {
+        return MessageFormat.format("""
+                        CraftingQueueProduct[
+                          itemId={0}
+                          recipes={1}
+                          iterations={2}
+                          index={3}
+                        ]
+                        """,
+                productId, recipes, iterations, index);
     }
 }
