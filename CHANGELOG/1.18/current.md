@@ -1,1 +1,3 @@
 - `[FIX]` Fix endless loop when calculating recipes
+- `[FIX]` Fixes to recipe cost calculations
+- `[FIX]` Miscellaneous optimizations
