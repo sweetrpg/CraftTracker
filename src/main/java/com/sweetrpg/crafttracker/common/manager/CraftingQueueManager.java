@@ -311,13 +311,10 @@ public class CraftingQueueManager {
         }
 
         // process ingredients
-//        for(Ingredient ingredient : ingredients) {
         ingredientTally.forEach((ingredientId, ingredientAmount) -> {
             CraftTracker.LOGGER.debug("ingredient: id {}, amount {}", ingredientId, ingredientAmount);
 
-//            ItemStack chosenStack = RecipeUtil.chooseLeastExpensiveOf(ingredient.getItems());
             Item item = ForgeRegistries.ITEMS.getValue(ingredientId);
-//            Item item = chosenStack.getItem();
             CraftTracker.LOGGER.debug("item: {}", DebugUtil.printItem(item));
             int amountRequired = ingredientAmount; // chosenStack.getCount();
             CraftTracker.LOGGER.debug("amountRequired: {}", amountRequired);
@@ -351,13 +348,7 @@ public class CraftingQueueManager {
                 CraftTracker.LOGGER.debug("subRecipes has {} items; ingredient {} is an intermediate product", subRecipes.size(), ingredientId);
 
                 var chosenSubRecipe = RecipeUtil.chooseLeastExpensiveOf(subRecipes);
-//                CraftTracker.LOGGER.debug("least expensive item index: {}", subIndex);
-//                var chosenSubRecipe = subRecipes.get(subIndex);
                 CraftTracker.LOGGER.debug("chosenSubRecipe: {}", DebugUtil.printRecipe(chosenSubRecipe));
-
-                computedRecipe.intermediateProducts.compute(id,
-                        (itemId, quantity) ->
-                                ObjectUtils.defaultIfNull(quantity, 0) + needsQty);
 
                 var computedSubRecipe = this.computeRecipe(chosenSubRecipe, amountRequired * iterations, depth + 1);
                 CraftTracker.LOGGER.debug("computedSubRecipe: {}", computedSubRecipe);
@@ -398,39 +389,6 @@ public class CraftingQueueManager {
 
         return computedRecipe;
     }
-
-//    public static class ProductItem {
-//        private ResourceLocation itemId;
-//        private int iterations;
-//        private List<ResourceLocation> categories;
-//
-//        public ProductItem(ResourceLocation itemId, int iterations, List<ResourceLocation> categories) {
-//            this.itemId = itemId;
-//            this.iterations = iterations;
-//            this.categories = categories;
-//        }
-//
-//        public ResourceLocation getItemId() {
-//            return itemId;
-//        }
-//
-//        public int getIterations() {
-//            return iterations;
-//        }
-//
-//        public List<ResourceLocation> getCategories() {
-//            return categories;
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return "ProductItem{" +
-//                    "itemId=" + itemId +
-//                    ", iterations=" + iterations +
-//                    ", categories=" + categories +
-//                    '}';
-//        }
-//    }
 
     public class QueueItem {
         private ResourceLocation itemId;
