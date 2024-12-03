@@ -284,6 +284,17 @@ public class CraftingQueueManager {
         var ingredients = recipe.getIngredients();
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
+        // if the ingredients are in a different namespace than the recipe, and we're not at the root, treat the recipe
+        var recipeNamespace = ObjectUtils.defaultIfNull(recipe.getId().getNamespace(), "");
+        var itemNamespace = ObjectUtils.defaultIfNull(recipe.getResultItem().getItem().getRegistryName().getNamespace(), "");
+        if(depth > 0 &&
+                (!RecipeUtil.areIngredientsSameNamespace(recipeNamespace, ingredients) ||
+                        !RecipeUtil.areIngredientsSameNamespace(itemNamespace, ingredients))) {
+            CraftTracker.LOGGER.debug("ingredients for sub-recipe are not in the same namespace as the recipe: {}",
+                    DebugUtil.printRecipe(recipe));
+            return null;
+        }
+
         // tally ingredients
         Map<ResourceLocation, Integer> ingredientTally = new HashMap<>();
         for(Ingredient ingredient : ingredients) {
