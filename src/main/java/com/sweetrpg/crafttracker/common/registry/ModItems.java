@@ -14,6 +14,13 @@ public class ModItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.Keys.ITEMS, Constants.MOD_ID);
 
+    // ----------------------------------------------------------------------------------------------------------------
+    // Shopping
+
+    public static final RegistryObject<Item> SHOPPING_LIST = register("shopping_list");
+
+    // ----------------------------------------------------------------------------------------------------------------
+
     private static Item.Properties createInitialProp() {
         return new Item.Properties().tab(ModItemGroups.GENERAL);
     }

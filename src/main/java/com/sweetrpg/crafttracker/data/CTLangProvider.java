@@ -2,6 +2,7 @@ package com.sweetrpg.crafttracker.data;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.registry.ModItems;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 
@@ -70,6 +71,8 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT, "The height of the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY, "Should the craft queue overlay be hidden when it is empty?");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY, "Should the shopping list overlay be hidden when it is empty?");
+
+        add(ModItems.SHOPPING_LIST.get(), "Shopping List");
     }
 
     private void processENGB() {
@@ -115,6 +118,8 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT, "The height of the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY, "Should the craft queue overlay be hidden when it is empty?");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY, "Should the shopping list overlay be hidden when it is empty?");
+
+        add(ModItems.SHOPPING_LIST.get(), "Shopping List");
     }
 
     private void processDEDE() {
@@ -160,5 +165,7 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT, "Die Höhe des Einkaufslisten-Overlays");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY, "Soll das Overlay der Herstellungswarteschlange ausgeblendet werden, wenn es leer ist?");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY, "Soll das Einkaufslisten-Overlay ausgeblendet werden, wenn es leer ist?");
+
+        add(ModItems.SHOPPING_LIST.get(), "Einkaufsliste");
     }
 }

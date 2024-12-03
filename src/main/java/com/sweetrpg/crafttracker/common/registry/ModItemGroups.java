@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 public class ModItemGroups {
 
-    public static final CreativeModeTab GENERAL = new CustomItemGroup("CraftTracker", () -> new ItemStack(Items.CRAFTING_TABLE));
+    public static final CreativeModeTab GENERAL = new CustomItemGroup("crafttracker", () -> new ItemStack(Items.CRAFTING_TABLE));
 
     public static class CustomItemGroup extends CreativeModeTab {
 

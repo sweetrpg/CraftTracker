@@ -10,6 +10,7 @@ import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.registry.*;
 import com.sweetrpg.crafttracker.data.CTAdvancementProvider;
 import com.sweetrpg.crafttracker.data.CTLangProvider;
+import com.sweetrpg.crafttracker.data.CTRecipeProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -119,22 +120,14 @@ public class CraftTracker {
         DataGenerator gen = event.getGenerator();
 
         if(event.includeClient()) {
-//            BlockstateProvider blockstates = new BlockstateProvider(gen, event.getExistingFileHelper());
-//            gen.addProvider(blockstates);
-//            gen.addProvider(new ItemModelProvider(gen, blockstates.getExistingHelper()));
             gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_EN_US));
             gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_EN_GB));
             gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_DE_DE));
         }
 
         if(event.includeServer()) {
-            // gen.addProvider(new DTBlockTagsProvider(gen));
             gen.addProvider(new CTAdvancementProvider(gen));
-//            BlockTagsProvider blockTagProvider = new CHBlockTagsProvider(gen, event.getExistingFileHelper());
-//            gen.addProvider(blockTagProvider);
-//            gen.addProvider(new ItemTagsProvider(gen, blockTagProvider, event.getExistingFileHelper()));
-//            gen.addProvider(new RecipeProvider(gen));
-//            gen.addProvider(new LootTableProvider(gen));
+            gen.addProvider(new CTRecipeProvider(gen));
         }
     }
 }
