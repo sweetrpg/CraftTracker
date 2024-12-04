@@ -1,0 +1,5 @@
+- `[FIX]` Made cost calculation of non-vanilla recipes slightly more expensive
+- `[FIX]` Made cost calculation of non-crafting table recipes slightly more expensive
+- `[FIX]` Increased recipe calculation depth to 3
+- `[FIX]` Added checks for recipe and ingredient namespaces in determining intermediate/raw status
+- `[FIX]` Changed text for crafting queue sections
