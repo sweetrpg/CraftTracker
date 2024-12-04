@@ -99,12 +99,12 @@ public class RecipeUtil {
         return ing.size() == 1;
     }
 
-    public static int calculateRecipeCost(Recipe<?> recipe) {
+    public static float calculateRecipeCost(Recipe<?> recipe) {
         CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", DebugUtil.printRecipe(recipe));
 
-        int cost = recipe.getIngredients().stream()
+        float cost = recipe.getIngredients().stream()
                 .map(RecipeUtil::calculateIngredientCost)
-                .reduce(0, Integer::sum);
+                .reduce(0f, Float::sum);
 
         // if the item's namespace is not 'minecraft:', increase the cost
         if(!recipe.getId().getNamespace().equals("minecraft")) {
@@ -122,7 +122,7 @@ public class RecipeUtil {
         return cost;
     }
 
-    public static int calculateIngredientCost(Ingredient ingredient) {
+    public static float calculateIngredientCost(Ingredient ingredient) {
         CraftTracker.LOGGER.debug("RecipeUtil#getIngredientCost: {}", DebugUtil.printIngredient(ingredient));
 
         for(ItemStack stack : ingredient.getItems()) {
@@ -136,7 +136,7 @@ public class RecipeUtil {
             }
 
             // it's not, so check its tags
-            int highestCost = 0;
+            float highestCost = 0;
             for(TagKey<Item> tag : stack.getTags().toList()) {
                 var tagId = tag.location();
                 if(ingredientCostsByTag.containsKey(tagId)) {
@@ -165,7 +165,7 @@ public class RecipeUtil {
         return 1;
     }
 
-    public static int calculateItemCost(ItemStack stack) {
+    public static float calculateItemCost(ItemStack stack) {
         CraftTracker.LOGGER.debug("#calculateItemCost: {}", DebugUtil.printItemStack(stack));
 
         var itemId = stack.getItem().getRegistryName();
@@ -177,7 +177,7 @@ public class RecipeUtil {
         }
 
         // it's not, so check its tags
-        int highestCost = 0;
+        float highestCost = 0;
         for(TagKey<Item> tag : stack.getTags().toList()) {
             var tagId = tag.location();
             if(ingredientCostsByTag.containsKey(tagId)) {
@@ -213,7 +213,7 @@ public class RecipeUtil {
             return recipes.get(0);
         }
 
-        List<Tuple<? extends Recipe<?>, Integer>> recipeCosts = new ArrayList<>();
+        List<Tuple<? extends Recipe<?>, Float>> recipeCosts = new ArrayList<>();
 
         for(Recipe<?> recipe : recipes) {
             var cost = RecipeUtil.calculateRecipeCost(recipe);
@@ -240,7 +240,7 @@ public class RecipeUtil {
             return stacks[0];
         }
 
-        List<Tuple<ItemStack, Integer>> itemCosts = new ArrayList<>();
+        List<Tuple<ItemStack, Float>> itemCosts = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
             var cost = RecipeUtil.calculateItemCost(stack);
