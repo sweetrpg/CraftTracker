@@ -187,7 +187,7 @@ public class RecipeUtil {
                 // if the item's namespace is not 'minecraft:', increase the cost
                 if(!ObjectUtils.defaultIfNull(stack.getItem().getRegistryName().getNamespace(), "").equals("minecraft") &&
                         !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
-                    CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla item {} by {}",
+                    CraftTracker.LOGGER.debug("RecipeUtil#calculateItemCost: increasing cost ({}) of non-vanilla item {} by {}",
                             cost, tagId, NON_VANILLA_COST_MULTIPLIER);
                     cost *= NON_VANILLA_COST_MULTIPLIER;
                 }
