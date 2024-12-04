@@ -151,10 +151,10 @@ public class CraftQueueOverlay {
 
                 var item = ForgeRegistries.ITEMS.getValue(inter.getItemId());
                 var stack = item.getDefaultInstance();
-                stack.setCount(inter.getQuantity());
+                stack.setCount(inter.getAmount());
 
                 int playerHasQuantity = InventoryUtil.getQuantityOf(player, inter.getItemId());
-                if(playerHasQuantity >= inter.getQuantity()) {
+                if(playerHasQuantity >= inter.getAmount()) {
                     // don't need to display this intermediate, since the user doesn't need to make it
                     continue;
                 }
@@ -166,14 +166,16 @@ public class CraftQueueOverlay {
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
                     var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_HAVE, playerHasQuantity);
-                    var text = String.format("%s [%s]",
+                    var text = String.format("%s%s [%s]",
                             item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
+                            inter.isTag() ? "*" : "",
                             countText);
                     CraftTracker.LOGGER.trace("text: {}", text);
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                 }
                 else {
-                    var text = item.getDescription().getString(MAX_STRING_LENGTH);
+                    var text = item.getDescription().getString(MAX_STRING_LENGTH) +
+                            (inter.isTag() ? "*" : "");
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
                 }
 
@@ -206,10 +208,10 @@ public class CraftQueueOverlay {
 
                 var item = ForgeRegistries.ITEMS.getValue(m.getItemId());
                 var stack = item.getDefaultInstance();
-                stack.setCount(m.getQuantity());
+                stack.setCount(m.getAmount());
 
                 int playerHasQuantity = InventoryUtil.getQuantityOf(player, m.getItemId());
-                if(playerHasQuantity >= m.getQuantity()) {
+                if(playerHasQuantity >= m.getAmount()) {
                     // don't need to display this intermediate, since the user doesn't need to make it
                     continue;
                 }
@@ -221,14 +223,16 @@ public class CraftQueueOverlay {
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
                     var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_HAVE, playerHasQuantity);
-                    var text = String.format("%s [%s]",
+                    var text = String.format("%s%s [%s]",
                             item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
+                            m.isTag() ? "*" : "",
                             countText);
                     CraftTracker.LOGGER.trace("text: {}", text);
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                 }
                 else {
-                    var text = item.getDescription().getString(MAX_STRING_LENGTH);
+                    var text = item.getDescription().getString(MAX_STRING_LENGTH) +
+                            (m.isTag() ? "*" : "");
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
                 }
 
@@ -261,10 +265,10 @@ public class CraftQueueOverlay {
 
                 var item = ForgeRegistries.ITEMS.getValue(f.getItemId());
                 var stack = item.getDefaultInstance();
-                stack.setCount(f.getQuantity());
+                stack.setCount(f.getAmount());
 
                 int playerHasQuantity = InventoryUtil.getQuantityOf(player, f.getItemId());
-                if(playerHasQuantity >= f.getQuantity()) {
+                if(playerHasQuantity >= f.getAmount()) {
                     // don't need to display this intermediate, since the user doesn't need to make it
                     continue;
                 }
@@ -276,14 +280,16 @@ public class CraftQueueOverlay {
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
                     var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_HAVE, playerHasQuantity);
-                    var text = String.format("%s [%s]",
+                    var text = String.format("%s%s [%s]",
                             item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
+                            f.isTag() ? "*" : "",
                             countText);
                     CraftTracker.LOGGER.trace("text: {}", text);
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                 }
                 else {
-                    var text = item.getDescription().getString(MAX_STRING_LENGTH);
+                    var text = item.getDescription().getString(MAX_STRING_LENGTH) +
+                            (f.isTag() ? "*" : "");
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
                 }
 
