@@ -33,7 +33,7 @@ public class CraftingQueueManager {
 
     public static CraftingQueueManager INSTANCE = new CraftingQueueManager();
 
-    private static final int MAX_PROCESSING_LEVEL = 2;
+    private static final int MAX_PROCESSING_LEVEL = 3;
 
     private Map<ResourceLocation, CraftingQueueProduct> endProducts = new HashMap<>();
     private Map<ResourceLocation, Integer> intermediateProducts = new HashMap<>();
@@ -282,6 +282,17 @@ public class CraftingQueueManager {
         var ingredients = recipe.getIngredients();
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
+        // if the ingredients are in a different namespace than the recipe, and we're not at the root, treat the recipe
+        var recipeNamespace = ObjectUtils.defaultIfNull(recipe.getId().getNamespace(), "");
+        var itemNamespace = ObjectUtils.defaultIfNull(recipe.getResultItem().getItem().getRegistryName().getNamespace(), "");
+        if(depth > 0 &&
+                (!RecipeUtil.areIngredientsSameNamespace(recipeNamespace, ingredients) ||
+                        !RecipeUtil.areIngredientsSameNamespace(itemNamespace, ingredients))) {
+            CraftTracker.LOGGER.debug("ingredients for sub-recipe are not in the same namespace as the recipe: {}",
+                    DebugUtil.printRecipe(recipe));
+            return null;
+        }
+
         // tally ingredients
         Map<ResourceLocation, Integer> ingredientTally = new HashMap<>();
         for(Ingredient ingredient : ingredients) {
@@ -298,13 +309,10 @@ public class CraftingQueueManager {
         }
 
         // process ingredients
-//        for(Ingredient ingredient : ingredients) {
         ingredientTally.forEach((ingredientId, ingredientAmount) -> {
             CraftTracker.LOGGER.debug("ingredient: id {}, amount {}", ingredientId, ingredientAmount);
 
-//            ItemStack chosenStack = RecipeUtil.chooseLeastExpensiveOf(ingredient.getItems());
             Item item = ForgeRegistries.ITEMS.getValue(ingredientId);
-//            Item item = chosenStack.getItem();
             CraftTracker.LOGGER.debug("item: {}", DebugUtil.printItem(item));
             int amountRequired = ingredientAmount; // chosenStack.getCount();
             CraftTracker.LOGGER.debug("amountRequired: {}", amountRequired);
@@ -338,15 +346,22 @@ public class CraftingQueueManager {
                 CraftTracker.LOGGER.debug("subRecipes has {} items; ingredient {} is an intermediate product", subRecipes.size(), ingredientId);
 
                 var chosenSubRecipe = RecipeUtil.chooseLeastExpensiveOf(subRecipes);
-//                CraftTracker.LOGGER.debug("least expensive item index: {}", subIndex);
-//                var chosenSubRecipe = subRecipes.get(subIndex);
                 CraftTracker.LOGGER.debug("chosenSubRecipe: {}", DebugUtil.printRecipe(chosenSubRecipe));
+
+                var computedSubRecipe = this.computeRecipe(chosenSubRecipe, amountRequired * iterations, depth + 1);
+                CraftTracker.LOGGER.debug("computedSubRecipe: {}", computedSubRecipe);
+                if(computedSubRecipe == null) {
+                    CraftTracker.LOGGER.debug("computed sub-recipe for {} returned is null; treat as raw material", DebugUtil.printRecipe(chosenSubRecipe));
+                    // if the sub-recipe comes back null, then treat the result item as a raw material
+                    computedRecipe.rawMaterials.compute(id,
+                            (itemId, quantity) ->
+                                    ObjectUtils.defaultIfNull(quantity, 0) + (amountRequired * iterations));
+                    return;
+                }
 
                 computedRecipe.intermediateProducts.compute(id,
                         (itemId, quantity) ->
                                 ObjectUtils.defaultIfNull(quantity, 0) + needsQty);
-
-                var computedSubRecipe = this.computeRecipe(chosenSubRecipe, amountRequired * iterations, depth + 1);
 
                 // merge subrecipe items into this
                 CraftTracker.LOGGER.debug("merging subrecipe contents: {} into this: {}", computedSubRecipe, computedRecipe);
@@ -372,39 +387,6 @@ public class CraftingQueueManager {
 
         return computedRecipe;
     }
-
-//    public static class ProductItem {
-//        private ResourceLocation itemId;
-//        private int iterations;
-//        private List<ResourceLocation> categories;
-//
-//        public ProductItem(ResourceLocation itemId, int iterations, List<ResourceLocation> categories) {
-//            this.itemId = itemId;
-//            this.iterations = iterations;
-//            this.categories = categories;
-//        }
-//
-//        public ResourceLocation getItemId() {
-//            return itemId;
-//        }
-//
-//        public int getIterations() {
-//            return iterations;
-//        }
-//
-//        public List<ResourceLocation> getCategories() {
-//            return categories;
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return "ProductItem{" +
-//                    "itemId=" + itemId +
-//                    ", iterations=" + iterations +
-//                    ", categories=" + categories +
-//                    '}';
-//        }
-//    }
 
     public class QueueItem {
         private ResourceLocation itemId;
