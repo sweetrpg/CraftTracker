@@ -141,7 +141,7 @@ public class RecipeUtil {
                 var tagId = tag.location();
                 if(ingredientCostsByTag.containsKey(tagId)) {
                     CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                    var cost = ingredientCostsByTag.get(tagId) * count;
+                    float cost = ingredientCostsByTag.get(tagId) * count;
 
                     // if the item's namespace is not 'minecraft:', increase the cost
                     if(!ObjectUtils.defaultIfNull(stack.getItem().getRegistryName().getNamespace(), "").equals("minecraft") &&
