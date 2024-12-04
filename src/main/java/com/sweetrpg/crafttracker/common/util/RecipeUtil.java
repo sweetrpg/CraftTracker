@@ -99,12 +99,12 @@ public class RecipeUtil {
         return ing.size() == 1;
     }
 
-    public static float calculateRecipeCost(Recipe<?> recipe) {
+    public static int calculateRecipeCost(Recipe<?> recipe) {
         CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", DebugUtil.printRecipe(recipe));
 
-        float cost = recipe.getIngredients().stream()
+        int cost = recipe.getIngredients().stream()
                 .map(RecipeUtil::calculateIngredientCost)
-                .reduce(0f, Float::sum);
+                .reduce(0, Integer::sum);
 
         // if the item's namespace is not 'minecraft:', increase the cost
         if(!recipe.getId().getNamespace().equals("minecraft")) {
@@ -122,7 +122,7 @@ public class RecipeUtil {
         return cost;
     }
 
-    public static float calculateIngredientCost(Ingredient ingredient) {
+    public static int calculateIngredientCost(Ingredient ingredient) {
         CraftTracker.LOGGER.debug("RecipeUtil#getIngredientCost: {}", DebugUtil.printIngredient(ingredient));
 
         for(ItemStack stack : ingredient.getItems()) {
@@ -136,12 +136,12 @@ public class RecipeUtil {
             }
 
             // it's not, so check its tags
-            float highestCost = 0;
+            int highestCost = 0;
             for(TagKey<Item> tag : stack.getTags().toList()) {
                 var tagId = tag.location();
                 if(ingredientCostsByTag.containsKey(tagId)) {
                     CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                    float cost = ingredientCostsByTag.get(tagId) * count;
+                    int cost = ingredientCostsByTag.get(tagId) * count;
 
                     // if the item's namespace is not 'minecraft:', increase the cost
                     if(!ObjectUtils.defaultIfNull(stack.getItem().getRegistryName().getNamespace(), "").equals("minecraft") &&
@@ -165,7 +165,7 @@ public class RecipeUtil {
         return 1;
     }
 
-    public static float calculateItemCost(ItemStack stack) {
+    public static int calculateItemCost(ItemStack stack) {
         CraftTracker.LOGGER.debug("#calculateItemCost: {}", DebugUtil.printItemStack(stack));
 
         var itemId = stack.getItem().getRegistryName();
@@ -177,12 +177,12 @@ public class RecipeUtil {
         }
 
         // it's not, so check its tags
-        float highestCost = 0;
+        int highestCost = 0;
         for(TagKey<Item> tag : stack.getTags().toList()) {
             var tagId = tag.location();
             if(ingredientCostsByTag.containsKey(tagId)) {
                 CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                double cost = ingredientCostsByTag.get(tagId) * count;
+                int cost = ingredientCostsByTag.get(tagId) * count;
 
                 // if the item's namespace is not 'minecraft:', increase the cost
                 if(!ObjectUtils.defaultIfNull(stack.getItem().getRegistryName().getNamespace(), "").equals("minecraft") &&
@@ -213,7 +213,7 @@ public class RecipeUtil {
             return recipes.get(0);
         }
 
-        List<Tuple<? extends Recipe<?>, Float>> recipeCosts = new ArrayList<>();
+        List<Tuple<? extends Recipe<?>, Integer>> recipeCosts = new ArrayList<>();
 
         for(Recipe<?> recipe : recipes) {
             var cost = RecipeUtil.calculateRecipeCost(recipe);
@@ -240,7 +240,7 @@ public class RecipeUtil {
             return stacks[0];
         }
 
-        List<Tuple<ItemStack, Float>> itemCosts = new ArrayList<>();
+        List<Tuple<ItemStack, Integer>> itemCosts = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
             var cost = RecipeUtil.calculateItemCost(stack);
