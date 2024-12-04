@@ -193,7 +193,7 @@ public class RecipeUtil {
                 }
 
                 if(cost > highestCost) {
-                    highestCost = cost;
+                    highestCost = (int) cost;
                 }
             }
         }
