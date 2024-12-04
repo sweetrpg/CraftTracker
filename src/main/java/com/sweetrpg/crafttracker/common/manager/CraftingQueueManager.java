@@ -28,7 +28,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CraftingQueueManager {
 
@@ -96,31 +95,30 @@ public class CraftingQueueManager {
     }
 
     public List<CraftingQueueProduct> getEndProducts() {
-        return endProducts.entrySet()
+        return endProducts.values()
                 .stream()
-                .map(e -> e.getValue())
                 .toList();
     }
 
     public List<QueueItem> getIntermediates() {
         return intermediateProducts.entrySet()
                 .stream()
-                .map(e -> new QueueItem(e.getKey(), e.getValue()))
-                .collect(Collectors.toUnmodifiableList());
+                .map(e -> new QueueItem(e.getKey(), false, e.getValue()))
+                .toList();
     }
 
     public List<QueueItem> getRawMaterials() {
         return rawMaterials.entrySet()
                 .stream()
-                .map(e -> new QueueItem(e.getKey(), e.getValue()))
-                .collect(Collectors.toUnmodifiableList());
+                .map(e -> new QueueItem(e.getKey(), false, e.getValue()))
+                .toList();
     }
 
     public List<QueueItem> getFuel() {
         return fuel.entrySet()
                 .stream()
-                .map(e -> new QueueItem(e.getKey(), e.getValue()))
-                .collect(Collectors.toUnmodifiableList());
+                .map(e -> new QueueItem(e.getKey(), false, e.getValue()))
+                .toList();
     }
 
     public void addProduct(Player player, ResourceLocation itemId, int quantity) {
@@ -130,7 +128,7 @@ public class CraftingQueueManager {
 
         var recipes = RecipeUtil.getRecipesFor(itemId);
 
-        if(recipes.size() > 0) {
+        if(!recipes.isEmpty()) {
             CraftTracker.LOGGER.debug("recipes: {}", recipes.stream().map(DebugUtil::printRecipe));
 
             var product = new CraftingQueueProduct(itemId, recipes, quantity);
@@ -410,9 +408,10 @@ public class CraftingQueueManager {
 
     public class QueueItem {
         private ResourceLocation itemId;
+        private boolean tag;
         private int quantity;
 
-        public QueueItem(ResourceLocation itemId, int quantity) {
+        public QueueItem(ResourceLocation itemId, boolean tag, int quantity) {
             this.itemId = itemId;
             this.quantity = quantity;
         }
@@ -423,6 +422,14 @@ public class CraftingQueueManager {
 
         public void setItemId(ResourceLocation itemId) {
             this.itemId = itemId;
+        }
+
+        public boolean isTag() {
+            return tag;
+        }
+
+        public void setTag(boolean tag) {
+            this.tag = tag;
         }
 
         public int getQuantity() {

@@ -37,7 +37,9 @@ public class CraftQueueOverlay {
         var mgr = CraftingQueueManager.INSTANCE;
         var products = mgr.getEndProducts().stream().sorted((i1, i2) -> {
             var item1 = ForgeRegistries.ITEMS.getValue(i1.getProductId());
+            if(item1 == null) return 0;
             var item2 = ForgeRegistries.ITEMS.getValue(i2.getProductId());
+            if(item2 == null) return 0;
             return item1.getDescription().getString().compareTo(item2.getDescription().getString());
         }).toList();
 
@@ -103,6 +105,9 @@ public class CraftQueueOverlay {
             var p = products.get(i);
 
             var item = ForgeRegistries.ITEMS.getValue(p.getProductId());
+            if(item == null) {
+                continue;
+            }
             var stack = item.getDefaultInstance();
             var selectedRecipe = p.getRecipes().get(p.getIndex());
             var amountProduced = selectedRecipe.getResultItem().getCount() * p.getIterations();
@@ -136,7 +141,9 @@ public class CraftQueueOverlay {
             // items
             var sortedIntermediates = mgr.getIntermediates().stream().sorted((i1, i2) -> {
                 var item1 = ForgeRegistries.ITEMS.getValue(i1.getItemId());
+                if(item1 == null) return 0;
                 var item2 = ForgeRegistries.ITEMS.getValue(i2.getItemId());
+                if(item2 == null) return 0;
                 return item1.getDescription().getString().compareTo(item2.getDescription().getString());
             }).toList();
             for(int i = 0; i < sortedIntermediates.size(); i++) {
