@@ -19,7 +19,6 @@ public class ShoppingListOverlay {
 
     static int TITLE_COLOR = 0x99999999;
     static int HELP_COLOR = 0x77777777;
-    static int SECTION_COLOR = 0xcccccccc;
     static int TEXT_COLOR = 0xffffffff;
     static int MESSAGE_COLOR = 0x66666666;
     static int SECTION_X_OFFSET = 4;
