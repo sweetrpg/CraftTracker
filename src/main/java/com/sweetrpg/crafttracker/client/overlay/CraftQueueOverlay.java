@@ -123,7 +123,6 @@ public class CraftQueueOverlay {
         }
 
         Player player = Minecraft.getInstance().player;
-//        var inventory = player.getInventory();
 
         // SECTION: intermediates
 
