@@ -35,7 +35,7 @@ public class CraftingQueueManager {
 
     public static CraftingQueueManager INSTANCE = new CraftingQueueManager();
 
-    private static final int MAX_PROCESSING_LEVEL = 2;
+    private static final int MAX_PROCESSING_LEVEL = 3;
 
     private Map<ResourceLocation, CraftingQueueProduct> endProducts = new HashMap<>();
     private Map<ResourceLocation, CraftingQueueItem> intermediateProducts = new HashMap<>();
