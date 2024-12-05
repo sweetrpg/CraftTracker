@@ -28,18 +28,19 @@ public class AddonManager {
     }
 
     /**
-     * @param addons The list of addons
-     * @param shouldRun Conditions for running for the particular addon
-     * @param action The action to run for the particular addon
+     * @param addons         The list of addons
+     * @param shouldRun      Conditions for running for the particular addon
+     * @param action         The action to run for the particular addon
      * @param failedCallback The callback if a {@link RuntimeException} is thrown
      */
     private static void doWork(List<Addon> addons, Predicate<Addon> shouldRun, Consumer<Addon> action, BiConsumer<Addon, RuntimeException> failedCallback) {
-        for (Addon addon : addons) {
+        for(Addon addon : addons) {
             // If list is empty load everytime or only load if all of the mods are loaded
-            if (shouldRun.test(addon)) {
+            if(shouldRun.test(addon)) {
                 try {
                     action.accept(addon);
-                } catch(RuntimeException e) {
+                }
+                catch (RuntimeException e) {
                     failedCallback.accept(addon, e);
                 }
             }

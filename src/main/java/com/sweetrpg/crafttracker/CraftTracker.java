@@ -54,7 +54,6 @@ public class CraftTracker {
         ModBlocks.BLOCKS.register(modEventBus);
         ModBlockEntityTypes.TILE_ENTITIES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
-//        ModEntityTypes.ENTITIES.register(modEventBus);
         ModContainerTypes.CONTAINERS.register(modEventBus);
         ModSerializers.SERIALIZERS.register(modEventBus);
         ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
@@ -70,10 +69,6 @@ public class CraftTracker {
         // Client Events
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             modEventBus.addListener(this::clientSetup);
-//            modEventBus.addListener(ModBlocks::registerBlockColours);
-//            modEventBus.addListener(ClientEventHandler::onModelBakeEvent);
-//            modEventBus.addListener(ClientSetup::setupTileEntityRenderers);
-//            modEventBus.addListener(ClientSetup::setupEntityRenderers);
             modEventBus.addListener(ClientSetup::addClientReloadListeners);
             modEventBus.addListener(ClientSetup::addKeyBindings);
 
@@ -84,9 +79,6 @@ public class CraftTracker {
 
         AddonManager.init();
     }
-
-//    public void commonSetup(final FMLCommonSetupEvent event) {
-//    }
 
     public void serverStarting(final ServerStartingEvent event) {
         LOGGER.debug("Server starting");
@@ -119,22 +111,13 @@ public class CraftTracker {
         DataGenerator gen = event.getGenerator();
 
         if(event.includeClient()) {
-//            BlockstateProvider blockstates = new BlockstateProvider(gen, event.getExistingFileHelper());
-//            gen.addProvider(blockstates);
-//            gen.addProvider(new ItemModelProvider(gen, blockstates.getExistingHelper()));
             gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_EN_US));
             gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_EN_GB));
             gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_DE_DE));
         }
 
         if(event.includeServer()) {
-            // gen.addProvider(new DTBlockTagsProvider(gen));
             gen.addProvider(new CTAdvancementProvider(gen));
-//            BlockTagsProvider blockTagProvider = new CHBlockTagsProvider(gen, event.getExistingFileHelper());
-//            gen.addProvider(blockTagProvider);
-//            gen.addProvider(new ItemTagsProvider(gen, blockTagProvider, event.getExistingFileHelper()));
-//            gen.addProvider(new RecipeProvider(gen));
-//            gen.addProvider(new LootTableProvider(gen));
         }
     }
 }

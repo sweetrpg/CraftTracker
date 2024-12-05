@@ -37,12 +37,20 @@ jobs:
         name: Get last version
         run: |
           echo "latest_version=$(cat .release-info/${{ github.ref_name }}/VERSION)" >> $GITHUB_ENV
+      - id: get_bump_level
+        name: Get bump level
+        run: |
+          echo "bump_level=$(cat .release-info/${{ github.ref_name }}/BUMP_LEVEL)" >> $GITHUB_ENV
       - id: bump_version
         name: Bump version
         uses: cbrgm/semver-bump-action@main
         with:
           current-version: ${{ env.latest_version }}
-          bump-level: patch
+          bump-level: ${{ env.bump_level || 'patch' }}
+      - id: reset_bump_level
+        name: Reset bump level
+        run: |
+          echo "patch" > .release-info/${{ github.ref_name }}/BUMP_LEVEL
       - name: Build with Gradle
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
@@ -54,8 +62,8 @@ jobs:
           git config --global user.email "ci@sweetrpg.com"
           git config --global user.name "SweetRPG CI"
           echo "${{ steps.bump_version.outputs.new_version }}" > .release-info/${{ github.ref_name }}/VERSION
-          git add .release-info/${{ github.ref_name }}/VERSION
-          git commit -m "Update ${{ github.ref_name }} VERSION file"
+          git add .release-info/${{ github.ref_name }}/*
+          git commit -m "Update ${{ github.ref_name }} .release-info files"
           git push origin
       - name: Release artifacts
         uses: softprops/action-gh-release@v1

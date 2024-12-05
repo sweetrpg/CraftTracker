@@ -25,13 +25,7 @@ public class CTRecipeProvider extends RecipeProvider {
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
         CraftTracker.LOGGER.debug("Build crafting recipes: {}", consumer);
 
-        // treats
-//        ShapelessRecipeBuilder.shapeless(ModItems.SUPER_TREAT.get(), 5)
-//                .requires(ModItems.TRAINING_TREAT.get(), 5)
-//                .requires(Items.GOLDEN_APPLE, 1)
-//                .unlockedBy("has_golden_apple", has(Items.GOLDEN_APPLE))
-//                .save(consumer);
-
+        // shopping list
     }
 
     @Override

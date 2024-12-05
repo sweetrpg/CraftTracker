@@ -6,6 +6,9 @@ import net.minecraft.world.item.crafting.Recipe;
 import java.text.MessageFormat;
 import java.util.List;
 
+/**
+ *
+ */
 public class CraftingQueueProduct {
 
     ResourceLocation productId;
@@ -13,6 +16,11 @@ public class CraftingQueueProduct {
     List<? extends Recipe<?>> recipes;
     int index;
 
+    /**
+     * @param productId
+     * @param recipes
+     * @param iterations
+     */
     public CraftingQueueProduct(ResourceLocation productId, List<? extends Recipe<?>> recipes, int iterations) {
         this.productId = productId;
         this.iterations = iterations;

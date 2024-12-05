@@ -31,9 +31,15 @@ public class CraftingQueueStorage extends SavedData {
     private boolean craftingQueueVisible;
     private Map<ResourceLocation, CraftingQueueProduct> products = new HashMap<>();
 
+    /**
+     *
+     */
     public CraftingQueueStorage() {
     }
 
+    /**
+     * @param products
+     */
     public void putData(Map<ResourceLocation, CraftingQueueProduct> products) {
         CraftTracker.LOGGER.debug("CraftingQueueStorage#putData: {}", products);
 
@@ -42,6 +48,11 @@ public class CraftingQueueStorage extends SavedData {
         this.setDirty();
     }
 
+    /**
+     *
+     * @param nbt
+     * @return
+     */
     public static Map<ResourceLocation, CraftingQueueProduct> load(CompoundTag nbt) {
         CraftTracker.LOGGER.debug("CraftingQueueStorage#load: {}", nbt);
 
@@ -69,6 +80,11 @@ public class CraftingQueueStorage extends SavedData {
         return store.products;
     }
 
+    /**
+     *
+     * @param compound
+     * @return
+     */
     @Override
     public CompoundTag save(CompoundTag compound) {
         CraftTracker.LOGGER.debug("CraftingQueueStorage#save: {}", compound);

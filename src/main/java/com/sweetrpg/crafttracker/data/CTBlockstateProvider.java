@@ -50,17 +50,17 @@ public class CTBlockstateProvider extends BlockStateProvider {
 
     protected void createFromShape(Supplier<? extends Block> blockIn, AABB bb) {
         BlockModelBuilder model = this.models()
-                                      .getBuilder(name(blockIn))
-                                      .parent(this.models().getExistingFile(mcLoc(ModelProvider.BLOCK_FOLDER + "/block")))
-                                      .texture("particle", extend(blockTexture(blockIn), "_bottom"))
-                                      .texture("bottom", extend(blockTexture(blockIn), "_bottom"))
-                                      .texture("top", extend(blockTexture(blockIn), "_top"))
-                                      .texture("side", extend(blockTexture(blockIn), "_side"));
+                .getBuilder(name(blockIn))
+                .parent(this.models().getExistingFile(mcLoc(ModelProvider.BLOCK_FOLDER + "/block")))
+                .texture("particle", extend(blockTexture(blockIn), "_bottom"))
+                .texture("bottom", extend(blockTexture(blockIn), "_bottom"))
+                .texture("top", extend(blockTexture(blockIn), "_top"))
+                .texture("side", extend(blockTexture(blockIn), "_side"));
 
         model.element()
-             .from((float) bb.minX, (float) bb.minY, (float) bb.minZ)
-             .to((float) bb.maxX, (float) bb.maxY, (float) bb.maxZ)
-             .allFaces((d, f) -> f.cullface(d == Direction.DOWN ? d : null).texture(d.getAxis().isHorizontal() ? "#side" : d == Direction.DOWN ? "#bottom" : "#top"));
+                .from((float) bb.minX, (float) bb.minY, (float) bb.minZ)
+                .to((float) bb.maxX, (float) bb.maxY, (float) bb.maxZ)
+                .allFaces((d, f) -> f.cullface(d == Direction.DOWN ? d : null).texture(d.getAxis().isHorizontal() ? "#side" : d == Direction.DOWN ? "#bottom" : "#top"));
 
         this.simpleBlock(blockIn.get(), model);
     }

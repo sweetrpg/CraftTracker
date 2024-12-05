@@ -12,21 +12,6 @@ public final class PacketHandler {
 
     public static void init() {
         registerPacket(new QueueCommandPacket(), QueueCommandData.class);
-//        registerPacket(new AddToQueuePacket(), AddToQueueData.class);
-//        registerPacket(new ToggleCraftListPacket(), ToggleCraftListData.class);
-//        registerPacket(new ToggleShoppingListPacket(), ToggleShoppingListData.class);
-//        registerPacket(new UpdateCraftQueuePacket(), UpdateCraftQueueData.class);
-//        registerPacket(new UpdateShoppingListPacket(), UpdateShoppingListData.class);
-//        registerPacket(new CatNamePacket(), CatNameData.class);
-//        registerPacket(new CatObeyPacket(), CatObeyData.class);
-//        registerPacket(new CatTalentPacket(), CatTalentData.class);
-//        //registerPacket(new CatTexturePacket(), CatTextureData.class);
-//        registerPacket(new FriendlyFirePacket(), FriendlyFireData.class);
-//        registerPacket(new SendSkinPacket(), SendSkinData.class);
-//        registerPacket(new RequestSkinPacket(), RequestSkinData.class);
-//        registerPacket(new OpenCatScreenPacket(), OpenCatScreenData.class);
-//        registerPacket(new CatInventoryPagePacket(), CatInventoryPageData.class);
-//        registerPacket(new CatTexturePacket(), CatTextureData.class);
     }
 
     public static <MSG> void sendToServer(MSG message) {

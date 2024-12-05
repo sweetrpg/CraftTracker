@@ -57,7 +57,7 @@ public class CTAdvancementProvider extends AdvancementProvider {
             }
         };
 
-        // training
+        // tracking
 //        Advancement trainCat = Advancement.Builder.advancement()
 ////                .parent(Util.mcLoc("tame_animal"))
 //                .display(DisplayInfoBuilder.create().icon(ModItems.TRAINING_TREAT).frame(FrameType.TASK).translate("CraftTracker.main.train_cat").background("stone.png").build())

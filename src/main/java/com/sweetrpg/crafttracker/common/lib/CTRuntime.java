@@ -1,5 +1,8 @@
 package com.sweetrpg.crafttracker.common.lib;
 
+/**
+ * Container class for runtime information.
+ */
 public class CTRuntime {
 
     public static CTRuntime INSTANCE = new CTRuntime();

@@ -139,7 +139,6 @@ public class ShoppingListOverlay {
             yPos += LINE_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (materials item {}): {}", i, yPos);
         }
-
     };
 
 }

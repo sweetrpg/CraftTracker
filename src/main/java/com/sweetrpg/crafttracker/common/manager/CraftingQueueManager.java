@@ -31,6 +31,9 @@ import java.nio.file.StandardOpenOption;
 import java.text.MessageFormat;
 import java.util.*;
 
+/**
+ *
+ */
 public class CraftingQueueManager {
 
     public static CraftingQueueManager INSTANCE = new CraftingQueueManager();
@@ -42,9 +45,15 @@ public class CraftingQueueManager {
     private Map<ResourceLocation, CraftingQueueItem> rawMaterials = new HashMap<>();
     private Map<ResourceLocation, CraftingQueueItem> fuel = new HashMap<>();
 
+    /**
+     *
+     */
     public CraftingQueueManager() {
     }
 
+    /**
+     * @param player
+     */
     public void load(Player player) {
         CraftTracker.LOGGER.info("Loading crafting queue for {}", player);
 
@@ -65,6 +74,9 @@ public class CraftingQueueManager {
         }
     }
 
+    /**
+     * @param player
+     */
     public void save(Player player) {
         CraftTracker.LOGGER.info("Saving crafting queue for {}", player);
 
@@ -96,30 +108,47 @@ public class CraftingQueueManager {
         }
     }
 
+    /**
+     * @return
+     */
     public List<CraftingQueueProduct> getEndProducts() {
         return endProducts.values()
                 .stream()
                 .toList();
     }
 
+    /**
+     * @return
+     */
     public List<CraftingQueueItem> getIntermediates() {
         return intermediateProducts.values()
                 .stream()
                 .toList();
     }
 
+    /**
+     * @return
+     */
     public List<CraftingQueueItem> getRawMaterials() {
         return rawMaterials.values()
                 .stream()
                 .toList();
     }
 
+    /**
+     * @return
+     */
     public List<CraftingQueueItem> getFuel() {
         return fuel.values()
                 .stream()
                 .toList();
     }
 
+    /**
+     * @param player
+     * @param itemId
+     * @param quantity
+     */
     public void addProduct(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#addProduct: {}, quantity: {}", itemId, quantity);
 
@@ -160,6 +189,10 @@ public class CraftingQueueManager {
             addProduct(player, itemId, quantity);
     }
 
+    /**
+     * @param player
+     * @param itemId
+     */
     public void removeProduct(Player player, ResourceLocation itemId) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}", itemId);
 
@@ -170,6 +203,11 @@ public class CraftingQueueManager {
         this.save(player);
     }
 
+    /**
+     * @param player
+     * @param itemId
+     * @param quantity
+     */
     public void removeProduct(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}, quantity: {}", itemId, quantity);
 
@@ -200,6 +238,9 @@ public class CraftingQueueManager {
         this.save(player);
     }
 
+    /**
+     *
+     */
     public void removeAll() {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeAll");
 
@@ -232,6 +273,10 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("final state after computation: {}", this);
     }
 
+    /**
+     * @param ctx
+     * @param product
+     */
     void computeProduct(ProcessingContext ctx, CraftingQueueProduct product) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeProduct: {}", product);
 
@@ -243,6 +288,9 @@ public class CraftingQueueManager {
         ctx.computedRecipes.add(computedRecipe);
     }
 
+    /**
+     * @param ctx
+     */
     void coalesceProducts(ProcessingContext ctx) {
         CraftTracker.LOGGER.debug("#coalesceProducts: {}", ctx);
 
@@ -257,21 +305,21 @@ public class CraftingQueueManager {
                 this.intermediateProducts.compute(ik, (ik1, iv1) -> {
                     return ObjectUtils.defaultIfNull(iv1, new CraftingQueueItem(ik1, 0, false))
                             .increment(iv.amount)
-                            .setTag(iv.tag);
+                            .tag(iv.tag);
                 });
             });
             r.rawMaterials.forEach((rk, rv) -> {
                 this.rawMaterials.compute(rk, (rk1, rv1) -> {
                     return ObjectUtils.defaultIfNull(rv1, new CraftingQueueItem(rk1, 0, false))
                             .increment(rv.amount)
-                            .setTag(rv.tag);
+                            .tag(rv.tag);
                 });
             });
             r.fuel.forEach((fk, fv) -> {
                 this.fuel.compute(fk, (fk1, fv1) -> {
                     return ObjectUtils.defaultIfNull(fv1, new CraftingQueueItem(fk1, 0, false))
                             .increment(fv.amount)
-                            .setTag(fv.tag);
+                            .tag(fv.tag);
                 });
             });
         });
@@ -279,6 +327,12 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("coalesce complete: {}", this);
     }
 
+    /**
+     * @param recipe
+     * @param iterations
+     * @param depth
+     * @return
+     */
     ComputedRecipe computeRecipe(Recipe<?> recipe, int iterations, int depth) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", DebugUtil.printRecipe(recipe));
 
@@ -425,49 +479,9 @@ public class CraftingQueueManager {
         return computedRecipe;
     }
 
-    public class QueueItem {
-        private ResourceLocation itemId;
-        private boolean tag;
-        private int quantity;
-
-        public QueueItem(ResourceLocation itemId, boolean tag, int quantity) {
-            this.itemId = itemId;
-            this.quantity = quantity;
-        }
-
-        public ResourceLocation getItemId() {
-            return itemId;
-        }
-
-        public void setItemId(ResourceLocation itemId) {
-            this.itemId = itemId;
-        }
-
-        public boolean isTag() {
-            return tag;
-        }
-
-        public void setTag(boolean tag) {
-            this.tag = tag;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
-        }
-
-        @Override
-        public String toString() {
-            return "QueueItem{" +
-                    "itemId=" + itemId +
-                    ", quantity=" + quantity +
-                    '}';
-        }
-    }
-
+    /**
+     *
+     */
     class ProcessingContext {
         Map<ResourceLocation, Integer> intermediateProducts = new HashMap<>();
         Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
@@ -490,20 +504,34 @@ public class CraftingQueueManager {
         }
     }
 
+    /**
+     *
+     */
     class ComputedRecipeItem {
         ResourceLocation itemId;
         int amount;
         boolean tag;
 
+        /**
+         * @param itemId
+         */
         public ComputedRecipeItem(ResourceLocation itemId) {
             this.itemId = itemId;
         }
 
+        /**
+         * @param amount
+         * @return
+         */
         public ComputedRecipeItem increase(int amount) {
             this.amount += amount;
             return this;
         }
 
+        /**
+         * @param tag
+         * @return
+         */
         public ComputedRecipeItem tag(boolean tag) {
             this.tag = tag;
             return this;
@@ -522,12 +550,18 @@ public class CraftingQueueManager {
         }
     }
 
+    /**
+     *
+     */
     class ComputedRecipe {
         ResourceLocation recipeId;
         Map<ResourceLocation, ComputedRecipeItem> intermediateProducts = new HashMap<>();
         Map<ResourceLocation, ComputedRecipeItem> rawMaterials = new HashMap<>();
         Map<ResourceLocation, ComputedRecipeItem> fuel = new HashMap<>();
 
+        /**
+         * @param recipeId
+         */
         ComputedRecipe(ResourceLocation recipeId) {
             this.recipeId = recipeId;
         }

@@ -72,7 +72,7 @@ public class CTLootTableProvider extends LootTableProvider {
 
         @Override
         protected Iterable<EntityType<?>> getKnownEntities() {
-            return List.of(); // ModEntityTypes.ENTITIES.getEntries().stream().map(Supplier::get).collect(Collectors.toList());
+            return List.of();
         }
     }
 }

@@ -62,9 +62,6 @@ public class QueueManagementScreen extends Screen {
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
-        int topX = this.width / 2;
-        int topY = this.height / 2;
-
         // hide queue overlay and shopping list
         this.queueState = CTRuntime.INSTANCE.queueOverlayRequestedState;
         CTRuntime.INSTANCE.queueOverlayRequestedState = SUPPRESS;
@@ -81,8 +78,6 @@ public class QueueManagementScreen extends Screen {
         int topY = 20; // (this.height / 2) - (height / 2);
 
         this.renderBackground(poseStack);
-
-//        GuiComponent.fill(poseStack, topX, topY, width, height, BACKGROUND_COLOR);
 
         // title
         GuiComponent.drawCenteredString(poseStack, this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
@@ -128,7 +123,6 @@ public class QueueManagementScreen extends Screen {
             }
             {
                 var text = String.format("%d", pItem.getIterations());
-//                this.font.draw(poseStack, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
                 GuiComponent.drawCenteredString(poseStack, this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
             }
             {
@@ -180,17 +174,7 @@ public class QueueManagementScreen extends Screen {
             this.addRenderableWidget(button);
         }
 
-        // buttons
-
         super.render(poseStack, mouseX, mouseY, partialTicks);
-        //RenderHelper.disableStandardItemLighting(); // 1.14 enableGUIStandardItemLighting
-
-//        for(Widget widget : this.renderables) {
-//            if(widget instanceof AbstractWidget w && w.isHoveredOrFocused()) {
-//                w.renderToolTip(poseStack, mouseX, mouseY);
-//                break;
-//            }
-//        }
     }
 
     @Override

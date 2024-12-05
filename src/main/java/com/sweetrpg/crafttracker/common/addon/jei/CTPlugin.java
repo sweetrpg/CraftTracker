@@ -28,22 +28,12 @@ public class CTPlugin implements IModPlugin {
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         CraftTracker.LOGGER.debug("CTPlugin#registerItemSubtypes: {}", registration);
 
-//        registration.registerSubtypeInterpreter(ModBlocks.CAT_TREE.get().asItem(), (stack, ctx) -> {
-//            IColorMaterial colorMaterial = CatTreeUtil.getColorMaterial(stack);
-//
-//            String colorKey = colorMaterial != null ? colorMaterial.getRegistryName().toString()
-//                    : "CraftTracker:casing_missing";
-//
-//            return colorKey;
-//        });
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         CraftTracker.LOGGER.debug("CTPlugin#registerRecipes: {}", registration);
 
-        //        registration.addRecipes(CatTreeRecipeMaker.createCatTreeRecipes(), RecipeTypes.CRAFTING.getUid());
-//        registration.addRecipes(PetDoorRecipeMaker.createPetDoorRecipes(), RecipeTypes.CRAFTING.getUid());
     }
 
     @Override

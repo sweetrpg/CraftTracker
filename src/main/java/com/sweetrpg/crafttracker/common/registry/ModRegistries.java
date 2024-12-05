@@ -8,7 +8,6 @@ import net.minecraftforge.registries.RegistryBuilder;
 public class ModRegistries {
 
     protected class Keys {
-//        public static final ResourceLocation TALENTS_REGISTRY = Util.getResource("talents");
     }
 
     public static void newRegistry(NewRegistryEvent event) {

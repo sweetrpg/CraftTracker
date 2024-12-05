@@ -20,15 +20,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ *
+ */
 public class ShoppingListManager {
 
     public static ShoppingListManager INSTANCE = new ShoppingListManager();
 
     private Map<ResourceLocation, Integer> items = new HashMap<>();
 
+    /**
+     *
+     */
     public ShoppingListManager() {
     }
 
+    /**
+     * @param player
+     */
     public void load(Player player) {
         CraftTracker.LOGGER.info("Loading shopping list for {}", player);
 
@@ -47,6 +56,9 @@ public class ShoppingListManager {
         }
     }
 
+    /**
+     * @param player
+     */
     public void save(Player player) {
         CraftTracker.LOGGER.info("Saving shopping list for {}", player);
 
@@ -78,6 +90,9 @@ public class ShoppingListManager {
         }
     }
 
+    /**
+     * @return
+     */
     public List<ListItem> getItems() {
         return items.entrySet()
                 .stream()
@@ -86,6 +101,9 @@ public class ShoppingListManager {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    /**
+     * @param player
+     */
     public void clearItems(Player player) {
         CraftTracker.LOGGER.debug("#clearItems: {}", player);
 
@@ -94,6 +112,11 @@ public class ShoppingListManager {
         this.save(player);
     }
 
+    /**
+     * @param player
+     * @param itemId
+     * @param quantity
+     */
     public void addItem(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("#addItem: {}", player);
 
@@ -108,6 +131,11 @@ public class ShoppingListManager {
         this.save(player);
     }
 
+    /**
+     * @param player
+     * @param itemId
+     * @param quantity
+     */
     public void removeItem(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("#removeItem: {}", player);
 
@@ -123,10 +151,17 @@ public class ShoppingListManager {
         this.save(player);
     }
 
+    /**
+     *
+     */
     public class ListItem {
         private ResourceLocation itemId;
         private int quantity;
 
+        /**
+         * @param itemId
+         * @param quantity
+         */
         public ListItem(ResourceLocation itemId, int quantity) {
             this.itemId = itemId;
             this.quantity = quantity;

@@ -8,8 +8,15 @@ import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.Arrays;
 
+/**
+ *
+ */
 public class DebugUtil {
 
+    /**
+     * @param ingredient
+     * @return
+     */
     public static String printIngredient(Ingredient ingredient) {
         StringBuilder builder = new StringBuilder();
 
@@ -37,6 +44,11 @@ public class DebugUtil {
         return builder.toString();
     }
 
+    /**
+     *
+     * @param itemStack
+     * @return
+     */
     public static String printItemStack(ItemStack itemStack) {
         StringBuilder builder = new StringBuilder();
 
@@ -59,6 +71,11 @@ public class DebugUtil {
         return builder.toString();
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     public static String printItem(Item item) {
         StringBuilder builder = new StringBuilder();
 
@@ -72,6 +89,11 @@ public class DebugUtil {
         return builder.toString();
     }
 
+    /**
+     *
+     * @param recipe
+     * @return
+     */
     public static String printRecipe(Recipe<?> recipe) {
         StringBuilder builder = new StringBuilder();
 
