@@ -76,7 +76,6 @@ public class CTPlugin implements IModPlugin {
     public void registerAdvanced(IAdvancedRegistration registration) {
         CraftTracker.LOGGER.debug("CTPlugin#registerAdvanced: {}", registration);
 
-//        registration.getJeiHelpers().getGuiHelper().createCraftingGridHelper(0);
     }
 
     @Override
