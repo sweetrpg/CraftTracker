@@ -110,13 +110,13 @@ public class RecipeUtil {
         if(!recipe.getId().getNamespace().equals("minecraft")) {
             CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla recipe {} by {}",
                     cost, DebugUtil.printRecipe(recipe), NON_VANILLA_COST_MULTIPLIER);
-            cost *= NON_VANILLA_COST_MULTIPLIER;
+            cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
         }
 
         if(!(recipe instanceof CraftingRecipe)) {
             CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-crafting table recipe {} by {}",
                     cost, DebugUtil.printRecipe(recipe), NON_CRAFTING_COST_MULTIPLIER);
-            cost *= NON_CRAFTING_COST_MULTIPLIER;
+            cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
         }
 
         return cost;
@@ -148,7 +148,7 @@ public class RecipeUtil {
                             !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
                         CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla item {} by {}",
                                 cost, tagId, NON_VANILLA_COST_MULTIPLIER);
-                        cost *= NON_VANILLA_COST_MULTIPLIER;
+                        cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
                     }
 
                     if(cost > highestCost) {
@@ -189,7 +189,7 @@ public class RecipeUtil {
                         !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
                     CraftTracker.LOGGER.debug("RecipeUtil#calculateItemCost: increasing cost ({}) of non-vanilla item {} by {}",
                             cost, tagId, NON_VANILLA_COST_MULTIPLIER);
-                    cost *= NON_VANILLA_COST_MULTIPLIER;
+                    cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
                 }
 
                 if(cost > highestCost) {

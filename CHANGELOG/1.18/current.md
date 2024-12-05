@@ -3,3 +3,4 @@
 - `[FIX]` Increased recipe calculation depth to 3
 - `[FIX]` Added checks for recipe and ingredient namespaces in determining intermediate/raw status
 - `[FIX]` Changed text for crafting queue sections
+- `[NEW]` Intermediate and raw materials that are tags are marked with an asterisk
