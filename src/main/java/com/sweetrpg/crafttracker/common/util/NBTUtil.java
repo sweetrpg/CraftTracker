@@ -16,10 +16,17 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * NBT reading and writing helpers
+ */
 public class NBTUtil {
 
     /**
      * Writes the UUID to the CompoundNBT under the given key if it is not null
+     *
+     * @param compound The tag to write to
+     * @param key The name of key
+     * @param uuid The UUID to add to the tag
      */
     public static void putUniqueId(CompoundTag compound, String key, @Nullable UUID uuid) {
         if (uuid != null) {
@@ -29,6 +36,10 @@ public class NBTUtil {
 
     /**
      * Reads the UUID from the CompoundNBT if it exists returns null otherwise
+     *
+     * @param compound The tag to read from
+     * @param key The key to check
+     * @return A UUID value, or `null` if one is not found for the key
      */
     @Nullable
     public static UUID getUniqueId(CompoundTag compound, String key) {
@@ -166,15 +177,6 @@ public class NBTUtil {
             compound.put(key, posNBT);
         }
     }
-
-//    @Nullable
-//    public static BlockPos getBlockPos(CompoundNBT compound, String key) {
-//        if (compound.contains(key, Tag.TAG_COMPOUND)) {
-//            return getBlockPos(compound.getCompound(key));
-//        }
-//
-//        return null;
-//    }
 
     public static void writeItemStack(CompoundTag compound, String key, ItemStack stackIn) {
         if (!stackIn.isEmpty()) {

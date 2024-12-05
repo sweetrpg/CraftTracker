@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Helper functions for handling recipes
+ */
 public class RecipeUtil {
 
     public static final float NON_VANILLA_COST_MULTIPLIER = 1.2f;
@@ -60,6 +63,12 @@ public class RecipeUtil {
         }
     }
 
+    /**
+     * Looks up recipes that will output the specified item
+     *
+     * @param itemId The ID of the item that the recipe would produce
+     * @return A {@link List} of recipes that produce the item
+     */
     public static List<? extends Recipe<?>> getRecipesFor(ResourceLocation itemId) {
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: {}", itemId);
 
@@ -72,6 +81,12 @@ public class RecipeUtil {
         return recipes;
     }
 
+    /**
+     * Checks if all the ingredients in the list are the same
+     *
+     * @param ingredients The list of ingredients to check
+     * @return A boolean indicating if the ingredients are all the same
+     */
     public static boolean areIngredientsSame(NonNullList<Ingredient> ingredients) {
         CraftTracker.LOGGER.debug("RecipeUtil#areIngredientsSame: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
@@ -85,6 +100,13 @@ public class RecipeUtil {
         return ing.size() == 1;
     }
 
+    /**
+     * Check if the ingredients' namespace matches the provided value
+     *
+     * @param namespace   The namespace to check for
+     * @param ingredients The list of ingredients to check
+     * @return A boolean value indicating if all the ingredients are in the specified namespace
+     */
     public static boolean areIngredientsSameNamespace(String namespace, NonNullList<Ingredient> ingredients) {
         CraftTracker.LOGGER.debug("RecipeUtil#areIngredientsSame: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
@@ -99,6 +121,17 @@ public class RecipeUtil {
         return ing.size() == 1;
     }
 
+    /**
+     * Calculates the "cost" of a recipe.
+     * <p/>
+     * Computes the cost of a recipe from:
+     *   - the sum of its ingredients' costs
+     *   - whether the recipe is "vanilla"
+     *   - whether the recipe is "simple" (crafted vs. smelted, etc.)
+     *
+     * @param recipe The recipe to calculate
+     * @return A integer value of the recipe's cost
+     */
     public static int calculateRecipeCost(Recipe<?> recipe) {
         CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", DebugUtil.printRecipe(recipe));
 
@@ -122,6 +155,17 @@ public class RecipeUtil {
         return cost;
     }
 
+    /**
+     * Calculates the cost of an ingredient
+     * <p/>
+     * Computes the cost of an ingredient by looking at the constituent items (i.e., if the ingredient is a tag, looking
+     * at the cost of items that match the tag).
+     * An item's cost can be set in the override list.
+     * The ultimate cost of an ingredient will be the highest cost of the items matching its tag.
+     *
+     * @param ingredient The ingredient to calculate
+     * @return An integer value of the ingredient's cost
+     */
     public static int calculateIngredientCost(Ingredient ingredient) {
         CraftTracker.LOGGER.debug("RecipeUtil#getIngredientCost: {}", DebugUtil.printIngredient(ingredient));
 
@@ -165,6 +209,16 @@ public class RecipeUtil {
         return 1;
     }
 
+    /**
+     * Calculates the cost of an item stack
+     * <p/>
+     * The logic here is the same as for {@link #calculateIngredientCost(Ingredient)}, except that it applies to an
+     * {@link ItemStack}. See that method's documentation for details, with the caveat that this method will fall
+     * back on an item's rarity if all other calculations are insufficient.
+     *
+     * @param stack The stack to calculate
+     * @return An integer value of the item stack's cost
+     */
     public static int calculateItemCost(ItemStack stack) {
         CraftTracker.LOGGER.debug("#calculateItemCost: {}", DebugUtil.printItemStack(stack));
 
@@ -206,6 +260,12 @@ public class RecipeUtil {
         return Math.max(rarity.ordinal() * count, count);
     }
 
+    /**
+     * Given a list of recipes, return the one that is least expensive.
+     *
+     * @param recipes A list of recipes to examine
+     * @return The least expensive recipe
+     */
     public static Recipe<?> chooseLeastExpensiveOf(List<? extends Recipe<?>> recipes) {
         CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", recipes.stream().map(DebugUtil::printRecipe).toList());
 
@@ -233,6 +293,12 @@ public class RecipeUtil {
         return recipeCosts.get(0).getA();
     }
 
+    /**
+     * Given an array of {@link ItemStack}, choose the least expensive and return it.
+     *
+     * @param stacks An array of item stacks
+     * @return The least expensive item stack
+     */
     public static ItemStack chooseLeastExpensiveOf(ItemStack[] stacks) {
         CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", Arrays.stream(stacks).map(DebugUtil::printItemStack).toList());
 

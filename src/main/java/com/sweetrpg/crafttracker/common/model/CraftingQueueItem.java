@@ -3,7 +3,7 @@ package com.sweetrpg.crafttracker.common.model;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- *
+ * A value object for holding intermediate, material, and fuel information from the crafting queue.
  */
 public class CraftingQueueItem {
 
@@ -12,9 +12,11 @@ public class CraftingQueueItem {
     boolean tag;
 
     /**
-     * @param itemId
-     * @param amount
-     * @param tag
+     * Default constructor.
+     *
+     * @param itemId The ID of the item
+     * @param amount The quantity of the item
+     * @param tag Indicates if the item is pulled from a tag or not
      */
     public CraftingQueueItem(ResourceLocation itemId, int amount, boolean tag) {
         this.itemId = itemId;
@@ -23,9 +25,10 @@ public class CraftingQueueItem {
     }
 
     /**
+     * Convenience method to increase the item amount. Provided for call chaining.
      *
-     * @param increase
-     * @return
+     * @param increase The amount to increase
+     * @return This object
      */
     public CraftingQueueItem increment(int increase) {
         this.amount += increase;
@@ -33,9 +36,10 @@ public class CraftingQueueItem {
     }
 
     /**
+     * Convenience method to set the tag value. Provided for call chaining.
      *
-     * @param tag
-     * @return
+     * @param tag Whether the item is a tag or not
+     * @return This object
      */
     public CraftingQueueItem tag(boolean tag) {
         this.tag = tag;
