@@ -9,14 +9,19 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class RecipeUtil {
+
+    public static final float NON_VANILLA_COST_MULTIPLIER = 1.2f;
+    public static final float NON_CRAFTING_COST_MULTIPLIER = 1.25f;
 
     private static Map<ResourceLocation, Integer> ingredientCostsByTag = new HashMap<>();
     private static Map<ResourceLocation, Integer> ingredientCostOverrides = new HashMap<>();
@@ -80,12 +85,41 @@ public class RecipeUtil {
         return ing.size() == 1;
     }
 
+    public static boolean areIngredientsSameNamespace(String namespace, NonNullList<Ingredient> ingredients) {
+        CraftTracker.LOGGER.debug("RecipeUtil#areIngredientsSame: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
+
+        Set<String> ing = ingredients.stream()
+                .map(i -> Arrays.asList(i.getItems()))
+                .filter(l -> !l.isEmpty())
+                .map(l -> l.get(0))
+                .map(i -> ObjectUtils.defaultIfNull(i.getItem().getRegistryName().getNamespace(), ""))
+                .filter(n -> n.equals(namespace))
+                .collect(Collectors.toSet());
+
+        return ing.size() == 1;
+    }
+
     public static int calculateRecipeCost(Recipe<?> recipe) {
         CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", DebugUtil.printRecipe(recipe));
 
-        return recipe.getIngredients().stream()
+        int cost = recipe.getIngredients().stream()
                 .map(RecipeUtil::calculateIngredientCost)
                 .reduce(0, Integer::sum);
+
+        // if the item's namespace is not 'minecraft:', increase the cost
+        if(!recipe.getId().getNamespace().equals("minecraft")) {
+            CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla recipe {} by {}",
+                    cost, DebugUtil.printRecipe(recipe), NON_VANILLA_COST_MULTIPLIER);
+            cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
+        }
+
+        if(!(recipe instanceof CraftingRecipe)) {
+            CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-crafting table recipe {} by {}",
+                    cost, DebugUtil.printRecipe(recipe), NON_CRAFTING_COST_MULTIPLIER);
+            cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
+        }
+
+        return cost;
     }
 
     public static int calculateIngredientCost(Ingredient ingredient) {
@@ -107,7 +141,16 @@ public class RecipeUtil {
                 var tagId = tag.location();
                 if(ingredientCostsByTag.containsKey(tagId)) {
                     CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                    var cost = ingredientCostsByTag.get(tagId) * count;
+                    int cost = ingredientCostsByTag.get(tagId) * count;
+
+                    // if the item's namespace is not 'minecraft:', increase the cost
+                    if(!ObjectUtils.defaultIfNull(stack.getItem().getRegistryName().getNamespace(), "").equals("minecraft") &&
+                            !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
+                        CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla item {} by {}",
+                                cost, tagId, NON_VANILLA_COST_MULTIPLIER);
+                        cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
+                    }
+
                     if(cost > highestCost) {
                         highestCost = cost;
                     }
@@ -139,9 +182,18 @@ public class RecipeUtil {
             var tagId = tag.location();
             if(ingredientCostsByTag.containsKey(tagId)) {
                 CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                var cost = ingredientCostsByTag.get(tagId) * count;
+                int cost = ingredientCostsByTag.get(tagId) * count;
+
+                // if the item's namespace is not 'minecraft:', increase the cost
+                if(!ObjectUtils.defaultIfNull(stack.getItem().getRegistryName().getNamespace(), "").equals("minecraft") &&
+                        !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
+                    CraftTracker.LOGGER.debug("RecipeUtil#calculateItemCost: increasing cost ({}) of non-vanilla item {} by {}",
+                            cost, tagId, NON_VANILLA_COST_MULTIPLIER);
+                    cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
+                }
+
                 if(cost > highestCost) {
-                    highestCost = cost;
+                    highestCost = (int) cost;
                 }
             }
         }

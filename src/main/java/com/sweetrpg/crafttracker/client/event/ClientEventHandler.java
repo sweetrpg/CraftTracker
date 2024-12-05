@@ -159,14 +159,14 @@ public class ClientEventHandler {
 
         materials.forEach(m -> {
             var haveQty = InventoryUtil.getQuantityOf(player, m.getItemId());
-            var needed = m.getQuantity() - haveQty;
+            var needed = m.getAmount() - haveQty;
 
             if(needed > 0)
                 sMgr.addItem(player, m.getItemId(), needed);
         });
         fuel.forEach(f -> {
             var haveQty = InventoryUtil.getQuantityOf(player, f.getItemId());
-            var needed = f.getQuantity() - haveQty;
+            var needed = f.getAmount() - haveQty;
 
             if(needed > 0)
                 sMgr.addItem(player, f.getItemId(), needed);
