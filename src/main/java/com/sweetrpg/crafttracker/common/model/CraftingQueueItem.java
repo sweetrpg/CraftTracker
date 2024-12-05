@@ -23,23 +23,26 @@ public class CraftingQueueItem {
         return itemId;
     }
 
-    public void setItemId(ResourceLocation itemId) {
+    public CraftingQueueItem setItemId(ResourceLocation itemId) {
         this.itemId = itemId;
+        return this;
     }
 
     public int getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public CraftingQueueItem setAmount(int amount) {
         this.amount = amount;
+        return this;
     }
 
     public boolean isTag() {
         return tag;
     }
 
-    public void setTag(boolean tag) {
+    public CraftingQueueItem setTag(boolean tag) {
         this.tag = tag;
+        return this;
     }
 }

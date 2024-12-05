@@ -256,19 +256,22 @@ public class CraftingQueueManager {
             r.intermediateProducts.forEach((ik, iv) -> {
                 this.intermediateProducts.compute(ik, (ik1, iv1) -> {
                     return ObjectUtils.defaultIfNull(iv1, new CraftingQueueItem(ik1, 0, false))
-                            .increment(iv.amount);
+                            .increment(iv.amount)
+                            .setTag(iv.tag);
                 });
             });
             r.rawMaterials.forEach((rk, rv) -> {
                 this.rawMaterials.compute(rk, (rk1, rv1) -> {
                     return ObjectUtils.defaultIfNull(rv1, new CraftingQueueItem(rk1, 0, false))
-                            .increment(rv.amount);
+                            .increment(rv.amount)
+                            .setTag(rv.tag);
                 });
             });
             r.fuel.forEach((fk, fv) -> {
                 this.fuel.compute(fk, (fk1, fv1) -> {
                     return ObjectUtils.defaultIfNull(fv1, new CraftingQueueItem(fk1, 0, false))
-                            .increment(fv.amount);
+                            .increment(fv.amount)
+                            .setTag(fv.tag);
                 });
             });
         });
@@ -362,7 +365,9 @@ public class CraftingQueueManager {
                 // no recipes for this ingredient, so it's a raw material
                 computedRecipe.rawMaterials.compute(id,
                         (itemId, quantity) ->
-                                ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId)).increase(amountRequired * iterations));
+                                ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId))
+                                        .increase(amountRequired * iterations)
+                                        .tag(isTag));
             }
             else {
                 CraftTracker.LOGGER.debug("subRecipes has {} items; ingredient {} is an intermediate product", subRecipes.size(), ingredientId);
@@ -377,32 +382,39 @@ public class CraftingQueueManager {
                     // if the sub-recipe comes back null, then treat the result item as a raw material
                     computedRecipe.rawMaterials.compute(id,
                             (itemId, quantity) ->
-                                    ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId)).increase(amountRequired * iterations));
+                                    ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId))
+                                            .increase(amountRequired * iterations)
+                                            .tag(isTag));
                     return;
                 }
 
                 computedRecipe.intermediateProducts.compute(id,
                         (itemId, quantity) ->
-                                ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId)).increase(needsQty));
+                                ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId))
+                                        .increase(needsQty)
+                                        .tag(isTag));
 
                 // merge subrecipe items into this
                 CraftTracker.LOGGER.debug("merging subrecipe contents: {} into this: {}", computedSubRecipe, computedRecipe);
                 computedSubRecipe.intermediateProducts.forEach((itemId, cri) -> {
                     computedRecipe.intermediateProducts.compute(itemId, (k1, v1) -> {
                         return ObjectUtils.defaultIfNull(v1, new ComputedRecipeItem(k1))
-                                .increase(cri.amount);
+                                .increase(cri.amount)
+                                .tag(cri.tag);
                     });
                 });
                 computedSubRecipe.rawMaterials.forEach((itemId, cri) -> {
                     computedRecipe.rawMaterials.compute(itemId, (k1, v1) -> {
                         return ObjectUtils.defaultIfNull(v1, new ComputedRecipeItem(k1))
-                                .increase(cri.amount);
+                                .increase(cri.amount)
+                                .tag(cri.tag);
                     });
                 });
                 computedSubRecipe.fuel.forEach((itemId, cri) -> {
                     computedRecipe.fuel.compute(itemId, (k1, v1) -> {
                         return ObjectUtils.defaultIfNull(v1, new ComputedRecipeItem(k1))
-                                .increase(cri.amount);
+                                .increase(cri.amount)
+                                .tag(cri.tag);
                     });
                 });
 
@@ -489,6 +501,11 @@ public class CraftingQueueManager {
 
         public ComputedRecipeItem increase(int amount) {
             this.amount += amount;
+            return this;
+        }
+
+        public ComputedRecipeItem tag(boolean tag) {
+            this.tag = tag;
             return this;
         }
 
