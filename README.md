@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/modrinth/dt/6eqIziNz" alt="Modrinth Downloads">
 </a>
 
-[![CI (1.18)](https://github.com/sweetrpg/CraftTracker/actions/workflows/ci-build.yml/badge.svg?branch=1.18)](https://github.com/sweetrpg/CraftTracker/actions/workflows/ci-build.yml)
+[![CI (1.19)](https://github.com/sweetrpg/CraftTracker/actions/workflows/ci-build.yml/badge.svg?branch=1.19)](https://github.com/sweetrpg/CraftTracker/actions/workflows/ci-build.yml)
 
 ## Overview 
 
@@ -21,7 +21,7 @@
 
 ## Required Mods
 
-* [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) &mdash; version 9.7.2.281 or higher
+* [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) &mdash; version 11.8.1.1034 or higher
 
 ## Where To Get It
 
