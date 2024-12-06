@@ -69,7 +69,7 @@ repositories {
 }
 
 minecraft {
-    mappings channel: 'parchment', version: project.parchment_version
+    mappings channel: 'official', version: project.mc_version
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
