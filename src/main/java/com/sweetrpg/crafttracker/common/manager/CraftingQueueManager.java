@@ -31,6 +31,12 @@ import java.nio.file.StandardOpenOption;
 import java.text.MessageFormat;
 import java.util.*;
 
+/**
+ * Manages the crafting queue.
+ * <p/>
+ * This class is responsible for doing all the calculations for intermediate recipes and raw materials when
+ * items are added or removed from the queue.
+ */
 public class CraftingQueueManager {
 
     public static CraftingQueueManager INSTANCE = new CraftingQueueManager();
@@ -42,9 +48,17 @@ public class CraftingQueueManager {
     private Map<ResourceLocation, CraftingQueueItem> rawMaterials = new HashMap<>();
     private Map<ResourceLocation, CraftingQueueItem> fuel = new HashMap<>();
 
+    /**
+     * Default constructor.
+     */
     public CraftingQueueManager() {
     }
 
+    /**
+     * Load the last persisted crafting queue from storage.
+     *
+     * @param player The player for whom to load the queue.
+     */
     public void load(Player player) {
         CraftTracker.LOGGER.info("Loading crafting queue for {}", player);
 
@@ -65,6 +79,11 @@ public class CraftingQueueManager {
         }
     }
 
+    /**
+     * Save the current crafting queue to persistent storage.
+     *
+     * @param player The player for whom to save the queue.
+     */
     public void save(Player player) {
         CraftTracker.LOGGER.info("Saving crafting queue for {}", player);
 
@@ -96,30 +115,59 @@ public class CraftingQueueManager {
         }
     }
 
+    /**
+     * Returns a copy of the end products in the queue.
+     *
+     * @return A {@link List} of {@link CraftingQueueProduct} representing the products in the queue
+     */
     public List<CraftingQueueProduct> getEndProducts() {
         return endProducts.values()
                 .stream()
                 .toList();
     }
 
+    /**
+     * Returns a list of the intermediate recipes in the queue.
+     *
+     * @return A {@link List} of {@link CraftingQueueItem} representing the intermediates in the queue
+     */
     public List<CraftingQueueItem> getIntermediates() {
         return intermediateProducts.values()
                 .stream()
                 .toList();
     }
 
+    /**
+     * Returns a list of the materials in the queue.
+     *
+     * @return A {@link List} of {@link CraftingQueueItem} representing the materials in the queue
+     */
     public List<CraftingQueueItem> getRawMaterials() {
         return rawMaterials.values()
                 .stream()
                 .toList();
     }
 
+    /**
+     * Returns a list of the fuels in the queue.
+     *
+     * @return A {@link List} of {@link CraftingQueueItem} representing the fuels in the queue
+     */
     public List<CraftingQueueItem> getFuel() {
         return fuel.values()
                 .stream()
                 .toList();
     }
 
+    /**
+     * Adds a product to the queue.
+     * <p/>
+     * This will trigger a recalculation of the entire queue.
+     *
+     * @param player The player whose queue is being adjusted
+     * @param itemId The item to add to the queue
+     * @param quantity The amount to add
+     */
     public void addProduct(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#addProduct: {}, quantity: {}", itemId, quantity);
 
@@ -147,9 +195,9 @@ public class CraftingQueueManager {
      * A convenience method to adjust the quantity of a product.
      * This will call the appropriate add* or remove* method.
      *
-     * @param player
-     * @param itemId
-     * @param quantity
+     * @param player The player whose queue is being adjusted
+     * @param itemId The item to adjust
+     * @param quantity The amount to adjust; positive values will increase the amount, negative values will reduce it.
      */
     public void adjustProduct(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#adjustProduct: {}, quantity: {}", itemId, quantity);
@@ -160,6 +208,12 @@ public class CraftingQueueManager {
             addProduct(player, itemId, quantity);
     }
 
+    /**
+     * Removes all of a single end product from the queue.
+     *
+     * @param player The player whose queue is being adjusted
+     * @param itemId The item to remove from the queue
+     */
     public void removeProduct(Player player, ResourceLocation itemId) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}", itemId);
 
@@ -170,6 +224,14 @@ public class CraftingQueueManager {
         this.save(player);
     }
 
+    /**
+     * Removes a single end product, or a quantity of it, from the queue.
+     *
+     * @param player The player whose queue is being adjusted
+     * @param itemId The item to remove from the queue
+     * @param quantity The amount of the item to remove. If this value is the greater than or equal to the amount
+     *                 currently in the queue, the item is removed entirely.
+     */
     public void removeProduct(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}, quantity: {}", itemId, quantity);
 
@@ -200,6 +262,9 @@ public class CraftingQueueManager {
         this.save(player);
     }
 
+    /**
+     * Removes everything from the queue.
+     */
     public void removeAll() {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeAll");
 
@@ -210,7 +275,7 @@ public class CraftingQueueManager {
     }
 
     /**
-     * Compute all the intermediate items, raw materials, and fuel needed to make the recipes
+     * Compute all the intermediate items, raw materials, and fuel needed to make the recipes.
      */
     public void computeAll() {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeAll");
@@ -232,6 +297,12 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("final state after computation: {}", this);
     }
 
+    /**
+     * Starts the computation of an end product's intermediates and materials.
+     *
+     * @param ctx The context to use for processing the queue
+     * @param product The product to process
+     */
     void computeProduct(ProcessingContext ctx, CraftingQueueProduct product) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeProduct: {}", product);
 
@@ -243,6 +314,11 @@ public class CraftingQueueManager {
         ctx.computedRecipes.add(computedRecipe);
     }
 
+    /**
+     * Merges the computed recipes in the context into a single list of intermediates and raw materials.
+     *
+     * @param ctx The context to process
+     */
     void coalesceProducts(ProcessingContext ctx) {
         CraftTracker.LOGGER.debug("#coalesceProducts: {}", ctx);
 
@@ -257,21 +333,21 @@ public class CraftingQueueManager {
                 this.intermediateProducts.compute(ik, (ik1, iv1) -> {
                     return ObjectUtils.defaultIfNull(iv1, new CraftingQueueItem(ik1, 0, false))
                             .increment(iv.amount)
-                            .setTag(iv.tag);
+                            .tag(iv.tag);
                 });
             });
             r.rawMaterials.forEach((rk, rv) -> {
                 this.rawMaterials.compute(rk, (rk1, rv1) -> {
                     return ObjectUtils.defaultIfNull(rv1, new CraftingQueueItem(rk1, 0, false))
                             .increment(rv.amount)
-                            .setTag(rv.tag);
+                            .tag(rv.tag);
                 });
             });
             r.fuel.forEach((fk, fv) -> {
                 this.fuel.compute(fk, (fk1, fv1) -> {
                     return ObjectUtils.defaultIfNull(fv1, new CraftingQueueItem(fk1, 0, false))
                             .increment(fv.amount)
-                            .setTag(fv.tag);
+                            .tag(fv.tag);
                 });
             });
         });
@@ -279,6 +355,20 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("coalesce complete: {}", this);
     }
 
+    /**
+     * The workhorse of the crafting queue manager. This function looks at the recipe's requirements and determines
+     * if the items involved require other crafted items to make this, or if they are simply materials to be
+     * acquired.
+     * <p/>
+     * If the recipe's namespace or the result item's namespace differ from the ingredients, the function will exit
+     * early with a `null` return value in order to prevent strange suggestions of intermediates and raw materials.
+     *
+     * @param recipe The recipe to compute
+     * @param iterations The desired number of times the recipe is to be crafted by the player
+     * @param depth The current depth of processing the queue. This is metadata about the processing context used to
+     *              prevent potential loops in looking up required items.
+     * @return A computed recipe, or `null` if certain criteria are not met or thresholds are crossed.
+     */
     ComputedRecipe computeRecipe(Recipe<?> recipe, int iterations, int depth) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", DebugUtil.printRecipe(recipe));
 
@@ -287,7 +377,9 @@ public class CraftingQueueManager {
         var ingredients = recipe.getIngredients();
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
-        // if the ingredients are in a different namespace than the recipe, and we're not at the root, treat the recipe
+        // if we're not at the root, and
+        //   1. the ingredients are in a different namespace than the recipe, or
+        //   2. the ingredients are in a different namespace than the result item
         var recipeNamespace = ObjectUtils.defaultIfNull(recipe.getId().getNamespace(), "");
         var itemNamespace = ObjectUtils.defaultIfNull(recipe.getResultItem().getItem().getRegistryName().getNamespace(), "");
         if(depth > 0 &&
@@ -425,49 +517,9 @@ public class CraftingQueueManager {
         return computedRecipe;
     }
 
-    public class QueueItem {
-        private ResourceLocation itemId;
-        private boolean tag;
-        private int quantity;
-
-        public QueueItem(ResourceLocation itemId, boolean tag, int quantity) {
-            this.itemId = itemId;
-            this.quantity = quantity;
-        }
-
-        public ResourceLocation getItemId() {
-            return itemId;
-        }
-
-        public void setItemId(ResourceLocation itemId) {
-            this.itemId = itemId;
-        }
-
-        public boolean isTag() {
-            return tag;
-        }
-
-        public void setTag(boolean tag) {
-            this.tag = tag;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
-        }
-
-        @Override
-        public String toString() {
-            return "QueueItem{" +
-                    "itemId=" + itemId +
-                    ", quantity=" + quantity +
-                    '}';
-        }
-    }
-
+    /**
+     * A context object to keep track of state while processing the queue.
+     */
     class ProcessingContext {
         Map<ResourceLocation, Integer> intermediateProducts = new HashMap<>();
         Map<ResourceLocation, Integer> rawMaterials = new HashMap<>();
@@ -490,20 +542,38 @@ public class CraftingQueueManager {
         }
     }
 
+    /**
+     * A wrapper object for items in the queue.
+     */
     class ComputedRecipeItem {
         ResourceLocation itemId;
         int amount;
         boolean tag;
 
+        /**
+         * @param itemId
+         */
         public ComputedRecipeItem(ResourceLocation itemId) {
             this.itemId = itemId;
         }
 
+        /**
+         * A convenience method for adjusting the amount, provided to allow chaining calls.
+         *
+         * @param amount The amount to increase the item
+         * @return the same object, for chaining calls.
+         */
         public ComputedRecipeItem increase(int amount) {
             this.amount += amount;
             return this;
         }
 
+        /**
+         * A convenience method for setting the tag value, provided to allow chaining calls.
+         *
+         * @param tag The tag value to set
+         * @return The same object
+         */
         public ComputedRecipeItem tag(boolean tag) {
             this.tag = tag;
             return this;
@@ -522,12 +592,20 @@ public class CraftingQueueManager {
         }
     }
 
+    /**
+     * An intermediate class that represents all the necessary items that make up a recipe. Used during computation
+     * of the crafting queue's intermediates and materials.
+     */
     class ComputedRecipe {
         ResourceLocation recipeId;
         Map<ResourceLocation, ComputedRecipeItem> intermediateProducts = new HashMap<>();
         Map<ResourceLocation, ComputedRecipeItem> rawMaterials = new HashMap<>();
         Map<ResourceLocation, ComputedRecipeItem> fuel = new HashMap<>();
 
+        /**
+         * Constructs the object with the ID of the recipe it represents.
+         * @param recipeId The recipe ID
+         */
         ComputedRecipe(ResourceLocation recipeId) {
             this.recipeId = recipeId;
         }

@@ -20,15 +20,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Manages the shopping list.
+ */
 public class ShoppingListManager {
 
     public static ShoppingListManager INSTANCE = new ShoppingListManager();
 
     private Map<ResourceLocation, Integer> items = new HashMap<>();
 
+    /**
+     * Default constructor.
+     */
     public ShoppingListManager() {
     }
 
+    /**
+     * Loads the shopping list information from storage for the specified player.
+     *
+     * @param player The player whose shopping list should be loaded
+     */
     public void load(Player player) {
         CraftTracker.LOGGER.info("Loading shopping list for {}", player);
 
@@ -47,6 +58,11 @@ public class ShoppingListManager {
         }
     }
 
+    /**
+     * Saves the shopping list information to storage for the specified player.
+     *
+     * @param player The player whose shopping list should be saved
+     */
     public void save(Player player) {
         CraftTracker.LOGGER.info("Saving shopping list for {}", player);
 
@@ -78,6 +94,11 @@ public class ShoppingListManager {
         }
     }
 
+    /**
+     * Gets the items in the list.
+     *
+     * @return A {@link List} of the items
+     */
     public List<ListItem> getItems() {
         return items.entrySet()
                 .stream()
@@ -86,6 +107,11 @@ public class ShoppingListManager {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    /**
+     * Clears all items from the shopping list.
+     *
+     * @param player The player whose shopping list should be cleared
+     */
     public void clearItems(Player player) {
         CraftTracker.LOGGER.debug("#clearItems: {}", player);
 
@@ -94,6 +120,13 @@ public class ShoppingListManager {
         this.save(player);
     }
 
+    /**
+     * Adds an item to the shopping list. Merges with an existing item if there is one.
+     *
+     * @param player The player whose shopping list is updated
+     * @param itemId The ID of the item to add
+     * @param quantity The amount of the item to add
+     */
     public void addItem(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("#addItem: {}", player);
 
@@ -108,6 +141,14 @@ public class ShoppingListManager {
         this.save(player);
     }
 
+    /**
+     * Removes an item from the shopping list
+     *
+     * @param player The player whose shopping list is updated
+     * @param itemId The ID of the item to remove
+     * @param quantity The amount of the item to remove. If the quantity is equal to or greater than what is currently
+     *                 in the list, the entire entry is removed.
+     */
     public void removeItem(Player player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("#removeItem: {}", player);
 
@@ -123,10 +164,19 @@ public class ShoppingListManager {
         this.save(player);
     }
 
+    /**
+     * A wrapper value object for returning list item information to the caller.
+     */
     public class ListItem {
         private ResourceLocation itemId;
         private int quantity;
 
+        /**
+         * Default constructor.
+         *
+         * @param itemId The ID of the item
+         * @param quantity The quantity of the item
+         */
         public ListItem(ResourceLocation itemId, int quantity) {
             this.itemId = itemId;
             this.quantity = quantity;

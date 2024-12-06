@@ -6,12 +6,15 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * An interface for other mods to implement to integrate with CT
+ */
 public interface Addon {
 
     /**
      * Called from the CT mod class constructor
      *
-     * @throws RuntimeException You should re-throw any exceptions as {@link RuntimeException}, this are
+     * @throws RuntimeException You should re-throw any exceptions as {@link RuntimeException}
      */
     default void init() throws RuntimeException {
 
@@ -20,7 +23,7 @@ public interface Addon {
     /**
      * Called from the CT {@link InterModProcessEvent}
      *
-     * @throws RuntimeException You should re-throw any exceptions as {@link RuntimeException}, this are
+     * @throws RuntimeException You should re-throw any exceptions as {@link RuntimeException}
      */
     default void exec() throws RuntimeException {
 

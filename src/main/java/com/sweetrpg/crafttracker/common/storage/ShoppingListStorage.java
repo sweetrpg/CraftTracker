@@ -8,12 +8,16 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * A class to managed persistence of shopping list data.
+ */
 public class ShoppingListStorage extends SavedData {
 
     private @Nullable UUID ownerId;
@@ -21,9 +25,17 @@ public class ShoppingListStorage extends SavedData {
     private boolean shoppingListVisible;
     private Map<ResourceLocation, Integer> products = new HashMap<>();
 
+    /**
+     * Default constructor.
+     */
     public ShoppingListStorage() {
     }
 
+    /**
+     * Sets the items to be persisted.
+     *
+     * @param products A map of products to store
+     */
     public void putData(Map<ResourceLocation, Integer> products) {
         CraftTracker.LOGGER.debug("ShoppingListStorage#putData: {}", products);
 
@@ -32,6 +44,12 @@ public class ShoppingListStorage extends SavedData {
         this.setDirty();
     }
 
+    /**
+     * Given a starting NBT tag, loads the shopping list information and attaches to that tag.
+     *
+     * @param nbt The root tag to add the shopping list data to
+     * @return A map of the shopping list data
+     */
     public static Map<ResourceLocation, Integer> load(CompoundTag nbt) {
         CraftTracker.LOGGER.debug("ShoppingListStorage#load: {}", nbt);
 
@@ -56,8 +74,14 @@ public class ShoppingListStorage extends SavedData {
         return store.products;
     }
 
+    /**
+     * Given a populated NBT tag, writes the attached tag data to storage.
+     *
+     * @param compound The root tag
+     * @return The root tag
+     */
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag compound) {
         CraftTracker.LOGGER.debug("ShoppingListStorage#save: {}", compound);
 
         NBTUtil.putUniqueId(compound, ShoppingListStorage.Keys.OWNER_ID, this.ownerId);

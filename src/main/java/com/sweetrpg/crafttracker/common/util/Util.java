@@ -21,6 +21,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * Miscellaneous utilities.
+ */
 public class Util {
 
     public static final Path STORAGE_DIR = FMLPaths.GAMEDIR.get().resolve("craft_tracker");
@@ -28,6 +31,11 @@ public class Util {
     private static final DecimalFormat dfShort = new DecimalFormat("0.0");
     private static final DecimalFormat dfShortDouble = new DecimalFormat("0.00");
 
+    /**
+     * Get the storage path to read and write local files.
+     *
+     * @return The {@link Path} to use for storage
+     */
     public static Path getStoragePath() {
         var addressPath = "";
 

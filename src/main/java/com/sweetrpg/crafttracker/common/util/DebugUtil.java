@@ -8,8 +8,17 @@ import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.Arrays;
 
+/**
+ * Utility functions for formatted output of various objects.
+ */
 public class DebugUtil {
 
+    /**
+     * Debug output for an {@link Ingredient}
+     *
+     * @param ingredient The ingredient to output
+     * @return A formatted string
+     */
     public static String printIngredient(Ingredient ingredient) {
         StringBuilder builder = new StringBuilder();
 
@@ -37,6 +46,12 @@ public class DebugUtil {
         return builder.toString();
     }
 
+    /**
+     * Debug output for an {@link ItemStack}
+     *
+     * @param itemStack An item stack to output
+     * @return A formatted string
+     */
     public static String printItemStack(ItemStack itemStack) {
         StringBuilder builder = new StringBuilder();
 
@@ -59,6 +74,12 @@ public class DebugUtil {
         return builder.toString();
     }
 
+    /**
+     * Debug output for an {@link Item}
+     *
+     * @param item An item to output
+     * @return A formatted string
+     */
     public static String printItem(Item item) {
         StringBuilder builder = new StringBuilder();
 
@@ -72,6 +93,12 @@ public class DebugUtil {
         return builder.toString();
     }
 
+    /**
+     * Debug output for a recipe
+     *
+     * @param recipe The recipe to output
+     * @return A formatted string
+     */
     public static String printRecipe(Recipe<?> recipe) {
         StringBuilder builder = new StringBuilder();
 

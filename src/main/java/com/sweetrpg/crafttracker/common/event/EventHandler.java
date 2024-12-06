@@ -6,7 +6,6 @@ import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.network.PacketHandler;
 import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
@@ -22,35 +21,10 @@ import static com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandD
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID)
 public class EventHandler {
 
-//    @SubscribeEvent
-//    public void rightClickEntity(final PlayerInteractEvent.EntityInteract event) {
-//        CraftTracker.LOGGER.debug("EventHandler#rightClickEntity: {}", event);
-//
-//        Level world = event.getWorld();
-//
-//        ItemStack stack = event.getItemStack();
-//        Entity target = event.getTarget();
-//
-//    }
-//
-//    @SubscribeEvent
-//    public static void onBiomeLoad(BiomeLoadingEvent event) {
-//        CraftTracker.LOGGER.debug("EventHandler#onBiomeLoad: {}", event);
-//
-//        BiomeGenerationSettingsBuilder builder = event.getGeneration();
-//        Biome.ClimateSettings climate = event.getClimate();
-//
-//    }
-//
     @SubscribeEvent
     public void onEntitySpawn(final EntityJoinWorldEvent event) {
         CraftTracker.LOGGER.trace("EventHandler#onEntitySpawn: {}", event);
 
-        Entity entity = event.getEntity();
-
-//        if(entity instanceof ServerPlayer player) {
-//            CraftingQueueManager.get(player, entity.level);
-//        }
     }
 
     @SubscribeEvent
@@ -63,7 +37,7 @@ public class EventHandler {
     public void onItemCrafted(final ItemCraftedEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemCrafted: {}", event);
 
-        if (event.getPlayer().level.isClientSide) {
+        if(event.getPlayer().level.isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = event.getCrafting().getItem().getRegistryName();
                 var quantity = event.getCrafting().getCount();
@@ -72,7 +46,7 @@ public class EventHandler {
         }
         else {
             // send packet
-            PacketHandler.sendToPlayer((ServerPlayer)event.getPlayer(), new QueueCommandData(RECALCULATE));
+            PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
         }
     }
 
@@ -80,7 +54,7 @@ public class EventHandler {
     public void onItemSmelted(final ItemSmeltedEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemSmelted: {}", event);
 
-        if (event.getPlayer().level.isClientSide) {
+        if(event.getPlayer().level.isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = event.getSmelting().getItem().getRegistryName();
                 var quantity = event.getSmelting().getCount();
@@ -89,7 +63,7 @@ public class EventHandler {
         }
         else {
             // send packet
-            PacketHandler.sendToPlayer((ServerPlayer)event.getPlayer(), new QueueCommandData(RECALCULATE));
+            PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
         }
     }
 
@@ -97,7 +71,7 @@ public class EventHandler {
     public void onItemPickedUp(final ItemPickupEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemPickedUp: {}", event);
 
-        if (event.getPlayer().level.isClientSide) {
+        if(event.getPlayer().level.isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = event.getStack().getItem().getRegistryName();
                 var quantity = event.getStack().getCount();
@@ -106,7 +80,7 @@ public class EventHandler {
         }
         else {
             // send packet
-            PacketHandler.sendToPlayer((ServerPlayer)event.getPlayer(), new QueueCommandData(RECALCULATE));
+            PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
         }
     }
 

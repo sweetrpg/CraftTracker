@@ -9,6 +9,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -22,7 +23,7 @@ import java.util.UUID;
  * This includes:
  * * Position and visibility of the craft list window
  * * Position and visibility of the shopping list window
- * * The list of end products in the queue by item ID and quantity
+ * * The list of end products in the queue by item ID and product information ({@link CraftingQueueProduct})
  */
 public class CraftingQueueStorage extends SavedData {
 
@@ -31,9 +32,17 @@ public class CraftingQueueStorage extends SavedData {
     private boolean craftingQueueVisible;
     private Map<ResourceLocation, CraftingQueueProduct> products = new HashMap<>();
 
+    /**
+     * Default constructor.
+     */
     public CraftingQueueStorage() {
     }
 
+    /**
+     * Sets the data to store.
+     *
+     * @param products A map of end products to write to storage
+     */
     public void putData(Map<ResourceLocation, CraftingQueueProduct> products) {
         CraftTracker.LOGGER.debug("CraftingQueueStorage#putData: {}", products);
 
@@ -42,6 +51,12 @@ public class CraftingQueueStorage extends SavedData {
         this.setDirty();
     }
 
+    /**
+     * Given a starting NBT tag, loads the crafting queue information and attaches to that tag.
+     *
+     * @param nbt The root tag to add the crafting queue data to
+     * @return A map of the crafting queue data
+     */
     public static Map<ResourceLocation, CraftingQueueProduct> load(CompoundTag nbt) {
         CraftTracker.LOGGER.debug("CraftingQueueStorage#load: {}", nbt);
 
@@ -69,8 +84,14 @@ public class CraftingQueueStorage extends SavedData {
         return store.products;
     }
 
+    /**
+     * Given a populated NBT tag, writes the attached tag data to storage.
+     *
+     * @param compound The root tag
+     * @return The root tag
+     */
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag compound) {
         CraftTracker.LOGGER.debug("CraftingQueueStorage#save: {}", compound);
 
         NBTUtil.putUniqueId(compound, Keys.OWNER_ID, this.ownerId);

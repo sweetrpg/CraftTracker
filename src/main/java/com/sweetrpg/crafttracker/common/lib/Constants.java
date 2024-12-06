@@ -68,7 +68,10 @@ public class Constants {
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY = "crafttracker.config.client.shopping_list_hide_empty";
 
     // Advancements
-    public static final String TRANSLATION_KEY_ADVANCEMENT_MAKE_LIST_TITLE = "advancements.crafttracker.main.make_list.title";
-    public static final String TRANSLATION_KEY_ADVANCEMENT_MAKE_LIST_DESCRIPTION = "advancements.crafttracker.main.make_list.description";
+    public static final String TRANSLATION_KEY_ADVANCEMENT_QUEUE_ITEM_TITLE = "advancements.crafttracker.main.queue_item.title";
+    public static final String TRANSLATION_KEY_ADVANCEMENT_QUEUE_ITEM_DESCRIPTION = "advancements.crafttracker.main.queue_item.description";
+    // TODO: craft an item in the queue
+    // TODO: populate the shopping list
+    // TODO: acquire something in the shopping list
 
 }

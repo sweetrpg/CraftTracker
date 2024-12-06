@@ -10,8 +10,18 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.function.Predicate;
 
+/**
+ * Miscellaneous utility functions for player inventory
+ */
 public class InventoryUtil {
 
+    /**
+     * Determine the quantity of a particular item in the player's inventory.
+     *
+     * @param player The player to inspect
+     * @param itemId The item to look for
+     * @return The amount of the item
+     */
     public static int getQuantityOf(Player player, ResourceLocation itemId) {
         var inventory = player.getInventory();
 

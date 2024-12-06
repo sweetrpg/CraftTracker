@@ -4,6 +4,7 @@ license="MIT"
 issueTrackerURL="https://github.com/sweetrpg/CraftTracker/issues"
 displayURL="https://minecraft.curseforge.com/projects/craft-tracker/"
 logoFile= "ct_logo.png"
+displayName = "Craft Tracker"
 
 [[mods]]
     modId="crafttracker"

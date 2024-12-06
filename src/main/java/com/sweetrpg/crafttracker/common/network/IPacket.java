@@ -7,9 +7,9 @@ import java.util.function.Supplier;
 
 public interface IPacket<D> {
 
-    public void encode(D data, FriendlyByteBuf buf);
+    void encode(D data, FriendlyByteBuf buf);
 
-    public D decode(FriendlyByteBuf buf);
+    D decode(FriendlyByteBuf buf);
 
-    public void handle(D data, Supplier<NetworkEvent.Context> ctx);
+    void handle(D data, Supplier<NetworkEvent.Context> ctx);
 }

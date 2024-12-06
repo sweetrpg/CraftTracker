@@ -1,6 +1,5 @@
 package com.sweetrpg.crafttracker.common.registry;
 
-import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -49,21 +48,4 @@ public class ModBlocks {
         return BLOCKS.register(name, blockSupplier);
     }
 
-//    public static void registerBlockColours(final ColorHandlerEvent.Block event) {
-//        BlockColors blockColors = event.getBlockColors();
-//
-////        Util.acceptOrElse(CatBlocks.CAT_BATH, (block) -> {
-////            blockColors.register((state, world, pos, tintIndex) -> {
-////                return world != null && pos != null ? BiomeColors.getAverageWaterColor(world, pos) : -1;
-////             }, block);
-////        }, CatBlocks::logError);
-//    }
-
-    public static void logError() {
-        // Only try to register if blocks were successfully registered
-        // Trying to avoid as reports like CraftTracker#242, where it says
-        // CraftTracker crashed but is not the CAUSE of the crash
-
-        CraftTracker.LOGGER.info("Items/Blocks were not registered for some reason... probably because we are c...r..a..s.hing");
-    }
 }

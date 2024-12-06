@@ -8,16 +8,7 @@ public class CommonSetup {
     public static void init(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             PacketHandler.init();
-            //TODO CriteriaTriggers.register(criterion)
-
-//            CatRespawnCommand.registerSerilizers();
-
         });
     }
-
-//    public static void registerDispenserBehaviors() {
-//
-//    }
-
 
 }

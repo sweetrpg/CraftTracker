@@ -6,6 +6,9 @@ import net.minecraft.world.item.crafting.Recipe;
 import java.text.MessageFormat;
 import java.util.List;
 
+/**
+ * A value object for holding crafting queue products.
+ */
 public class CraftingQueueProduct {
 
     ResourceLocation productId;
@@ -13,6 +16,13 @@ public class CraftingQueueProduct {
     List<? extends Recipe<?>> recipes;
     int index;
 
+    /**
+     * Default constructor.
+     *
+     * @param productId The ID of the product
+     * @param recipes The recipes associated with the product
+     * @param iterations The number of times the product should be crafted
+     */
     public CraftingQueueProduct(ResourceLocation productId, List<? extends Recipe<?>> recipes, int iterations) {
         this.productId = productId;
         this.iterations = iterations;
