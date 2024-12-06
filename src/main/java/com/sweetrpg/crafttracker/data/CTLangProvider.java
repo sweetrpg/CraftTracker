@@ -70,6 +70,19 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT, "The height of the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY, "Should the craft queue overlay be hidden when it is empty?");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY, "Should the shopping list overlay be hidden when it is empty?");
+
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ROOT_TITLE, "Tracking Crafts");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ROOT_DESCRIPTION, "Keep track of all the things you need to craft");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_QUEUE_ITEM_TITLE, "Remember This");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_QUEUE_ITEM_DESCRIPTION, "Add an item to the crafting queue");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CRAFT_ITEM_TITLE, "Workin'");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CRAFT_ITEM_DESCRIPTION, "Craft a queued item");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_POPULATE_SHOPPING_LIST_TITLE, "Honey-do List");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_POPULATE_SHOPPING_LIST_DESCRIPTION, "Populate the shopping list");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ACQUIRE_LIST_ITEM_TITLE, "Just Keep Shopping");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ACQUIRE_LIST_ITEM_DESCRIPTION, "Acquire an item that is in the shopping list");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CLEAR_QUEUE_ITEM_TITLE, "Like A Boss");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CLEAR_QUEUE_ITEM_DESCRIPTION, "Clear the crafting queue entirely");
     }
 
     private void processENGB() {
@@ -115,6 +128,19 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT, "The height of the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY, "Should the craft queue overlay be hidden when it is empty?");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY, "Should the shopping list overlay be hidden when it is empty?");
+
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ROOT_TITLE, "Tracking Crafts");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ROOT_DESCRIPTION, "Keep track of all the things you need to craft");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_QUEUE_ITEM_TITLE, "Remember This");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_QUEUE_ITEM_DESCRIPTION, "Add an item to the crafting queue");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CRAFT_ITEM_TITLE, "Workin'");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CRAFT_ITEM_DESCRIPTION, "Craft a queued item");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_POPULATE_SHOPPING_LIST_TITLE, "Honey-do List");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_POPULATE_SHOPPING_LIST_DESCRIPTION, "Populate the shopping list");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ACQUIRE_LIST_ITEM_TITLE, "Just Keep Shopping");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ACQUIRE_LIST_ITEM_DESCRIPTION, "Acquire an item that is in the shopping list");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CLEAR_QUEUE_ITEM_TITLE, "Like A Boss");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CLEAR_QUEUE_ITEM_DESCRIPTION, "Clear the crafting queue entirely");
     }
 
     private void processDEDE() {
@@ -160,5 +186,18 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT, "Die Höhe des Einkaufslisten-Overlays");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY, "Soll das Overlay der Herstellungswarteschlange ausgeblendet werden, wenn es leer ist?");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY, "Soll das Einkaufslisten-Overlay ausgeblendet werden, wenn es leer ist?");
+
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ROOT_TITLE, "Tracking-Handwerk");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ROOT_DESCRIPTION, "Behalten Sie den Überblick über alle Dinge, die Sie zum Herstellen benötigen");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_QUEUE_ITEM_TITLE, "Denken Sie daran");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_QUEUE_ITEM_DESCRIPTION, "Einen Gegenstand zur Herstellungswarteschlange hinzufügen");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CRAFT_ITEM_TITLE, "Arbeiten");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CRAFT_ITEM_DESCRIPTION, "Einen in der Warteschlange befindlichen Gegenstand herstellen");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_POPULATE_SHOPPING_LIST_TITLE, "To-do-Liste");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_POPULATE_SHOPPING_LIST_DESCRIPTION, "Die Einkaufsliste füllen");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ACQUIRE_LIST_ITEM_TITLE, "Einfach weiter einkaufen");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_ACQUIRE_LIST_ITEM_DESCRIPTION, "Einen Artikel erwerben, der auf der Einkaufsliste steht");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CLEAR_QUEUE_ITEM_TITLE, "Wie ein Boss");
+        add(Constants.TRANSLATION_KEY_ADVANCEMENT_CLEAR_QUEUE_ITEM_DESCRIPTION, "Leeren Sie die Herstellungswarteschlange vollständig.");
     }
 }

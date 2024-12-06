@@ -7,6 +7,9 @@ import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
+import com.sweetrpg.crafttracker.common.network.PacketHandler;
+import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
+import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.KeyUtil;
@@ -137,6 +140,8 @@ public class ClientEventHandler {
             if(needed > 0)
                 sMgr.addItem(player, f.getItemId(), needed);
         });
+
+        PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.POPULATE_LIST));
     }
 
     private static void handleToggleShoppingList() {
@@ -179,6 +184,9 @@ public class ClientEventHandler {
 
                         var player = Minecraft.getInstance().player;
                         CraftingQueueManager.INSTANCE.addProduct(player, res, 1);
+
+                        // send advancement packet
+                        PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.QUEUE_ITEM));
                     }
                 });
     }

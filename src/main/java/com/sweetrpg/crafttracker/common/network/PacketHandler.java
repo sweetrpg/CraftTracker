@@ -1,7 +1,9 @@
 package com.sweetrpg.crafttracker.common.network;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.network.packet.AdvancementPacket;
 import com.sweetrpg.crafttracker.common.network.packet.QueueCommandPacket;
+import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.PacketDistributor;
@@ -12,6 +14,7 @@ public final class PacketHandler {
 
     public static void init() {
         registerPacket(new QueueCommandPacket(), QueueCommandData.class);
+        registerPacket(new AdvancementPacket(), AdvancementData.class);
     }
 
     public static <MSG> void sendToServer(MSG message) {

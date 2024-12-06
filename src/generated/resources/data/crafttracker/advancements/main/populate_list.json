@@ -1,0 +1,30 @@
+{
+  "parent": "crafttracker:main/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:paper"
+    },
+    "title": {
+      "translate": "advancements.crafttracker.main.populate_list.title"
+    },
+    "description": {
+      "translate": "advancements.crafttracker.main.populate_list.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "main": {
+      "trigger": "crafttracker:populate_list",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "main"
+    ]
+  ]
+}
