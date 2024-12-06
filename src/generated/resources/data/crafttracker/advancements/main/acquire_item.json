@@ -1,0 +1,30 @@
+{
+  "parent": "crafttracker:main/populate_list",
+  "display": {
+    "icon": {
+      "item": "minecraft:crafting_table"
+    },
+    "title": {
+      "translate": "advancements.crafttracker.main.acquire_item.title"
+    },
+    "description": {
+      "translate": "advancements.crafttracker.main.acquire_item.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "main": {
+      "trigger": "crafttracker:acquire_item",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "main"
+    ]
+  ]
+}

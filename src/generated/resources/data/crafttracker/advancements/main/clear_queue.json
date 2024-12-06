@@ -1,0 +1,30 @@
+{
+  "parent": "crafttracker:main/queue_item",
+  "display": {
+    "icon": {
+      "item": "minecraft:crafting_table"
+    },
+    "title": {
+      "translate": "advancements.crafttracker.main.clear_queue.title"
+    },
+    "description": {
+      "translate": "advancements.crafttracker.main.clear_queue.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "main": {
+      "trigger": "crafttracker:clear_queue",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "main"
+    ]
+  ]
+}
