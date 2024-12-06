@@ -7,6 +7,9 @@ import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
+import com.sweetrpg.crafttracker.common.network.PacketHandler;
+import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
+import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -165,6 +168,9 @@ public class QueueManagementScreen extends Screen {
                         CraftingQueueManager.INSTANCE.removeAll();
                         QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                         this.renderables.clear();
+
+                        // send advancement packet
+                        PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.CLEAR_QUEUE));
                     }) /*{
                 @Override
                 public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {

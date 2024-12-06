@@ -3,6 +3,8 @@ package com.sweetrpg.crafttracker.data;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -57,14 +59,11 @@ public class CTAdvancementProvider extends AdvancementProvider {
             }
         };
 
-        // tracking
-//        Advancement trainCat = Advancement.Builder.advancement()
-////                .parent(Util.mcLoc("tame_animal"))
-//                .display(DisplayInfoBuilder.create().icon(ModItems.TRAINING_TREAT).frame(FrameType.TASK).translate("CraftTracker.main.train_cat").background("stone.png").build())
-//                .addCriterion("tame_cat", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(ModEntityTypes.CAT.get()).build()))
-//                //.withCriterion("get_cat", ItemUseTrigger.TameAnimalTrigger.Instance.create(EntityPredicate.Builder.create().type(CatEntityTypes.CAT.get()).build()))
-//                .requirements(RequirementsStrategy.OR)
-//                .save(consumer, Util.getResourcePath("main/tame_cat"));
-
+        var root = ModAdvancements.ROOT.deconstruct().save(consumer, Util.getResourcePath("main/root"));
+        var queueItem = ModAdvancements.QUEUE_ITEM.deconstruct().save(consumer, Util.getResourcePath("main/queue_item"));
+        var craftItem = ModAdvancements.CRAFT_ITEM.deconstruct().save(consumer, Util.getResourcePath("main/craft_item"));
+        var populateList = ModAdvancements.POPULATE_LIST.deconstruct().save(consumer, Util.getResourcePath("main/populate_list"));
+        var acquireItem = ModAdvancements.ACQUIRE_ITEM.deconstruct().save(consumer, Util.getResourcePath("main/acquire_item"));
+        var clearQueue = ModAdvancements.CLEAR_QUEUE.deconstruct().save(consumer, Util.getResourcePath("main/clear_queue"));
     }
 }

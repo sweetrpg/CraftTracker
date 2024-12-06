@@ -5,6 +5,8 @@ import com.sweetrpg.crafttracker.client.event.CraftingEvents;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.network.PacketHandler;
 import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
+import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
+import com.sweetrpg.crafttracker.common.util.AdvancementUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -48,6 +50,8 @@ public class EventHandler {
             // send packet
             PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
         }
+
+        AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayer) event.getPlayer());
     }
 
     @SubscribeEvent
@@ -65,6 +69,8 @@ public class EventHandler {
             // send packet
             PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
         }
+
+        AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayer) event.getPlayer());
     }
 
     @SubscribeEvent
@@ -82,6 +88,8 @@ public class EventHandler {
             // send packet
             PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
         }
+
+        AdvancementUtil.trigger(ModAdvancements.Key.ACQUIRE_ITEM, (ServerPlayer) event.getPlayer());
     }
 
 }
