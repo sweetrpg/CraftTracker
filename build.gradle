@@ -53,23 +53,33 @@ configurations {
     apiRuntimeOnly.extendsFrom(runtimeOnly)
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(11)
 
 repositories {
     maven { // JEI
         url "https://dvs1.progwml6.com/files/maven"
         content { includeGroup "mezz.jei" }
     }
-    maven { // The One Probe
+    maven {
         url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
-    maven { // ???
+    maven {
         url 'https://maven.blamejared.com'
+    }
+    maven { // PARCHMENT
+       url = "https://maven.parchmentmc.org"
+    }
+    maven {
+        url "https://modmaven.k-4u.nl"
+        content { includeGroup "mezz.jei" }
     }
 }
 
 minecraft {
-    mappings channel: 'parchment', version: project.parchment_version
+    mappings channel: 'official', version: project.mc_version
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -128,13 +138,13 @@ dependencies {
     implementation fg.deobf("curse.maven:create-${create_project_id}:${create_file_id}")
     implementation fg.deobf("curse.maven:ars-nouveau-${ars_project_id}:${ars_file_id}")
     implementation fg.deobf("curse.maven:curios-${curios_project_id}:${curios_file_id}")
-    implementation fg.deobf("curse.maven:celestial-exploration-${cexp_project_id}:${cexp_file_id}")
-    implementation fg.deobf("curse.maven:azurelib-${azure_project_id}:${azure_file_id}")
+    // implementation fg.deobf("curse.maven:celestial-exploration-${cexp_project_id}:${cexp_file_id}")
+    // implementation fg.deobf("curse.maven:azurelib-${azure_project_id}:${azure_file_id}")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiter_version}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiter_version}")
 
-    runtimeOnly fg.deobf("curse.maven:the-one-probe-245211:${top_file_id}")
+    runtimeOnly fg.deobf("curse.maven:the-one-probe-${top_project_id}:${top_file_id}")
 }
 
 // Define a task to create a jar of project sources
