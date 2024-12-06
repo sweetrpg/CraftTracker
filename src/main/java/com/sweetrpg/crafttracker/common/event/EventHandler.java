@@ -49,9 +49,8 @@ public class EventHandler {
         else {
             // send packet
             PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
+            AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayer) event.getPlayer());
         }
-
-        AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayer) event.getPlayer());
     }
 
     @SubscribeEvent
@@ -68,9 +67,8 @@ public class EventHandler {
         else {
             // send packet
             PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
+            AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayer) event.getPlayer());
         }
-
-        AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayer) event.getPlayer());
     }
 
     @SubscribeEvent
@@ -87,9 +85,8 @@ public class EventHandler {
         else {
             // send packet
             PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
+            AdvancementUtil.trigger(ModAdvancements.Key.ACQUIRE_ITEM, (ServerPlayer) event.getPlayer());
         }
-
-        AdvancementUtil.trigger(ModAdvancements.Key.ACQUIRE_ITEM, (ServerPlayer) event.getPlayer());
     }
 
 }

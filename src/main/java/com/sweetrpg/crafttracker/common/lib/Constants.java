@@ -76,8 +76,8 @@ public class Constants {
     public static final String TRANSLATION_KEY_ADVANCEMENT_CRAFT_ITEM_DESCRIPTION = "advancements.crafttracker.main.craft_item.description";
     public static final String TRANSLATION_KEY_ADVANCEMENT_POPULATE_SHOPPING_LIST_TITLE = "advancements.crafttracker.main.populate_list.title";
     public static final String TRANSLATION_KEY_ADVANCEMENT_POPULATE_SHOPPING_LIST_DESCRIPTION = "advancements.crafttracker.main.populate_list.description";
-    public static final String TRANSLATION_KEY_ADVANCEMENT_ACQUIRE_LIST_ITEM_TITLE = "advancements.crafttracker.main.acquire_list_item.title";
-    public static final String TRANSLATION_KEY_ADVANCEMENT_ACQUIRE_LIST_ITEM_DESCRIPTION = "advancements.crafttracker.main.acquire_list_item.description";
+    public static final String TRANSLATION_KEY_ADVANCEMENT_ACQUIRE_LIST_ITEM_TITLE = "advancements.crafttracker.main.acquire_item.title";
+    public static final String TRANSLATION_KEY_ADVANCEMENT_ACQUIRE_LIST_ITEM_DESCRIPTION = "advancements.crafttracker.main.acquire_item.description";
     public static final String TRANSLATION_KEY_ADVANCEMENT_CLEAR_QUEUE_ITEM_TITLE = "advancements.crafttracker.main.clear_queue.title";
     public static final String TRANSLATION_KEY_ADVANCEMENT_CLEAR_QUEUE_ITEM_DESCRIPTION = "advancements.crafttracker.main.clear_queue.description";
 

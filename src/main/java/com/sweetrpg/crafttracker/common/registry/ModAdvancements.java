@@ -44,7 +44,6 @@ public class ModAdvancements {
                     .background("stone.png")
                     .build())
             .addCriterion(MAIN_CRITERION, ModTriggers.addSimple("craft_item").instance())
-//            .parent(QUEUE_ITEM)
             .requirements(RequirementsStrategy.OR));
     public static final Advancement POPULATE_LIST = create("populate_list", Key.POPULATE_LIST, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
@@ -63,7 +62,6 @@ public class ModAdvancements {
                     .background("stone.png")
                     .build())
             .addCriterion(MAIN_CRITERION, ModTriggers.addSimple("acquire_item").instance())
-//            .parent(POPULATE_LIST)
             .requirements(RequirementsStrategy.OR));
     public static final Advancement CLEAR_QUEUE = create("clear_queue", Key.CLEAR_QUEUE, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
@@ -73,7 +71,6 @@ public class ModAdvancements {
                     .background("stone.png")
                     .build())
             .addCriterion(MAIN_CRITERION, ModTriggers.addSimple("clear_queue").instance())
-//            .parent(QUEUE_ITEM)
             .requirements(RequirementsStrategy.OR));
 
 

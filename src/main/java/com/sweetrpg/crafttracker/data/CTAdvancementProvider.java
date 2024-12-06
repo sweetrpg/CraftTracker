@@ -60,10 +60,10 @@ public class CTAdvancementProvider extends AdvancementProvider {
         };
 
         var root = ModAdvancements.ROOT.deconstruct().save(consumer, Util.getResourcePath("main/root"));
-        var queueItem = ModAdvancements.QUEUE_ITEM.deconstruct().save(consumer, Util.getResourcePath("main/queue_item"));
-        var craftItem = ModAdvancements.CRAFT_ITEM.deconstruct().save(consumer, Util.getResourcePath("main/craft_item"));
-        var populateList = ModAdvancements.POPULATE_LIST.deconstruct().save(consumer, Util.getResourcePath("main/populate_list"));
-        var acquireItem = ModAdvancements.ACQUIRE_ITEM.deconstruct().save(consumer, Util.getResourcePath("main/acquire_item"));
-        var clearQueue = ModAdvancements.CLEAR_QUEUE.deconstruct().save(consumer, Util.getResourcePath("main/clear_queue"));
+        var queueItem = ModAdvancements.QUEUE_ITEM.deconstruct().parent(root).save(consumer, Util.getResourcePath("main/queue_item"));
+        var craftItem = ModAdvancements.CRAFT_ITEM.deconstruct().parent(queueItem).save(consumer, Util.getResourcePath("main/craft_item"));
+        var populateList = ModAdvancements.POPULATE_LIST.deconstruct().parent(root).save(consumer, Util.getResourcePath("main/populate_list"));
+        var acquireItem = ModAdvancements.ACQUIRE_ITEM.deconstruct().parent(populateList).save(consumer, Util.getResourcePath("main/acquire_item"));
+        var clearQueue = ModAdvancements.CLEAR_QUEUE.deconstruct().parent(queueItem).save(consumer, Util.getResourcePath("main/clear_queue"));
     }
 }
