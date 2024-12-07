@@ -11,13 +11,13 @@ import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.Recipe;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Manages the crafting queue.
@@ -59,7 +60,7 @@ public class CraftingQueueManager {
      *
      * @param player The player for whom to load the queue.
      */
-    public void load(Player player) {
+    public void load(PlayerEntity player) {
         CraftTracker.LOGGER.info("Loading crafting queue for {}", player);
 
         Path file = Util.getStoragePath().resolve("queue.nbt").toAbsolutePath();
@@ -84,7 +85,7 @@ public class CraftingQueueManager {
      *
      * @param player The player for whom to save the queue.
      */
-    public void save(Player player) {
+    public void save(PlayerEntity player) {
         CraftTracker.LOGGER.info("Saving crafting queue for {}", player);
 
         Path file = Util.getStoragePath().resolve("queue.nbt").toAbsolutePath();
@@ -121,9 +122,7 @@ public class CraftingQueueManager {
      * @return A {@link List} of {@link CraftingQueueProduct} representing the products in the queue
      */
     public List<CraftingQueueProduct> getEndProducts() {
-        return endProducts.values()
-                .stream()
-                .toList();
+        return new ArrayList<>(endProducts.values());
     }
 
     /**
@@ -132,9 +131,7 @@ public class CraftingQueueManager {
      * @return A {@link List} of {@link CraftingQueueItem} representing the intermediates in the queue
      */
     public List<CraftingQueueItem> getIntermediates() {
-        return intermediateProducts.values()
-                .stream()
-                .toList();
+        return new ArrayList<>(intermediateProducts.values());
     }
 
     /**
@@ -143,9 +140,7 @@ public class CraftingQueueManager {
      * @return A {@link List} of {@link CraftingQueueItem} representing the materials in the queue
      */
     public List<CraftingQueueItem> getRawMaterials() {
-        return rawMaterials.values()
-                .stream()
-                .toList();
+        return new ArrayList<>(rawMaterials.values());
     }
 
     /**
@@ -154,9 +149,7 @@ public class CraftingQueueManager {
      * @return A {@link List} of {@link CraftingQueueItem} representing the fuels in the queue
      */
     public List<CraftingQueueItem> getFuel() {
-        return fuel.values()
-                .stream()
-                .toList();
+        return new ArrayList<>(fuel.values());
     }
 
     /**
@@ -168,7 +161,7 @@ public class CraftingQueueManager {
      * @param itemId The item to add to the queue
      * @param quantity The amount to add
      */
-    public void addProduct(Player player, ResourceLocation itemId, int quantity) {
+    public void addProduct(PlayerEntity player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#addProduct: {}, quantity: {}", itemId, quantity);
 
         if(quantity < 1) return;
@@ -199,7 +192,7 @@ public class CraftingQueueManager {
      * @param itemId The item to adjust
      * @param quantity The amount to adjust; positive values will increase the amount, negative values will reduce it.
      */
-    public void adjustProduct(Player player, ResourceLocation itemId, int quantity) {
+    public void adjustProduct(PlayerEntity player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#adjustProduct: {}, quantity: {}", itemId, quantity);
 
         if(quantity < 0)
@@ -214,7 +207,7 @@ public class CraftingQueueManager {
      * @param player The player whose queue is being adjusted
      * @param itemId The item to remove from the queue
      */
-    public void removeProduct(Player player, ResourceLocation itemId) {
+    public void removeProduct(PlayerEntity player, ResourceLocation itemId) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}", itemId);
 
         this.endProducts.remove(itemId);
@@ -232,7 +225,7 @@ public class CraftingQueueManager {
      * @param quantity The amount of the item to remove. If this value is the greater than or equal to the amount
      *                 currently in the queue, the item is removed entirely.
      */
-    public void removeProduct(Player player, ResourceLocation itemId, int quantity) {
+    public void removeProduct(PlayerEntity player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}, quantity: {}", itemId, quantity);
 
         if(quantity < 1) return;
@@ -529,15 +522,13 @@ public class CraftingQueueManager {
 
         @Override
         public String toString() {
-            return MessageFormat.format("""
-                            ProcessingContext[
-                              intermediateProducts={0}
-                              rawMaterials={1}
-                              fuel={2}
-                              handledItems={3}
-                              computedRecipes={4}
-                            ]
-                            """,
+            return MessageFormat.format(                            "ProcessingContext[\n" +
+                              "  intermediateProducts={0}\n" +
+                              "  rawMaterials={1}\n" +
+                              "  fuel={2}\n" +
+                              "  handledItems={3}\n" +
+                              "  computedRecipes={4}\n" +
+                            "]",
                     intermediateProducts, rawMaterials, fuel, handledItems, computedRecipes);
         }
     }
@@ -581,13 +572,11 @@ public class CraftingQueueManager {
 
         @Override
         public String toString() {
-            return MessageFormat.format("""
-                            ComputedRecipeItem[
-                              itemId={0}
-                              amount={1}
-                              tag={2}
-                            ]
-                            """,
+            return MessageFormat.format(                            "ComputedRecipeItem[\n"+
+                            "  itemId={0}\n" +
+                            "  amount={1}\n"+
+                            "  tag={2}\n"+
+                            "]",
                     itemId, amount, tag);
         }
     }
@@ -612,28 +601,24 @@ public class CraftingQueueManager {
 
         @Override
         public String toString() {
-            return MessageFormat.format("""
-                            ComputedRecipe[
-                              recipeId={0}
-                              intermediateProducts={1}
-                              rawMaterials={2}
-                              fuel={3}
-                            ]
-                            """,
+            return MessageFormat.format(                            "ComputedRecipe[\n"+
+                            "  recipeId={0}\n"+
+                            "  intermediateProducts={1}\n"+
+                            "  rawMaterials={2}\n"+
+                            "  fuel={3}\n"+
+                            "]",
                     recipeId, intermediateProducts, rawMaterials, fuel);
         }
     }
 
     @Override
     public String toString() {
-        return MessageFormat.format("""                
-                        CraftingQueueManager[
-                          endProducts={0}
-                          intermediateProducts={1}
-                          rawMaterials={2}
-                          fuel={3}
-                        ]
-                        """,
+        return MessageFormat.format(                                        "CraftingQueueManager[\n"+
+                        "  endProducts={0}\n"+
+                        "  intermediateProducts={1}\n"+
+                        "  rawMaterials={2}\n"+
+                        "  fuel={3}\n"+
+                        "]",
                 endProducts, intermediateProducts, rawMaterials, fuel);
     }
 }

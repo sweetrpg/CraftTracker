@@ -14,13 +14,13 @@ import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.KeyUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.CraftingScreen;
-import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.CraftingScreen;
+import net.minecraft.client.gui.screen.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.network.TranslatableComponent;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -178,8 +178,8 @@ public class ClientEventHandler {
                     CraftTracker.LOGGER.debug("#handleAddToQueue: type {}", ingredient.getType());
                     CraftTracker.LOGGER.debug("#handleAddToQueue: ingredient {}", ingredient.getIngredient());
 
-                    if(ingredient.getIngredient() instanceof ItemStack itemStack) {
-                        ResourceLocation res = itemStack.getItem().getRegistryName();
+                    if(ingredient.getIngredient() instanceof ItemStack) {
+                        ResourceLocation res = ((ItemStack)itemStack).getItem().getRegistryName();
                         CraftTracker.LOGGER.debug("#handleAddToQueue: res {}", res);
 
                         var player = Minecraft.getInstance().player;

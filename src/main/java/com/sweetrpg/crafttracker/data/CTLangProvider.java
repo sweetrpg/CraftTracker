@@ -21,9 +21,9 @@ public class CTLangProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         switch(this.locale) {
-            case Constants.LOCALE_EN_US -> processENUS();
-            case Constants.LOCALE_EN_GB -> processENGB();
-            case Constants.LOCALE_DE_DE -> processDEDE();
+            case Constants.LOCALE_EN_US: processENUS();
+            case Constants.LOCALE_EN_GB: processENGB();
+            case Constants.LOCALE_DE_DE: processDEDE();
         }
     }
 

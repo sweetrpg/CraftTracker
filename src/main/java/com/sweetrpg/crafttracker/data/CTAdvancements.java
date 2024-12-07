@@ -3,8 +3,8 @@ package com.sweetrpg.crafttracker.data;
 import com.google.common.collect.Maps;
 import net.minecraft.advancements.*;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nullable;
