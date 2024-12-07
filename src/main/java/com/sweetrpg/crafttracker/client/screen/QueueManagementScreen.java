@@ -16,8 +16,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -48,7 +47,7 @@ public class QueueManagementScreen extends Screen {
     private CTRuntime.OverlayState shoppingState;
 
     public QueueManagementScreen(Player player) {
-        super(new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE));
+        super(Component.translatable(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE));
         this.player = player;
 
         this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
@@ -112,7 +111,7 @@ public class QueueManagementScreen extends Screen {
 
             // quantity and adjustment buttons
             {
-                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("-"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, Component.literal("-"), btn -> {
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), -1);
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                 }) /*{
@@ -129,7 +128,7 @@ public class QueueManagementScreen extends Screen {
                 GuiComponent.drawCenteredString(poseStack, this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
             }
             {
-                Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("+"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, Component.literal("+"), btn -> {
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), 1);
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                 }) /*{
@@ -146,7 +145,7 @@ public class QueueManagementScreen extends Screen {
 
             // delete button
             {
-                Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("x"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, Component.literal("x"), btn -> {
                     CraftingQueueManager.INSTANCE.removeProduct(player, pItem.getProductId());
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                     this.renderables.clear();
@@ -163,7 +162,7 @@ public class QueueManagementScreen extends Screen {
         // clear all button
         {
             Button button = new Button(topX + (width / 2) - 50, topY + height - BUTTON_SIZE - 4, 100, BUTTON_SIZE + 2,
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_CLEAR_BUTTON),
+                    Component.translatable(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_CLEAR_BUTTON),
                     btn -> {
                         CraftingQueueManager.INSTANCE.removeAll();
                         QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();

@@ -28,8 +28,4 @@ public class CTRecipeProvider extends RecipeProvider {
         // shopping list
     }
 
-    @Override
-    protected void saveAdvancement(HashCache cache, JsonObject advancementJson, Path pathIn) {
-        // NOOP - We don't replace any of the advancement things yet...
-    }
 }

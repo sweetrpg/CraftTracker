@@ -9,7 +9,6 @@ import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.util.AdvancementUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemSmeltedEvent;
@@ -17,17 +16,18 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData.QueueCommand.RECALCULATE;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID)
 public class EventHandler {
 
-    @SubscribeEvent
-    public void onEntitySpawn(final EntityJoinWorldEvent event) {
-        CraftTracker.LOGGER.trace("EventHandler#onEntitySpawn: {}", event);
-
-    }
+//    @SubscribeEvent
+//    public void onEntitySpawn(final EntityJoinWorldEvent event) {
+//        CraftTracker.LOGGER.trace("EventHandler#onEntitySpawn: {}", event);
+//
+//    }
 
     @SubscribeEvent
     public void playerLoggedIn(final PlayerLoggedInEvent event) {
@@ -39,17 +39,17 @@ public class EventHandler {
     public void onItemCrafted(final ItemCraftedEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemCrafted: {}", event);
 
-        if(event.getPlayer().level.isClientSide) {
+        if(event.getEntity().level.isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                var itemId = event.getCrafting().getItem().getRegistryName();
+                var itemId = ForgeRegistries.ITEMS.getKey(event.getCrafting().getItem());
                 var quantity = event.getCrafting().getCount();
                 CraftingEvents.removeProduct(itemId, quantity);
             });
         }
         else {
             // send packet
-            PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
-            AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayer) event.getPlayer());
+            PacketHandler.sendToPlayer((ServerPlayer) event.getEntity(), new QueueCommandData(RECALCULATE));
+            AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayer) event.getEntity());
         }
     }
 
@@ -57,17 +57,17 @@ public class EventHandler {
     public void onItemSmelted(final ItemSmeltedEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemSmelted: {}", event);
 
-        if(event.getPlayer().level.isClientSide) {
+        if(event.getEntity().level.isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                var itemId = event.getSmelting().getItem().getRegistryName();
+                var itemId = ForgeRegistries.ITEMS.getKey(event.getSmelting().getItem());
                 var quantity = event.getSmelting().getCount();
                 CraftingEvents.removeProduct(itemId, quantity);
             });
         }
         else {
             // send packet
-            PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
-            AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayer) event.getPlayer());
+            PacketHandler.sendToPlayer((ServerPlayer) event.getEntity(), new QueueCommandData(RECALCULATE));
+            AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayer) event.getEntity());
         }
     }
 
@@ -75,17 +75,17 @@ public class EventHandler {
     public void onItemPickedUp(final ItemPickupEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemPickedUp: {}", event);
 
-        if(event.getPlayer().level.isClientSide) {
+        if(event.getEntity().level.isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                var itemId = event.getStack().getItem().getRegistryName();
+                var itemId = ForgeRegistries.ITEMS.getKey(event.getStack().getItem());
                 var quantity = event.getStack().getCount();
                 CraftingEvents.pickupItem(itemId, quantity);
             });
         }
         else {
             // send packet
-            PacketHandler.sendToPlayer((ServerPlayer) event.getPlayer(), new QueueCommandData(RECALCULATE));
-            AdvancementUtil.trigger(ModAdvancements.Key.ACQUIRE_ITEM, (ServerPlayer) event.getPlayer());
+            PacketHandler.sendToPlayer((ServerPlayer) event.getEntity(), new QueueCommandData(RECALCULATE));
+            AdvancementUtil.trigger(ModAdvancements.Key.ACQUIRE_ITEM, (ServerPlayer) event.getEntity());
         }
     }
 

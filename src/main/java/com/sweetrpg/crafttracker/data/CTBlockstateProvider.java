@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -41,7 +41,7 @@ public class CTBlockstateProvider extends BlockStateProvider {
     }
 
     private String blockName(Block block) {
-        return block.getRegistryName().getPath();
+        return ForgeRegistries.BLOCKS.getKey(block).getPath();
     }
 
     public ResourceLocation resourceBlock(String path) {
@@ -85,12 +85,12 @@ public class CTBlockstateProvider extends BlockStateProvider {
         }, ignored);
     }
 
-    private String name(Supplier<? extends IForgeRegistryEntry<?>> block) {
-        return block.get().getRegistryName().getPath();
+    private String name(Supplier<? extends Block> block) {
+        return ForgeRegistries.BLOCKS.getKey(block.get()).getPath();
     }
 
     private ResourceLocation blockTexture(Supplier<? extends Block> block) {
-        ResourceLocation base = block.get().getRegistryName();
+        ResourceLocation base = ForgeRegistries.BLOCKS.getKey(block.get());
         return prextend(base, ModelProvider.BLOCK_FOLDER + "/");
     }
 

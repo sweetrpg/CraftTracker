@@ -119,10 +119,12 @@ minecraft {
 dependencies {
     minecraft "net.minecraftforge:forge:${project.forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${ptch_version}:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${ptch_version}")
+    // compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
+    // runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
+    implementation fg.deobf("curse.maven:jei-${jei_project_id}:${jei_file_id}")
+    // compileOnly fg.deobf("vazkii.patchouli:Patchouli:${ptch_version}:api")
+    // runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${ptch_version}")
+    implementation fg.deobf("curse.maven:patchouli-${ptch_project_id}:${ptch_file_id}")
 
     implementation fg.deobf("curse.maven:farmers-delight-${farmers_project_id}:${farmers_file_id}")
     implementation fg.deobf("curse.maven:create-${create_project_id}:${create_file_id}")

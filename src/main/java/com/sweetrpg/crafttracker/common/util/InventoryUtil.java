@@ -30,7 +30,7 @@ public class InventoryUtil {
 
         if(inventory.contains(stack)) {
             return inventory.items.stream()
-                    .filter(inv -> inv.getItem().getRegistryName().equals(itemId))
+                    .filter(inv -> ForgeRegistries.ITEMS.getKey(inv.getItem()).equals(itemId))
                     .map(inv -> inv.getCount())
                     .findFirst()
                     .orElse(0);

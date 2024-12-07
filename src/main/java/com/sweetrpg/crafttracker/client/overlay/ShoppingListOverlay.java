@@ -11,8 +11,13 @@ import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ShoppingListOverlay {
@@ -28,8 +33,15 @@ public class ShoppingListOverlay {
     static int TEXT_HEIGHT = 12;
     static int MAX_STRING_LENGTH = 40;
 
-    public static final IIngameOverlay SHOPPING_LIST = (gui, poseStack, partialTicks, width, height) -> {
-        CraftTracker.LOGGER.trace("SHOPPING_LIST");
+
+    @SubscribeEvent
+    public void onRenderGuiOverlay(RenderGuiOverlayEvent event) {
+        CraftTracker.LOGGER.trace("ShoppingListOverlay#onRenderGuiOverlay");
+
+        final var gui = (ForgeGui) Minecraft.getInstance().gui;
+        final var poseStack = event.getPoseStack();
+        final var width = Minecraft.getInstance().getWindow().getWidth();
+        final var height = Minecraft.getInstance().getWindow().getHeight();
 
         var mgr = ShoppingListManager.INSTANCE;
         var items = mgr.getItems();
@@ -68,13 +80,13 @@ public class ShoppingListOverlay {
         GuiComponent.fill(poseStack, x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
 
         GuiComponent.drawCenteredString(poseStack, gui.getFont(),
-                new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_TITLE),
+                Component.translatable(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_TITLE),
                 (x + olWidth - 8) / 2, y + 6, TITLE_COLOR);
 
         // if products list is empty, display "empty" message
         if(items.isEmpty()) {
             GuiComponent.drawCenteredString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_EMPTY),
+                    Component.translatable(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_EMPTY),
                     (x + olWidth - 8) / 2, (y + olHeight - 6) / 2, MESSAGE_COLOR);
             return;
         }
@@ -106,8 +118,8 @@ public class ShoppingListOverlay {
             int playerHasQuantity = 0;
             if(inventory.contains(stack)) {
                 playerHasQuantity = inventory.items.stream()
-                        .filter(inv -> inv.getItem().getRegistryName().equals(m.getItemId()))
-                        .map(inv -> inv.getCount())
+                        .filter(inv -> ForgeRegistries.ITEMS.getKey(inv.getItem()).equals(m.getItemId()))
+                        .map(ItemStack::getCount)
                         .findFirst()
                         .orElse(0);
             }
@@ -138,6 +150,9 @@ public class ShoppingListOverlay {
             yPos += LINE_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (materials item {}): {}", i, yPos);
         }
-    };
+    }
 
+    public static void init() {
+        MinecraftForge.EVENT_BUS.register(new ShoppingListOverlay());
+    }
 }

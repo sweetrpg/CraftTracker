@@ -12,9 +12,12 @@ import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class CraftQueueOverlay {
@@ -31,8 +34,14 @@ public class CraftQueueOverlay {
     static int TEXT_HEIGHT = 12;
     static int MAX_STRING_LENGTH = 40;
 
-    public static final IIngameOverlay CRAFT_QUEUE = (gui, poseStack, partialTicks, width, height) -> {
-        CraftTracker.LOGGER.trace("CRAFT_QUEUE");
+    @SubscribeEvent
+    public void onRenderGuiOverlay(RenderGuiOverlayEvent event) {
+        CraftTracker.LOGGER.trace("CraftQueueOverlay#onRenderGuiOverlay");
+
+        final var gui = (ForgeGui) Minecraft.getInstance().gui;
+        final var poseStack = event.getPoseStack();
+        final var width = Minecraft.getInstance().getWindow().getWidth();
+        final var height = Minecraft.getInstance().getWindow().getHeight();
 
         var mgr = CraftingQueueManager.INSTANCE;
         var products = mgr.getEndProducts().stream().sorted((i1, i2) -> {
@@ -64,20 +73,20 @@ public class CraftQueueOverlay {
         var y = ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_Y.get();
         var olWidth = Math.min((ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_X.get() + ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_WIDTH.get()), width - 10);
         var olHeight = Math.min((ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_Y.get() + ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_HEIGHT.get()), height - 10);
-        var backgroundColor = 0x5f5f5f5f; // TODO: get from config
-        var borderColor = 0x1f1f1f1f; // TODO: get from config
+        var backgroundColor = 0x015f5f5f; // TODO: get from config
+        var borderColor = 0x061f1f1f; // TODO: get from config
 
         GuiComponent.fill(poseStack, x, y, olWidth, olHeight, borderColor);
         GuiComponent.fill(poseStack, x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
 
         GuiComponent.drawCenteredString(poseStack, gui.getFont(),
-                new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_TITLE),
+                Component.translatable(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_TITLE),
                 (x + olWidth - 8) / 2, y + 6, TITLE_COLOR);
 
         // if products list is empty, display "empty" message
         if(products.isEmpty()) {
             GuiComponent.drawCenteredString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_EMPTY),
+                    Component.translatable(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_EMPTY),
                     (x + olWidth - 8) / 2, (y + olHeight - 6) / 2, MESSAGE_COLOR);
             return;
         }
@@ -95,7 +104,7 @@ public class CraftQueueOverlay {
 
         // title
         GuiComponent.drawString(poseStack, gui.getFont(),
-                new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_PRODUCTS),
+                Component.translatable(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_PRODUCTS),
                 x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
         yPos += TEXT_HEIGHT + 2;
         CraftTracker.LOGGER.trace("yPos (after product title): {}", yPos);
@@ -132,7 +141,7 @@ public class CraftQueueOverlay {
 
             // title
             GuiComponent.drawString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_INTERMEDIATES),
+                    Component.translatable(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_INTERMEDIATES),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (after intermediates title): {}", yPos);
@@ -191,7 +200,7 @@ public class CraftQueueOverlay {
 
             // title
             GuiComponent.drawString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_MATERIALS),
+                    Component.translatable(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_MATERIALS),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (after materials title): {}", yPos);
@@ -248,7 +257,7 @@ public class CraftQueueOverlay {
 
             // title
             GuiComponent.drawString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_FUEL),
+                    Component.translatable(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_FUEL),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos: {}", yPos);
@@ -296,6 +305,12 @@ public class CraftQueueOverlay {
                 CraftTracker.LOGGER.trace("yPos (materials item {}): {}", i, yPos);
             }
         }
-    };
+    }
+
+    public static void init() {
+        MinecraftForge.EVENT_BUS.register(new CraftQueueOverlay());
+//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "craft_queue", CraftQueueOverlay.CRAFT_QUEUE);
+//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "shopping_list", ShoppingListOverlay.SHOPPING_LIST);
+    }
 
 }

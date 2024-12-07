@@ -5,8 +5,8 @@ import com.sweetrpg.crafttracker.data.DisplayInfoBuilder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.RequirementsStrategy;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.TickTrigger;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.world.item.Items;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class ModAdvancements {
                     .translate("crafttracker.main.root")
                     .background("stone.png")
                     .build())
-            .addCriterion(MAIN_CRITERION, new TickTrigger.TriggerInstance(EntityPredicate.Composite.ANY))
+            .addCriterion(MAIN_CRITERION, PlayerTrigger.TriggerInstance.located(LocationPredicate.ANY))
             .requirements(RequirementsStrategy.OR));
     public static final Advancement QUEUE_ITEM = create("queue_item", Key.QUEUE_ITEM, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
