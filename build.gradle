@@ -59,15 +59,23 @@ configurations {
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 repositories {
-    maven { // JEI
-        url "https://dvs1.progwml6.com/files/maven"
-        content { includeGroup "mezz.jei" }
-    }
+    maven {
+    // location of the maven that hosts JEI files before January 2023
+    name = "Progwml6's maven"
+    url = "https://dvs1.progwml6.com/files/maven/"
+  }
+  maven {
+    // location of the maven that hosts JEI files since January 2023
+    name = "Jared's maven"
+    url = "https://maven.blamejared.com/"
+  }
+  maven {
+    // location of a maven mirror for JEI files, as a fallback
+    name = "ModMaven"
+    url = "https://modmaven.dev"
+  }
     maven { // The One Probe
         url "https://cursemaven.com"
-    }
-    maven { // Patchouli
-        url 'https://maven.blamejared.com'
     }
     maven {
         url "https://oss.sonatype.org/content/repositories/releases/"
@@ -127,20 +135,20 @@ minecraft {
 dependencies {
     minecraft "net.minecraftforge:forge:${project.forge_version}"
 
-    implementation fg.deobf("curse.maven:jei-${jei_project_id}:${jei_file_id}")
-    implementation fg.deobf("curse.maven:patchouli-${ptch_project_id}:${ptch_file_id}")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
-    // implementation fg.deobf("curse.maven:farmers-delight-${farmers_project_id}:${farmers_file_id}")
-    // implementation fg.deobf("curse.maven:create-${create_project_id}:${create_file_id}")
-    // implementation fg.deobf("curse.maven:ars-nouveau-${ars_project_id}:${ars_file_id}")
-    // implementation fg.deobf("curse.maven:curios-${curios_project_id}:${curios_file_id}")
+    implementation fg.deobf("curse.maven:patchouli-${ptch_project_id}:${ptch_file_id}")
+    implementation fg.deobf("curse.maven:farmers-delight-${farmers_project_id}:${farmers_file_id}")
+    implementation fg.deobf("curse.maven:create-${create_project_id}:${create_file_id}")
+    implementation fg.deobf("curse.maven:ars-nouveau-${ars_project_id}:${ars_file_id}")
+    implementation fg.deobf("curse.maven:curios-${curios_project_id}:${curios_file_id}")
 //    implementation fg.deobf("curse.maven:celestial-exploration-${cexp_project_id}:${cexp_file_id}")
 //    implementation fg.deobf("curse.maven:azurelib-${azure_project_id}:${azure_file_id}")
+    implementation fg.deobf("curse.maven:the-one-probe-${top_project_id}:${top_file_id}")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiter_version}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiter_version}")
-
-    runtimeOnly fg.deobf("curse.maven:the-one-probe-${top_project_id}:${top_file_id}")
 
     // lwjgl {
     //     version = Release.latest
