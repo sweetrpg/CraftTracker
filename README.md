@@ -9,20 +9,23 @@
   <img src="https://img.shields.io/modrinth/dt/6eqIziNz" alt="Modrinth Downloads">
 </a>
 
-[![CI (1.19)](https://github.com/sweetrpg/CraftTracker/actions/workflows/ci-build.yml/badge.svg?branch=1.19)](https://github.com/sweetrpg/CraftTracker/actions/workflows/ci-build.yml)
+[![CI (1.20)](https://github.com/sweetrpg/CraftTracker/actions/workflows/ci-build.yml/badge.svg?branch=1.20)](https://github.com/sweetrpg/CraftTracker/actions/workflows/ci-build.yml)
 
-## Overview 
+## Overview
 
-**Craft Tracker** is a **Minecraft** mod made for **Minecraft Forge**.
+**Craft Tracker** is a Minecraft mod made for [Minecraft Forge](https://minecraftforge.net).
 
 * Add items to a queue to keep track of what you need
 * Setup a shopping list so you know what to gather
-* Share the shopping list with other players so they can help
 
-## Required Mods
+## Requirements
 
-* [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) &mdash; version 11.8.1.1034 or higher
+* [JEI](https://www.curseforge.com/minecraft/mc-mods/jei)
 
 ## Where To Get It
 
 Download it from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/craft-tracker) or [Modrinth](https://modrinth.com/mod/craft-tracker).
+
+## Translations
+
+If you would like to help translate Craft Tracker into your language, please open [an issue](https://github.com/actions/setup-java/issues).
