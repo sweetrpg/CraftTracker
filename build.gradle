@@ -63,7 +63,7 @@ repositories {
     maven { // The One Probe
         url "https://cursemaven.com"
     }
-    maven { // ???
+    maven { // Patchouli
         url 'https://maven.blamejared.com'
     }
 }
@@ -199,14 +199,9 @@ curseforge {
         changelogType = 'markdown'
         releaseType = findProperty("curseforge_release_type") ?: 'beta'
         addGameVersion project.target_mc_version
-//        for (String v : project.additional_mc_versions.split(',')) {
-//            if (v) {
-//                addGameVersion v
-//            }
-//        }
         relations {
-            optionalDependency 'configured'
             requiredDependency 'jei'
+            optionalDependency 'configured'
             optionalDependency 'patchouli'
         }
     }
@@ -225,8 +220,8 @@ modrinth {
     changelog = file("CHANGELOG/${project.base_mc_version}/current.md").text
     loaders = ["forge"]
     dependencies {
-        optional.project "configured"
         required.project "jei"
+        optional.project "configured"
         optional.project "patchouli"
     }
 }
