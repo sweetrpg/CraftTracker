@@ -39,7 +39,7 @@ public class EventHandler {
     public void onItemCrafted(final ItemCraftedEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemCrafted: {}", event);
 
-        if(event.getEntity().level.isClientSide) {
+        if(event.getEntity().level().isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = ForgeRegistries.ITEMS.getKey(event.getCrafting().getItem());
                 var quantity = event.getCrafting().getCount();
@@ -57,7 +57,7 @@ public class EventHandler {
     public void onItemSmelted(final ItemSmeltedEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemSmelted: {}", event);
 
-        if(event.getEntity().level.isClientSide) {
+        if(event.getEntity().level().isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = ForgeRegistries.ITEMS.getKey(event.getSmelting().getItem());
                 var quantity = event.getSmelting().getCount();
@@ -75,7 +75,7 @@ public class EventHandler {
     public void onItemPickedUp(final ItemPickupEvent event) {
         CraftTracker.LOGGER.debug("EventHandler#onItemPickedUp: {}", event);
 
-        if(event.getEntity().level.isClientSide) {
+        if(event.getEntity().level().isClientSide) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 var itemId = ForgeRegistries.ITEMS.getKey(event.getStack().getItem());
                 var quantity = event.getStack().getCount();
