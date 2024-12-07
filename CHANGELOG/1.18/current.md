@@ -1,1 +1,2 @@
-- `[NEW]` Advancements!
+- `[CHG]` Remove shift key from key binding default
+- `[FIX]` Fixed the translated text on one of the advancements

@@ -1,6 +1,6 @@
 {
-  "advancements.crafttracker.main.acquire_list_item.description": "Einen Artikel erwerben, der auf der Einkaufsliste steht",
-  "advancements.crafttracker.main.acquire_list_item.title": "Einfach weiter einkaufen",
+  "advancements.crafttracker.main.acquire_item.description": "Einen Artikel erwerben, der auf der Einkaufsliste steht",
+  "advancements.crafttracker.main.acquire_item.title": "Einfach weiter einkaufen",
   "advancements.crafttracker.main.clear_queue.description": "Leeren Sie die Herstellungswarteschlange vollst\u00E4ndig.",
   "advancements.crafttracker.main.clear_queue.title": "Wie ein Boss",
   "advancements.crafttracker.main.craft_item.description": "Einen in der Warteschlange befindlichen Gegenstand herstellen",
