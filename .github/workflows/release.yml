@@ -9,7 +9,7 @@ name: Release
 
 on:
   push:
-    branches: [ "1.18-release", "1.19-release", "1.20-release" ]
+    branches: [ "1.18-release", "1.19-release", "1.20-release", "1.16-release", "1.21-release" ]
     paths:
       - 'src/**'
       - 'test/**'
@@ -28,10 +28,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
+          java-version: java-version-file
           distribution: 'temurin'
       - name: Build with Gradle
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
@@ -44,9 +44,9 @@ jobs:
         run: |
           git config --global user.email "ci@sweetrpg.com"
           git config --global user.name "SweetRPG CI"
-          
+
           branch_version=$(echo ${{ github.ref_name }} | cut -f1 -d-)
-          
+
           echo "${{ github.sha }}" > .release-info/${branch_version}/RELEASE_HASH
           git add .release-info/${branch_version}/RELEASE_HASH
           git commit -m "Update ${branch_version} RELEASE_HASH"
