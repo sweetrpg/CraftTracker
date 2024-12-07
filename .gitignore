@@ -11,7 +11,7 @@ out
 *.ipr
 *.iws
 *.iml
-.idea/
+.idea/workspace.xml
 
 # gradle
 build
@@ -26,5 +26,5 @@ logs
 
 # Files from Forge MDK
 forge*changelog.txt
-/src/generated/resources/.cache/cache
+/src/generated/resources/.cache/
 .DS_Store
