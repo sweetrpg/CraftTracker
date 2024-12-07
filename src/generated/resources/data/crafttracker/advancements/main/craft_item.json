@@ -1,25 +1,25 @@
 {
   "parent": "crafttracker:main/queue_item",
+  "criteria": {
+    "main": {
+      "conditions": {},
+      "trigger": "crafttracker:craft_item"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:crafting_table"
-    },
-    "title": {
-      "translate": "advancements.crafttracker.main.craft_item.title"
-    },
+    "announce_to_chat": true,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
     "description": {
       "translate": "advancements.crafttracker.main.craft_item.description"
     },
     "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
     "hidden": false,
-    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
-  },
-  "criteria": {
-    "main": {
-      "trigger": "crafttracker:craft_item",
-      "conditions": {}
+    "icon": {
+      "item": "minecraft:crafting_table"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.crafttracker.main.craft_item.title"
     }
   },
   "requirements": [
