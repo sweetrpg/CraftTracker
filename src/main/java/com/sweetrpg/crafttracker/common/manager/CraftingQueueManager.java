@@ -381,7 +381,7 @@ public class CraftingQueueManager {
         //   1. the ingredients are in a different namespace than the recipe, or
         //   2. the ingredients are in a different namespace than the result item
         var recipeNamespace = ObjectUtils.defaultIfNull(recipe.getId().getNamespace(), "");
-        var itemNamespace = ObjectUtils.defaultIfNull(recipe.getResultItem().getItem().getRegistryName().getNamespace(), "");
+        var itemNamespace = ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(recipe.getResultItem().getItem()).getNamespace(), "");
         if(depth > 0 &&
                 (!RecipeUtil.areIngredientsSameNamespace(recipeNamespace, ingredients) ||
                         !RecipeUtil.areIngredientsSameNamespace(itemNamespace, ingredients))) {
@@ -412,7 +412,7 @@ public class CraftingQueueManager {
             }
 
             ItemStack chosenStack = RecipeUtil.chooseLeastExpensiveOf(ingredient.getItems());
-            ingredientTally.compute(chosenStack.getItem().getRegistryName(), (ingredientId, tuple) -> {
+            ingredientTally.compute(ForgeRegistries.ITEMS.getKey(chosenStack.getItem()), (ingredientId, tuple) -> {
 //                return ObjectUtils.defaultIfNull(amount, 0) + 1;
                 tuple = ObjectUtils.defaultIfNull(tuple, new Tuple<>(false, 0));
                 tuple.setA(tag);
@@ -437,17 +437,17 @@ public class CraftingQueueManager {
             // check if player already has the item
             CraftTracker.LOGGER.debug("check if player already has {}", DebugUtil.printItem(item));
             var player = Minecraft.getInstance().player;
-            var hasInInventory = InventoryUtil.getQuantityOf(player, item.getRegistryName());
+            var hasInInventory = InventoryUtil.getQuantityOf(player, ForgeRegistries.ITEMS.getKey(item));
             CraftTracker.LOGGER.debug("hasInInventory: {}", hasInInventory);
             var needsQty = (amountRequired * iterations) - hasInInventory;
             CraftTracker.LOGGER.debug("needsQty: {}", needsQty);
 
             if(needsQty < 1) {
-                CraftTracker.LOGGER.debug("player already has enough of item {} ({} >= {})", item.getRegistryName(), hasInInventory, amountRequired);
+                CraftTracker.LOGGER.debug("player already has enough of item {} ({} >= {})", ForgeRegistries.ITEMS.getKey(item), hasInInventory, amountRequired);
                 return;
             }
 
-            var id = item.getRegistryName();
+            var id = ForgeRegistries.ITEMS.getKey(item);
             CraftTracker.LOGGER.debug("id: {}", id);
             var subRecipes = RecipeUtil.getRecipesFor(id);
             CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes.stream().map(DebugUtil::printRecipe).toList());

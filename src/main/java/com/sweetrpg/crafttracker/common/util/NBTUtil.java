@@ -6,10 +6,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -115,7 +116,7 @@ public class NBTUtil {
     }
 
     @Nullable
-    public static <T extends IForgeRegistryEntry<T>> T getRegistryValue(CompoundTag compound, String key, IForgeRegistry<T> registry) {
+    public static <T> T getRegistryValue(CompoundTag compound, String key, IForgeRegistry<T> registry) {
         ResourceLocation rl = NBTUtil.getResourceLocation(compound, key);
         if (rl != null) {
             if (registry.containsKey(rl)) {
@@ -130,9 +131,9 @@ public class NBTUtil {
         return null;
     }
 
-    public static <T extends IForgeRegistryEntry<T>> void putRegistryValue(CompoundTag compound, String key, T value) {
+    public static <T extends Item> void putRegistryValue(CompoundTag compound, String key, T value) {
         if (value != null) {
-            NBTUtil.putResourceLocation(compound, key, value.getRegistryName());
+            NBTUtil.putResourceLocation(compound, key, ForgeRegistries.ITEMS.getKey(value));
         }
     }
 

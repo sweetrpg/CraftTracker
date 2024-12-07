@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
@@ -54,8 +54,7 @@ public class CraftTracker {
         ModBlocks.BLOCKS.register(modEventBus);
         ModBlockEntityTypes.TILE_ENTITIES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
-        ModContainerTypes.CONTAINERS.register(modEventBus);
-        ModSerializers.SERIALIZERS.register(modEventBus);
+//        ModSerializers.SERIALIZERS.register(modEventBus);
         ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
 
         modEventBus.addListener(ModRegistries::newRegistry);
@@ -110,14 +109,10 @@ public class CraftTracker {
 
         DataGenerator gen = event.getGenerator();
 
-        if(event.includeClient()) {
-            gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_EN_US));
-            gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_EN_GB));
-            gen.addProvider(new CTLangProvider(gen, Constants.LOCALE_DE_DE));
-        }
+            gen.addProvider(event.includeServer(), new CTLangProvider(gen, Constants.LOCALE_EN_US));
+            gen.addProvider(event.includeServer(), new CTLangProvider(gen, Constants.LOCALE_EN_GB));
+            gen.addProvider(event.includeServer(), new CTLangProvider(gen, Constants.LOCALE_DE_DE));
 
-        if(event.includeServer()) {
-            gen.addProvider(new CTAdvancementProvider(gen));
-        }
+            gen.addProvider(event.includeServer(), new CTAdvancementProvider(gen));
     }
 }

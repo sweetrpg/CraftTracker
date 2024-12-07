@@ -37,11 +37,6 @@ public class CTPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerFluidSubtypes(ISubtypeRegistration registration) {
-        CraftTracker.LOGGER.debug("CTPlugin#registerFluidSubtypes: {}", registration);
-    }
-
-    @Override
     public void registerIngredients(IModIngredientRegistration registration) {
         CraftTracker.LOGGER.debug("CTPlugin#registerIngredients: {}", registration);
     }
