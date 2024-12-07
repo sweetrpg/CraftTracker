@@ -16,10 +16,12 @@ buildscript {
 }
 
 plugins {
-    id "com.modrinth.minotaur" version "2.+"
     // It's safest to have this on 2.+ to get the latest features and
     // bug fixes without having to worry about breaking changes.
-     id("org.lwjgl.plugin") version "0.0.35"
+    id "com.modrinth.minotaur" version "2.+"
+    id "org.lwjgl.plugin" version "0.0.34"
+    id "idea"
+    id "maven-publish"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -64,10 +66,14 @@ repositories {
     maven { // The One Probe
         url "https://cursemaven.com"
     }
-    maven { // ???
+    maven { // Patchouli
         url 'https://maven.blamejared.com'
     }
-    sonatype() // plugin accessor
+    maven {
+        url "https://oss.sonatype.org/content/repositories/releases/"
+    }
+    // sonatype { // plugin accessor
+    // }
 }
 
 minecraft {
@@ -124,15 +130,10 @@ dependencies {
     implementation fg.deobf("curse.maven:jei-${jei_project_id}:${jei_file_id}")
     implementation fg.deobf("curse.maven:patchouli-${ptch_project_id}:${ptch_file_id}")
 
-     lwjgl {
-        version = Release.latest
-        implementation(Preset.everything)
-    }
-
-    implementation fg.deobf("curse.maven:farmers-delight-${farmers_project_id}:${farmers_file_id}")
-    implementation fg.deobf("curse.maven:create-${create_project_id}:${create_file_id}")
-    implementation fg.deobf("curse.maven:ars-nouveau-${ars_project_id}:${ars_file_id}")
-    implementation fg.deobf("curse.maven:curios-${curios_project_id}:${curios_file_id}")
+    // implementation fg.deobf("curse.maven:farmers-delight-${farmers_project_id}:${farmers_file_id}")
+    // implementation fg.deobf("curse.maven:create-${create_project_id}:${create_file_id}")
+    // implementation fg.deobf("curse.maven:ars-nouveau-${ars_project_id}:${ars_file_id}")
+    // implementation fg.deobf("curse.maven:curios-${curios_project_id}:${curios_file_id}")
 //    implementation fg.deobf("curse.maven:celestial-exploration-${cexp_project_id}:${cexp_file_id}")
 //    implementation fg.deobf("curse.maven:azurelib-${azure_project_id}:${azure_file_id}")
 
@@ -140,6 +141,11 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiter_version}")
 
     runtimeOnly fg.deobf("curse.maven:the-one-probe-${top_project_id}:${top_file_id}")
+
+    // lwjgl {
+    //     version = Release.latest
+    //     implementation Preset.everything
+    // }
 }
 
 // Define a task to create a jar of project sources
