@@ -26,14 +26,12 @@ public class CTBlockTagsProvider extends BlockTagsProvider {
     }
 
     protected void registerBlockMineables() {
-
     }
 
     protected void registerMinecraftTags() {
     }
 
     protected void registerForgeTags() {
-
     }
 
     protected void registerModTags() {
