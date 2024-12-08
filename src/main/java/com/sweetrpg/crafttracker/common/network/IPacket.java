@@ -11,5 +11,8 @@ public interface IPacket<D> {
 
     D decode(FriendlyByteBuf buf);
 
+    default void doHandle(D data, CustomPayloadEvent.Context ctx) {
+        handle(data, () -> ctx);
+    }
     void handle(D data, Supplier<CustomPayloadEvent.Context> ctx);
 }

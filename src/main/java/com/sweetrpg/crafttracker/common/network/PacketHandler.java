@@ -29,7 +29,7 @@ public final class PacketHandler {
         CraftTracker.HANDLER.messageBuilder(dataClass, PacketHandler.disc++)
                 .encoder(packet::encode)
                 .decoder(packet::decode)
-                .consumerNetworkThread(packet::handle)
+                .consumerNetworkThread(packet::doHandle)
                 .add();
     }
 }

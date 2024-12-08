@@ -45,7 +45,10 @@ println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getPro
 
 sourceSets {
     main {
-        resources.srcDirs += 'src/generated/resources'
+        resources {
+            srcDirs += 'src/generated/resources'
+            exclude '.cache/'
+        }
     }
     test {
     }
@@ -74,14 +77,38 @@ repositories {
     name = "ModMaven"
     url = "https://modmaven.dev"
   }
-    maven { // The One Probe
-        url "https://cursemaven.com"
+    maven {
+        url = 'https://www.cursemaven.com'
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
     }
     maven {
         url "https://oss.sonatype.org/content/repositories/releases/"
     }
     // sonatype { // plugin accessor
     // }
+
+    mavenCentral()
+    mavenLocal()
+    flatDir {
+        dirs 'libs'
+    }
+
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
 }
 
 minecraft {
@@ -135,6 +162,7 @@ minecraft {
 dependencies {
     minecraft "net.minecraftforge:forge:${project.forge_version}"
 
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
@@ -190,6 +218,10 @@ processResources {
 
 classes.configure {
     dependsOn(replaceResources)
+}
+
+compileJava {
+    options.compilerArgs = ['-Xdiags:verbose']
 }
 
 jar {

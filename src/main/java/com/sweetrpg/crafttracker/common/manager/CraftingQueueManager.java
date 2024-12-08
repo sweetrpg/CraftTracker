@@ -18,6 +18,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -164,8 +166,8 @@ public class CraftingQueueManager {
      * <p/>
      * This will trigger a recalculation of the entire queue.
      *
-     * @param player The player whose queue is being adjusted
-     * @param itemId The item to add to the queue
+     * @param player   The player whose queue is being adjusted
+     * @param itemId   The item to add to the queue
      * @param quantity The amount to add
      */
     public void addProduct(Player player, ResourceLocation itemId, int quantity) {
@@ -195,8 +197,8 @@ public class CraftingQueueManager {
      * A convenience method to adjust the quantity of a product.
      * This will call the appropriate add* or remove* method.
      *
-     * @param player The player whose queue is being adjusted
-     * @param itemId The item to adjust
+     * @param player   The player whose queue is being adjusted
+     * @param itemId   The item to adjust
      * @param quantity The amount to adjust; positive values will increase the amount, negative values will reduce it.
      */
     public void adjustProduct(Player player, ResourceLocation itemId, int quantity) {
@@ -227,8 +229,8 @@ public class CraftingQueueManager {
     /**
      * Removes a single end product, or a quantity of it, from the queue.
      *
-     * @param player The player whose queue is being adjusted
-     * @param itemId The item to remove from the queue
+     * @param player   The player whose queue is being adjusted
+     * @param itemId   The item to remove from the queue
      * @param quantity The amount of the item to remove. If this value is the greater than or equal to the amount
      *                 currently in the queue, the item is removed entirely.
      */
@@ -300,7 +302,7 @@ public class CraftingQueueManager {
     /**
      * Starts the computation of an end product's intermediates and materials.
      *
-     * @param ctx The context to use for processing the queue
+     * @param ctx     The context to use for processing the queue
      * @param product The product to process
      */
     void computeProduct(ProcessingContext ctx, CraftingQueueProduct product) {
@@ -363,30 +365,32 @@ public class CraftingQueueManager {
      * If the recipe's namespace or the result item's namespace differ from the ingredients, the function will exit
      * early with a `null` return value in order to prevent strange suggestions of intermediates and raw materials.
      *
-     * @param recipe The recipe to compute
+     * @param holder     The recipe to compute
      * @param iterations The desired number of times the recipe is to be crafted by the player
-     * @param depth The current depth of processing the queue. This is metadata about the processing context used to
-     *              prevent potential loops in looking up required items.
+     * @param depth      The current depth of processing the queue. This is metadata about the processing context used to
+     *                   prevent potential loops in looking up required items.
      * @return A computed recipe, or `null` if certain criteria are not met or thresholds are crossed.
      */
-    ComputedRecipe computeRecipe(Recipe<?> recipe, int iterations, int depth) {
-        CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", DebugUtil.printRecipe(recipe));
+    ComputedRecipe computeRecipe(RecipeHolder<? extends Recipe<?>> holder, int iterations, int depth) {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", DebugUtil.printRecipe(holder));
 
-        var computedRecipe = new ComputedRecipe(recipe.getId());
+        var computedRecipe = new ComputedRecipe(holder.id());
 
-        var ingredients = recipe.getIngredients();
+        var ingredients = holder.value().getIngredients();
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
         // if we're not at the root, and
-        //   1. the ingredients are in a different namespace than the recipe, or
+        //   1. the ingredients are in a different namespace than the holder, or
         //   2. the ingredients are in a different namespace than the result item
-        var recipeNamespace = ObjectUtils.defaultIfNull(recipe.getId().getNamespace(), "");
-        var itemNamespace = ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(recipe.getResultItem().getItem()).getNamespace(), "");
+//        var recipe = Minecraft.getInstance().level.getRecipeManager().getRecipeFor(holder.value().getType(), holder, Minecraft.getInstance().level).get().value();
+//        var recipeNamespace = ObjectUtils.getIfNull(ForgeRegistries.RECIPE_TYPES.getKey(holder.getType()), () -> new ResourceLocation("", "")).getNamespace();
+        var recipeNamespace = ObjectUtils.defaultIfNull(holder.id().getNamespace(), "");
+        var itemNamespace = ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(holder.value().getResultItem(Minecraft.getInstance().level.registryAccess()).getItem()).getNamespace(), "");
         if(depth > 0 &&
                 (!RecipeUtil.areIngredientsSameNamespace(recipeNamespace, ingredients) ||
                         !RecipeUtil.areIngredientsSameNamespace(itemNamespace, ingredients))) {
-            CraftTracker.LOGGER.debug("ingredients for sub-recipe are not in the same namespace as the recipe: {}",
-                    DebugUtil.printRecipe(recipe));
+            CraftTracker.LOGGER.debug("ingredients for sub-holder are not in the same namespace as the holder: {}",
+                    DebugUtil.printRecipe(holder));
             return null;
         }
 
@@ -470,8 +474,8 @@ public class CraftingQueueManager {
                 var computedSubRecipe = this.computeRecipe(chosenSubRecipe, amountRequired * iterations, depth + 1);
                 CraftTracker.LOGGER.debug("computedSubRecipe: {}", computedSubRecipe);
                 if(computedSubRecipe == null) {
-                    CraftTracker.LOGGER.debug("computed sub-recipe for {} returned is null; treat as raw material", DebugUtil.printRecipe(chosenSubRecipe));
-                    // if the sub-recipe comes back null, then treat the result item as a raw material
+                    CraftTracker.LOGGER.debug("computed sub-holder for {} returned is null; treat as raw material", DebugUtil.printRecipe(chosenSubRecipe));
+                    // if the sub-holder comes back null, then treat the result item as a raw material
                     computedRecipe.rawMaterials.compute(id,
                             (itemId, quantity) ->
                                     ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId))
@@ -604,6 +608,7 @@ public class CraftingQueueManager {
 
         /**
          * Constructs the object with the ID of the recipe it represents.
+         *
          * @param recipeId The recipe ID
          */
         ComputedRecipe(ResourceLocation recipeId) {

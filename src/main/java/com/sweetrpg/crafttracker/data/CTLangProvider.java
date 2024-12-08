@@ -3,13 +3,14 @@ package com.sweetrpg.crafttracker.data;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 
 public class CTLangProvider extends LanguageProvider {
     private final String locale;
 
-    public CTLangProvider(DataGenerator gen, String locale) {
-        super(gen, Constants.MOD_ID, locale);
+    public CTLangProvider(PackOutput packOutput, String locale) {
+        super(packOutput, Constants.MOD_ID, locale);
         this.locale = locale;
     }
 
@@ -28,7 +29,7 @@ public class CTLangProvider extends LanguageProvider {
     }
 
     private void processENUS() {
-        CraftTracker.LOGGER.info("Adding translations for en_us...");
+        CraftTracker.LOGGER.info("Adding translations for EN_US...");
 
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_TITLE, "Craft Queue");
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_EMPTY, "The queue is empty.");
@@ -86,7 +87,7 @@ public class CTLangProvider extends LanguageProvider {
     }
 
     private void processENGB() {
-        CraftTracker.LOGGER.info("Adding translations for en_gb...");
+        CraftTracker.LOGGER.info("Adding translations for EN_GB...");
 
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_TITLE, "Craft Queue");
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_EMPTY, "The queue is empty.");
@@ -144,7 +145,7 @@ public class CTLangProvider extends LanguageProvider {
     }
 
     private void processDEDE() {
-        CraftTracker.LOGGER.info("Adding translations for de_de...");
+        CraftTracker.LOGGER.info("Adding translations for DE_DE...");
 
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_TITLE, "Herstellungswarteschlange");
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_EMPTY, "Die Warteschlange ist leer.");

@@ -10,12 +10,12 @@ import static com.sweetrpg.crafttracker.common.advancement.SimpleTrigger.MAIN_CR
 public class AdvancementUtil {
 
     public static void trigger(ModAdvancements.Key advancement, ServerPlayer player) {
-        var ct = ModAdvancements.ENTRIES.get(advancement)
-                .getCriteria().get(MAIN_CRITERION)
-                .getTrigger();
-        if(ModTriggers.ENTRIES.get(ct.getCriterion().getPath()) instanceof SimpleTrigger trigger) {
-            trigger.trigger(player);
-        }
+//        var ct = ModAdvancements.ENTRIES.get(advancement)
+//                .getCriteria().get(MAIN_CRITERION)
+//                .getTrigger();
+//        if(ModTriggers.ENTRIES.get(ct.getCriterion().getPath()) instanceof SimpleTrigger trigger) {
+//            trigger.trigger(player);
+//        }
 
     }
 }

@@ -1,11 +1,15 @@
 package com.sweetrpg.crafttracker.common.util;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.Arrays;
 
@@ -95,26 +99,27 @@ public class DebugUtil {
     }
 
     /**
-     * Debug output for a recipe
+     * Debug output for a recipe holder
      *
-     * @param recipe The recipe to output
+     * @param holder The recipe to output
      * @return A formatted string
      */
-    public static String printRecipe(Recipe<?> recipe) {
+    public static String printRecipe(RecipeHolder<? extends Recipe<?>> holder) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Recipe{\n");
 
         builder.append("\tid=");
-        builder.append(recipe.getId());
+        builder.append(holder.id());
         builder.append("\n");
 
         builder.append("\tresultItem=");
-        builder.append(DebugUtil.printItemStack(recipe.getResultItem()));
+        RegistryAccess access = ObjectUtils.defaultIfNull(Minecraft.getInstance().level.registryAccess(), RegistryAccess.EMPTY);
+        builder.append(DebugUtil.printItemStack(holder.value().getResultItem(access)));
         builder.append("\n");
 
         builder.append("\tingredients=[\n\t\t");
-        builder.append(String.join(",\n\t\t", recipe.getIngredients().stream()
+        builder.append(String.join(",\n\t\t", holder.value().getIngredients().stream()
                 .map(DebugUtil::printIngredient)
                 .toList()));
         builder.append("\t]\n");

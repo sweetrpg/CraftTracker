@@ -55,12 +55,12 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class DTAdvancementProvider extends ForgeAdvancementProvider {
+public class CTAdvancementProvider extends ForgeAdvancementProvider {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
-    public DTAdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
+    public CTAdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
         super(output, registries, existingFileHelper,
                 List.of(new DoggyAdvancementsSubProvider())
         );
@@ -75,12 +75,13 @@ public class DTAdvancementProvider extends ForgeAdvancementProvider {
 
         @Override
         public void generate(HolderLookup.Provider registries, Consumer<AdvancementHolder> consumer, ExistingFileHelper existingFileHelper) {
-            var root = ModAdvancements.ROOT.save(consumer, Util.getResourcePath("main/root"));
-            var queueItem = ModAdvancements.QUEUE_ITEM.parent(root).save(consumer, Util.getResourcePath("main/queue_item"));
-            var craftItem = ModAdvancements.CRAFT_ITEM.parent(queueItem).save(consumer, Util.getResourcePath("main/craft_item"));
-            var populateList = ModAdvancements.POPULATE_LIST.parent(root).save(consumer, Util.getResourcePath("main/populate_list"));
-            var acquireItem = ModAdvancements.ACQUIRE_ITEM.parent(populateList).save(consumer, Util.getResourcePath("main/acquire_item"));
-            var clearQueue = ModAdvancements.CLEAR_QUEUE.parent(queueItem).save(consumer, Util.getResourcePath("main/clear_queue"));
+            // TODO
+//            var root = ModAdvancements.ROOT.save(consumer, Util.getResourcePath("main/root"));
+//            var queueItem = ModAdvancements.QUEUE_ITEM.parent(root).save(consumer, Util.getResourcePath("main/queue_item"));
+//            var craftItem = ModAdvancements.CRAFT_ITEM.parent(queueItem).save(consumer, Util.getResourcePath("main/craft_item"));
+//            var populateList = ModAdvancements.POPULATE_LIST.parent(root).save(consumer, Util.getResourcePath("main/populate_list"));
+//            var acquireItem = ModAdvancements.ACQUIRE_ITEM.parent(populateList).save(consumer, Util.getResourcePath("main/acquire_item"));
+//            var clearQueue = ModAdvancements.CLEAR_QUEUE.parent(queueItem).save(consumer, Util.getResourcePath("main/clear_queue"));
 
         }
 

@@ -68,8 +68,8 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
     }
 
     public abstract static class Instance extends AbstractCriterionTriggerInstance {
-        public Instance(ResourceLocation idIn, EntityPredicate p_i231464_2_) {
-            super(idIn, p_i231464_2_);
+        public Instance(ResourceLocation idIn, Optional<ContextAwarePredicate> p_i231464_2_) {
+            super(p_i231464_2_);
         }
 
         protected abstract boolean test(@Nullable List<Supplier<Object>> var1);

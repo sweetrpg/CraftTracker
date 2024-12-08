@@ -5,11 +5,14 @@ import com.sweetrpg.crafttracker.common.lib.Constants;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.RegistryObject;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.File;
 import java.nio.file.Path;

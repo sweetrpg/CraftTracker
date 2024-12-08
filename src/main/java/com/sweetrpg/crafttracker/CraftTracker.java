@@ -7,13 +7,15 @@ import com.sweetrpg.crafttracker.common.addon.AddonManager;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.event.EventHandler;
 import com.sweetrpg.crafttracker.common.lib.Constants;
-import com.sweetrpg.crafttracker.common.registry.*;
-import com.sweetrpg.crafttracker.data.CTAdvancementProvider;
+import com.sweetrpg.crafttracker.common.registry.ModRecipeSerializers;
+import com.sweetrpg.crafttracker.common.registry.ModRegistries;
 import com.sweetrpg.crafttracker.data.CTLangProvider;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -22,10 +24,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.network.Channel;
 import net.minecraftforge.network.ChannelBuilder;
-import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,9 +52,9 @@ public class CraftTracker {
         modEventBus.addListener(this::interModProcess);
 
         // Registries
-        ModBlocks.BLOCKS.register(modEventBus);
-        ModBlockEntityTypes.TILE_ENTITIES.register(modEventBus);
-        ModItems.ITEMS.register(modEventBus);
+//        ModBlocks.BLOCKS.register(modEventBus);
+//        ModBlockEntityTypes.TILE_ENTITIES.register(modEventBus);
+//        ModItems.ITEMS.register(modEventBus);
 //        ModSerializers.SERIALIZERS.register(modEventBus);
         ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
 
@@ -109,11 +109,12 @@ public class CraftTracker {
         LOGGER.debug("Gather data: {}", event);
 
         DataGenerator gen = event.getGenerator();
+        PackOutput packOutput = gen.getPackOutput();
 
-            gen.addProvider(event.includeServer(), new CTLangProvider(gen, Constants.LOCALE_EN_US));
-            gen.addProvider(event.includeServer(), new CTLangProvider(gen, Constants.LOCALE_EN_GB));
-            gen.addProvider(event.includeServer(), new CTLangProvider(gen, Constants.LOCALE_DE_DE));
+        gen.addProvider(event.includeServer(), new CTLangProvider(packOutput, Constants.LOCALE_EN_US));
+        gen.addProvider(event.includeServer(), new CTLangProvider(packOutput, Constants.LOCALE_EN_GB));
+        gen.addProvider(event.includeServer(), new CTLangProvider(packOutput, Constants.LOCALE_DE_DE));
 
-            gen.addProvider(event.includeServer(), new CTAdvancementProvider(gen));
+//            gen.addProvider(event.includeServer(), new CTAdvancementProvider(gen));
     }
 }

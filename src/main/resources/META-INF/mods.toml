@@ -4,7 +4,7 @@ license="MIT"
 issueTrackerURL="https://github.com/sweetrpg/CraftTracker/issues"
 displayURL="https://minecraft.curseforge.com/projects/craft-tracker/"
 logoFile= "ct_logo.png"
-displayName = "Craft Tracker"
+displayName="Craft Tracker"
 
 [[mods]]
     modId="crafttracker"
@@ -33,7 +33,7 @@ displayName = "Craft Tracker"
 [[dependencies.crafttracker]]
     modId="jei"
     mandatory=true
-    versionRange="[9.7.2.281,)"
+    versionRange="[16.0.0.2,)"
     ordering="NONE"
     side="BOTH"
 
