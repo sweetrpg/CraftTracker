@@ -75,7 +75,7 @@ public class RecipeUtil {
 
         var mgr = Minecraft.getInstance().level.getRecipeManager();
         var recipes = mgr.getRecipes().stream()
-                .filter(r -> ForgeRegistries.ITEMS.getKey(r.getResultItem().getItem()).equals(itemId))
+                .filter(r -> r.id().equals(itemId))
                 .toList();
 
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: recipes {}", recipes.stream().map(DebugUtil::printRecipe).toList());

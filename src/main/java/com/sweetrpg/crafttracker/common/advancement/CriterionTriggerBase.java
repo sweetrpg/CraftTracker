@@ -5,6 +5,7 @@ import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
@@ -56,7 +57,7 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
             List<CriterionTrigger.Listener<T>> list = new LinkedList();
 
             for(CriterionTrigger.Listener<T> listener : playerListeners) {
-                if(((Instance) listener.getTriggerInstance()).test(suppliers)) {
+                if(listener.trigger().test(suppliers)) {
                     list.add(listener);
                 }
             }
@@ -67,7 +68,7 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
     }
 
     public abstract static class Instance extends AbstractCriterionTriggerInstance {
-        public Instance(ResourceLocation idIn, EntityPredicate.Composite p_i231464_2_) {
+        public Instance(ResourceLocation idIn, EntityPredicate p_i231464_2_) {
             super(idIn, p_i231464_2_);
         }
 

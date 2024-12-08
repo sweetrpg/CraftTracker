@@ -9,7 +9,6 @@ import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +38,7 @@ public class ShoppingListOverlay {
         CraftTracker.LOGGER.trace("ShoppingListOverlay#onRenderGuiOverlay");
 
         final var gui = (ForgeGui) Minecraft.getInstance().gui;
-        final var poseStack = event.getPoseStack();
+        final var graphics = event.getGuiGraphics();
         final var width = Minecraft.getInstance().getWindow().getWidth();
         final var height = Minecraft.getInstance().getWindow().getHeight();
 
@@ -76,16 +75,16 @@ public class ShoppingListOverlay {
         var backgroundColor = 0x5f5f5f5f; // TODO: get from config?
         var borderColor = 0x1f1f1f1f; // TODO: get from config?
 
-        GuiComponent.fill(poseStack, x, y, olWidth, olHeight, borderColor);
-        GuiComponent.fill(poseStack, x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
+        graphics.fill(x, y, olWidth, olHeight, borderColor);
+        graphics.fill(x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
 
-        GuiComponent.drawCenteredString(poseStack, gui.getFont(),
+        graphics.drawCenteredString(gui.getFont(),
                 Component.translatable(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_TITLE),
                 (x + olWidth - 8) / 2, y + 6, TITLE_COLOR);
 
         // if products list is empty, display "empty" message
         if(items.isEmpty()) {
-            GuiComponent.drawCenteredString(poseStack, gui.getFont(),
+            graphics.drawCenteredString( gui.getFont(),
                     Component.translatable(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_EMPTY),
                     (x + olWidth - 8) / 2, (y + olHeight - 6) / 2, MESSAGE_COLOR);
             return;
@@ -94,7 +93,7 @@ public class ShoppingListOverlay {
         var helpText = String.format("%s [%s]",
                 I18n.get(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_HELP),
                 ModKeyBindings.CLEAR_SHOPPING_LIST_MAPPING.getTranslatedKeyMessage().getString());
-        GuiComponent.drawCenteredString(poseStack, gui.getFont(), helpText,
+        graphics.drawCenteredString( gui.getFont(), helpText,
                 (x + olWidth - 8) / 2, olHeight - TEXT_HEIGHT, HELP_COLOR);
 
         int yPos = y + SECTION_TITLE_Y_OFFSET;
@@ -131,7 +130,7 @@ public class ShoppingListOverlay {
 
             var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
                     .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-            drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+            drawable.draw(graphics, x + SECTION_X_OFFSET, yPos);
 
             final int lambdaYpos = yPos;
             if(playerHasQuantity > 0) {
@@ -140,11 +139,11 @@ public class ShoppingListOverlay {
                         item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
                         countText);
                 CraftTracker.LOGGER.trace("text: {}", text);
-                GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
+                graphics.drawString( gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
             }
             else {
                 var text = item.getDescription().getString(MAX_STRING_LENGTH);
-                GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                graphics.drawString( gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
             }
 
             yPos += LINE_HEIGHT + 2;

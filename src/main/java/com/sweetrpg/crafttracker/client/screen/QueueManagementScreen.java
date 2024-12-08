@@ -12,7 +12,8 @@ import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -62,7 +63,7 @@ public class QueueManagementScreen extends Screen {
     public void init() {
         super.init();
 
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+//        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
         // hide queue overlay and shopping list
         this.queueState = CTRuntime.INSTANCE.queueOverlayRequestedState;
@@ -72,17 +73,17 @@ public class QueueManagementScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 
         int width = Math.max(200, this.width / 3);
         int height = this.height - 100;
         int topX = (this.width / 2) - (width / 2);
         int topY = 20; // (this.height / 2) - (height / 2);
 
-        this.renderBackground(poseStack);
+        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
 
         // title
-        GuiComponent.drawCenteredString(poseStack, this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
+        graphics.drawCenteredString(this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
 
         // products
         for(int i = 0; i < this.productItems.size(); i++) {
@@ -99,7 +100,7 @@ public class QueueManagementScreen extends Screen {
             }
 
             // background
-            GuiComponent.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
+            graphics.fill(topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
 
             // icon
             var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
@@ -107,7 +108,7 @@ public class QueueManagementScreen extends Screen {
             drawable.draw(poseStack, topX + ITEM_X_ICON_OFFSET, y + 2);
 
             // name
-            this.font.draw(poseStack, item.getDescription(), topX + ITEM_X_TEXT_OFFSET, y + 6, ITEM_COLOR);
+            graphics.drawString(this.font, item.getDescription(), topX + ITEM_X_TEXT_OFFSET, y + 6, ITEM_COLOR);
 
             // quantity and adjustment buttons
             {
@@ -125,7 +126,7 @@ public class QueueManagementScreen extends Screen {
             }
             {
                 var text = String.format("%d", pItem.getIterations());
-                GuiComponent.drawCenteredString(poseStack, this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
+                graphics.drawCenteredString(this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
             }
             {
                 Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, Component.literal("+"), btn -> {
@@ -179,14 +180,14 @@ public class QueueManagementScreen extends Screen {
             this.addRenderableWidget(button);
         }
 
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
     public void removed() {
         super.removed();
 
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+//        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
 
         // restore queue overlay and shopping list
         CTRuntime.INSTANCE.queueOverlayRequestedState = this.queueState;
