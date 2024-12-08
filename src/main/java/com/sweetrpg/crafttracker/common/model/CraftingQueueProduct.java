@@ -2,7 +2,6 @@ package com.sweetrpg.crafttracker.common.model;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -14,7 +13,7 @@ public class CraftingQueueProduct {
 
     ResourceLocation productId;
     int iterations;
-    List<RecipeHolder<? extends Recipe<?>>> recipes;
+    List<? extends Recipe<?>> recipes;
     int index;
 
     /**
@@ -24,7 +23,7 @@ public class CraftingQueueProduct {
      * @param recipes The recipes associated with the product
      * @param iterations The number of times the product should be crafted
      */
-    public CraftingQueueProduct(ResourceLocation productId, List<RecipeHolder<? extends Recipe<?>>> recipes, int iterations) {
+    public CraftingQueueProduct(ResourceLocation productId, List<? extends Recipe<?>> recipes, int iterations) {
         this.productId = productId;
         this.iterations = iterations;
         this.recipes = recipes;
@@ -39,11 +38,11 @@ public class CraftingQueueProduct {
         this.productId = productId;
     }
 
-    public List<RecipeHolder<? extends Recipe<?>>> getRecipes() {
+    public List<? extends Recipe<?>> getRecipes() {
         return recipes;
     }
 
-    public void setRecipes(List<RecipeHolder<? extends Recipe<?>>> recipes) {
+    public void setRecipes(List<? extends Recipe<?>> recipes) {
         this.recipes = recipes;
     }
 

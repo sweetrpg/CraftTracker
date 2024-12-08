@@ -1,19 +1,9 @@
 package com.sweetrpg.crafttracker.common.registry;
 
-import com.sweetrpg.crafttracker.common.util.Util;
-import com.sweetrpg.crafttracker.data.DisplayInfoBuilder;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.world.item.Items;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
-
-import static com.sweetrpg.crafttracker.common.advancement.SimpleTrigger.MAIN_CRITERION;
 
 public class ModAdvancements {
     public static final Map<Key, Advancement> ENTRIES = new HashMap<>();

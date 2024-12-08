@@ -6,7 +6,7 @@ import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.util.AdvancementUtil;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.event.network.CustomPayloadEvent.Context;
+import net.minecraftforge.network.NetworkEvent.Context;
 
 import java.util.function.Supplier;
 

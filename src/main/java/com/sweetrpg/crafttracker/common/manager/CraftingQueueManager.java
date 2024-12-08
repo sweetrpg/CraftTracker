@@ -18,8 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -365,18 +363,18 @@ public class CraftingQueueManager {
      * If the recipe's namespace or the result item's namespace differ from the ingredients, the function will exit
      * early with a `null` return value in order to prevent strange suggestions of intermediates and raw materials.
      *
-     * @param holder     The recipe to compute
+     * @param recipe     The recipe to compute
      * @param iterations The desired number of times the recipe is to be crafted by the player
      * @param depth      The current depth of processing the queue. This is metadata about the processing context used to
      *                   prevent potential loops in looking up required items.
      * @return A computed recipe, or `null` if certain criteria are not met or thresholds are crossed.
      */
-    ComputedRecipe computeRecipe(RecipeHolder<? extends Recipe<?>> holder, int iterations, int depth) {
-        CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", DebugUtil.printRecipe(holder));
+    ComputedRecipe computeRecipe(Recipe<?> recipe, int iterations, int depth) {
+        CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", DebugUtil.printRecipe(recipe));
 
-        var computedRecipe = new ComputedRecipe(holder.id());
+        var computedRecipe = new ComputedRecipe(recipe.getId());
 
-        var ingredients = holder.value().getIngredients();
+        var ingredients = recipe.getIngredients();
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
         // if we're not at the root, and
@@ -384,13 +382,13 @@ public class CraftingQueueManager {
         //   2. the ingredients are in a different namespace than the result item
 //        var recipe = Minecraft.getInstance().level.getRecipeManager().getRecipeFor(holder.value().getType(), holder, Minecraft.getInstance().level).get().value();
 //        var recipeNamespace = ObjectUtils.getIfNull(ForgeRegistries.RECIPE_TYPES.getKey(holder.getType()), () -> new ResourceLocation("", "")).getNamespace();
-        var recipeNamespace = ObjectUtils.defaultIfNull(holder.id().getNamespace(), "");
-        var itemNamespace = ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(holder.value().getResultItem(Minecraft.getInstance().level.registryAccess()).getItem()).getNamespace(), "");
+        var recipeNamespace = ObjectUtils.defaultIfNull(recipe.getId().getNamespace(), "");
+        var itemNamespace = ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()).getItem()).getNamespace(), "");
         if(depth > 0 &&
                 (!RecipeUtil.areIngredientsSameNamespace(recipeNamespace, ingredients) ||
                         !RecipeUtil.areIngredientsSameNamespace(itemNamespace, ingredients))) {
             CraftTracker.LOGGER.debug("ingredients for sub-holder are not in the same namespace as the holder: {}",
-                    DebugUtil.printRecipe(holder));
+                    DebugUtil.printRecipe(recipe));
             return null;
         }
 

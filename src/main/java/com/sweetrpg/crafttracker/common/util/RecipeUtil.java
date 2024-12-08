@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -71,12 +70,12 @@ public class RecipeUtil {
      * @param itemId The ID of the item that the recipe would produce
      * @return A {@link List} of recipes that produce the item
      */
-    public static List<RecipeHolder<? extends Recipe<?>>> getRecipesFor(ResourceLocation itemId) {
+    public static List<? extends Recipe<?>> getRecipesFor(ResourceLocation itemId) {
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: {}", itemId);
 
         var mgr = Minecraft.getInstance().level.getRecipeManager();
-        List<RecipeHolder<?>> recipes = mgr.getRecipes().stream()
-                .filter(r -> r.id().equals(itemId))
+        List<? extends Recipe<?>> recipes = mgr.getRecipes().stream()
+                .filter(r -> r.getId().equals(itemId))
                 .toList();
 
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: recipes {}", recipes.stream().map(DebugUtil::printRecipe).toList());
@@ -131,26 +130,26 @@ public class RecipeUtil {
      *   - whether the recipe is "vanilla"
      *   - whether the recipe is "simple" (crafted vs. smelted, etc.)
      *
-     * @param holder The recipe to calculate
+     * @param recipe The recipe to calculate
      * @return A integer value of the recipe's cost
      */
-    public static int calculateRecipeCost(RecipeHolder<? extends Recipe<?>> holder) {
-        CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", DebugUtil.printRecipe(holder));
+    public static int calculateRecipeCost(Recipe<?> recipe) {
+        CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", DebugUtil.printRecipe(recipe));
 
-        int cost = holder.value().getIngredients().stream()
+        int cost = recipe.getIngredients().stream()
                 .map(RecipeUtil::calculateIngredientCost)
                 .reduce(0, Integer::sum);
 
         // if the item's namespace is not 'minecraft:', increase the cost
-        if(!holder.id().getNamespace().equals("minecraft")) {
+        if(!recipe.getId().getNamespace().equals("minecraft")) {
             CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla recipe {} by {}",
-                    cost, DebugUtil.printRecipe(holder), NON_VANILLA_COST_MULTIPLIER);
+                    cost, DebugUtil.printRecipe(recipe), NON_VANILLA_COST_MULTIPLIER);
             cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
         }
 
-        if(!(holder.value() instanceof CraftingRecipe)) {
+        if(!(recipe instanceof CraftingRecipe)) {
             CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-crafting table recipe {} by {}",
-                    cost, DebugUtil.printRecipe(holder), NON_CRAFTING_COST_MULTIPLIER);
+                    cost, DebugUtil.printRecipe(recipe), NON_CRAFTING_COST_MULTIPLIER);
             cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
         }
 
@@ -268,18 +267,18 @@ public class RecipeUtil {
      * @param recipes A list of recipes to examine
      * @return The least expensive recipe
      */
-    public static RecipeHolder<? extends Recipe<?>> chooseLeastExpensiveOf(List<RecipeHolder<? extends Recipe<?>>> recipes) {
+    public static Recipe<?> chooseLeastExpensiveOf(List<? extends Recipe<?>> recipes) {
         CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", recipes.stream().map(DebugUtil::printRecipe).toList());
 
         if(recipes.size() == 1) {
             return recipes.get(0);
         }
 
-        List<Tuple<RecipeHolder<? extends Recipe<?>>, Integer>> recipeCosts = new ArrayList<>();
+        List<Tuple<? extends Recipe<?>, Integer>> recipeCosts = new ArrayList<>();
 
-        for(RecipeHolder<? extends Recipe<?>> recipe : recipes) {
+        for(Recipe<?> recipe : recipes) {
             int cost = RecipeUtil.calculateRecipeCost(recipe);
-            Tuple<RecipeHolder<? extends Recipe<?>>, Integer> tuple = new Tuple<>(recipe, cost);
+            Tuple<? extends Recipe<?>, Integer> tuple = new Tuple<>(recipe, cost);
 
             recipeCosts.add(tuple);
         }
@@ -287,7 +286,7 @@ public class RecipeUtil {
         recipeCosts.sort((rc1, rc2) -> {
             int result = rc1.getB().compareTo(rc2.getB());
             if(result == 0) {
-                return rc1.getA().id().compareTo(rc2.getA().id());
+                return rc1.getA().getId().compareTo(rc2.getA().getId());
             }
             return result;
         });

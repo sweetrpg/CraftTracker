@@ -7,7 +7,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -99,27 +98,27 @@ public class DebugUtil {
     }
 
     /**
-     * Debug output for a recipe holder
+     * Debug output for a recipe
      *
-     * @param holder The recipe to output
+     * @param recipe The recipe to output
      * @return A formatted string
      */
-    public static String printRecipe(RecipeHolder<? extends Recipe<?>> holder) {
+    public static String printRecipe(Recipe<?> recipe) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Recipe{\n");
 
         builder.append("\tid=");
-        builder.append(holder.id());
+        builder.append(recipe.getId());
         builder.append("\n");
 
         builder.append("\tresultItem=");
-        RegistryAccess access = ObjectUtils.defaultIfNull(Minecraft.getInstance().level.registryAccess(), RegistryAccess.EMPTY);
-        builder.append(DebugUtil.printItemStack(holder.value().getResultItem(access)));
+        RegistryAccess access = Minecraft.getInstance().level.registryAccess();
+        builder.append(DebugUtil.printItemStack(recipe.getResultItem(access)));
         builder.append("\n");
 
         builder.append("\tingredients=[\n\t\t");
-        builder.append(String.join(",\n\t\t", holder.value().getIngredients().stream()
+        builder.append(String.join(",\n\t\t", recipe.getIngredients().stream()
                 .map(DebugUtil::printIngredient)
                 .toList()));
         builder.append("\t]\n");

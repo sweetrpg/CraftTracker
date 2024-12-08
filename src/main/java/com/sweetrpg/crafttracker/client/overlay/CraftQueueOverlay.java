@@ -14,7 +14,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.common.MinecraftForge;
@@ -119,8 +118,8 @@ public class CraftQueueOverlay {
                 continue;
             }
             var stack = item.getDefaultInstance();
-            RecipeHolder<? extends Recipe<?>> selectedRecipe = p.getRecipes().get(p.getIndex());
-            var amountProduced = selectedRecipe.value().getResultItem(Minecraft.getInstance().level.registryAccess()).getCount() * p.getIterations();
+            Recipe<?> selectedRecipe = p.getRecipes().get(p.getIndex());
+            var amountProduced = selectedRecipe.getResultItem(Minecraft.getInstance().level.registryAccess()).getCount() * p.getIterations();
             stack.setCount(amountProduced);
             var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
                     .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);

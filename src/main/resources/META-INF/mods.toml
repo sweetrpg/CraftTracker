@@ -33,7 +33,7 @@ displayName="Craft Tracker"
 [[dependencies.crafttracker]]
     modId="jei"
     mandatory=true
-    versionRange="[16.0.0.2,)"
+    versionRange="[15.20.0.105,)"
     ordering="NONE"
     side="BOTH"
 

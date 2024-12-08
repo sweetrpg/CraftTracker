@@ -78,7 +78,7 @@ public class QueueManagementScreen extends Screen {
         int topX = (this.width / 2) - (width / 2);
         int topY = 20; // (this.height / 2) - (height / 2);
 
-        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
+        this.renderBackground(graphics);
 
         // title
         graphics.drawCenteredString(this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
