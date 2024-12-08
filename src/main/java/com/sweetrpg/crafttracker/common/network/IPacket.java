@@ -1,7 +1,7 @@
 package com.sweetrpg.crafttracker.common.network;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import java.util.function.Supplier;
 
@@ -11,5 +11,5 @@ public interface IPacket<D> {
 
     D decode(FriendlyByteBuf buf);
 
-    void handle(D data, Supplier<NetworkEvent.Context> ctx);
+    void handle(D data, Supplier<CustomPayloadEvent.Context> ctx);
 }

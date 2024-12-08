@@ -23,8 +23,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.network.Channel;
+import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,10 +38,9 @@ public class CraftTracker {
 
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
 
-    public static final SimpleChannel HANDLER = NetworkRegistry.ChannelBuilder.named(Constants.CHANNEL_NAME)
-            .clientAcceptedVersions(Constants.PROTOCOL_VERSION::equals)
-            .serverAcceptedVersions(Constants.PROTOCOL_VERSION::equals)
-            .networkProtocolVersion(Constants.PROTOCOL_VERSION::toString)
+    public static final SimpleChannel HANDLER = ChannelBuilder.named(Constants.CHANNEL_NAME)
+            .acceptedVersions(Channel.VersionTest.exact(Constants.PROTOCOL_VERSION))
+            .networkProtocolVersion(Constants.PROTOCOL_VERSION)
             .simpleChannel();
 
     public CraftTracker() {

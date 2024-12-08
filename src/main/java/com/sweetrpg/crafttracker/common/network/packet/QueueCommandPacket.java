@@ -5,8 +5,8 @@ import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.network.IPacket;
 import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.event.network.CustomPayloadEvent.Context;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 import java.util.function.Supplier;
 

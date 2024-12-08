@@ -18,14 +18,18 @@ public final class PacketHandler {
     }
 
     public static <MSG> void sendToServer(MSG message) {
-        CraftTracker.HANDLER.sendToServer(message);
+        CraftTracker.HANDLER.send(message, PacketDistributor.SERVER.noArg());
     }
 
     public static <MSG> void sendToPlayer(ServerPlayer player, MSG message) {
-        CraftTracker.HANDLER.send(PacketDistributor.PLAYER.with(() -> player), message);
+        CraftTracker.HANDLER.send(message, PacketDistributor.PLAYER.with(player));
     }
 
     public static <D> void registerPacket(IPacket<D> packet, Class<D> dataClass) {
-        CraftTracker.HANDLER.registerMessage(PacketHandler.disc++, dataClass, packet::encode, packet::decode, packet::handle);
+        CraftTracker.HANDLER.messageBuilder(dataClass, PacketHandler.disc++)
+                .encoder(packet::encode)
+                .decoder(packet::decode)
+                .consumerNetworkThread(packet::handle)
+                .add();
     }
 }
