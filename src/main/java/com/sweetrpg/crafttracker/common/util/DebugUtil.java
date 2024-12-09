@@ -1,10 +1,14 @@
 package com.sweetrpg.crafttracker.common.util;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.Arrays;
 
@@ -28,7 +32,7 @@ public class DebugUtil {
         Arrays.stream(ingredient.getItems())
                 .forEach(i -> {
                     builder.append("\t\tregistryName=");
-                    builder.append(i.getItem().getRegistryName());
+                    builder.append(ForgeRegistries.ITEMS.getKey(i.getItem()));
                     builder.append("\n");
 
                     builder.append("\t\ttags=[");
@@ -58,7 +62,7 @@ public class DebugUtil {
         builder.append("ItemStack{\n");
 
         builder.append("\tregistryName=");
-        builder.append(itemStack.getItem().getRegistryName());
+        builder.append(ForgeRegistries.ITEMS.getKey(itemStack.getItem()));
         builder.append("\n");
 
         builder.append("\tcount=");
@@ -86,7 +90,7 @@ public class DebugUtil {
         builder.append("Item{");
 
         builder.append("registryName=");
-        builder.append(item.getRegistryName());
+        builder.append(ForgeRegistries.ITEMS.getKey(item));
 
         builder.append("}");
 
@@ -109,7 +113,8 @@ public class DebugUtil {
         builder.append("\n");
 
         builder.append("\tresultItem=");
-        builder.append(DebugUtil.printItemStack(recipe.getResultItem()));
+        RegistryAccess access = Minecraft.getInstance().level.registryAccess();
+        builder.append(DebugUtil.printItemStack(recipe.getResultItem(access)));
         builder.append("\n");
 
         builder.append("\tingredients=[\n\t\t");

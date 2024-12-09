@@ -6,7 +6,7 @@ import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.util.AdvancementUtil;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent.Context;
 
 import java.util.function.Supplier;
 
@@ -24,7 +24,7 @@ public class AdvancementPacket implements IPacket<AdvancementData> {
     }
 
     @Override
-    public final void handle(AdvancementData data, Supplier<NetworkEvent.Context> ctx) {
+    public final void handle(AdvancementData data, Supplier<Context> ctx) {
         CraftTracker.LOGGER.debug("AdvancementPacket#handle: {}", data);
 
         ctx.get().enqueueWork(() -> {

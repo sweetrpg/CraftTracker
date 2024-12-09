@@ -1,6 +1,5 @@
 package com.sweetrpg.crafttracker.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
@@ -12,13 +11,13 @@ import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
@@ -48,7 +47,7 @@ public class QueueManagementScreen extends Screen {
     private CTRuntime.OverlayState shoppingState;
 
     public QueueManagementScreen(Player player) {
-        super(new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE));
+        super(Component.translatable(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE));
         this.player = player;
 
         this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
@@ -63,7 +62,7 @@ public class QueueManagementScreen extends Screen {
     public void init() {
         super.init();
 
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+//        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
         // hide queue overlay and shopping list
         this.queueState = CTRuntime.INSTANCE.queueOverlayRequestedState;
@@ -73,17 +72,17 @@ public class QueueManagementScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 
         int width = Math.max(200, this.width / 3);
         int height = this.height - 100;
         int topX = (this.width / 2) - (width / 2);
         int topY = 20; // (this.height / 2) - (height / 2);
 
-        this.renderBackground(poseStack);
+        this.renderBackground(graphics);
 
         // title
-        GuiComponent.drawCenteredString(poseStack, this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
+        graphics.drawCenteredString(this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
 
         // products
         for(int i = 0; i < this.productItems.size(); i++) {
@@ -100,44 +99,54 @@ public class QueueManagementScreen extends Screen {
             }
 
             // background
-            GuiComponent.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
+            graphics.fill(topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
 
             // icon
             var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
                     .createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
-            drawable.draw(poseStack, topX + ITEM_X_ICON_OFFSET, y + 2);
+            drawable.draw(graphics, topX + ITEM_X_ICON_OFFSET, y + 2);
 
             // name
-            this.font.draw(poseStack, item.getDescription(), topX + ITEM_X_TEXT_OFFSET, y + 6, ITEM_COLOR);
+            graphics.drawString(this.font, item.getDescription(), topX + ITEM_X_TEXT_OFFSET, y + 6, ITEM_COLOR);
 
             // quantity and adjustment buttons
             {
-                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("-"), btn -> {
-                    CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), -1);
-                    QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
-                }) /*{
+                Button button = Button.builder(Component.literal("-"), btn -> {
+                            CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), -1);
+                            QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
+                        })
+                        .pos(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2)
+                        .size(BUTTON_SIZE, BUTTON_SIZE - 2)
+                        .build();
+                        /*{
                     @Override
                     public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
                         QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEC_BUTTON_TOOLTIP), mouseX, mouseY);
                     }
-                }*/;
+                }*/
+                ;
                 button.active = pItem.getIterations() > 1;
                 this.addRenderableWidget(button);
             }
             {
                 var text = String.format("%d", pItem.getIterations());
-                GuiComponent.drawCenteredString(poseStack, this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
+                graphics.drawCenteredString(this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
             }
             {
-                Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("+"), btn -> {
-                    CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), 1);
-                    QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
-                }) /*{
+                Button button = Button.builder(Component.literal("+"), btn -> {
+                            CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), 1);
+                            QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
+                        })
+                        .pos(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2)
+                        .size(BUTTON_SIZE, BUTTON_SIZE - 2)
+                        .build();
+                        /*{
                     @Override
                     public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
                         QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_INC_BUTTON_TOOLTIP), mouseX, mouseY);
                     }
-                }*/;
+                }*/
+                ;
                 this.addRenderableWidget(button);
             }
 
@@ -146,48 +155,57 @@ public class QueueManagementScreen extends Screen {
 
             // delete button
             {
-                Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("x"), btn -> {
-                    CraftingQueueManager.INSTANCE.removeProduct(player, pItem.getProductId());
-                    QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
-                    this.renderables.clear();
-                }) /*{
+                Button button = Button.builder(Component.literal("x"), btn -> {
+                            CraftingQueueManager.INSTANCE.removeProduct(player, pItem.getProductId());
+                            QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
+                            this.renderables.clear();
+                        })
+                        .pos(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2)
+                        .size(BUTTON_SIZE, BUTTON_SIZE - 2)
+                        .build();
+                /*{
                     @Override
                     public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
                         QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEL_BUTTON_TOOLTIP), mouseX, mouseY);
                     }
-                }*/;
+                }*/
+                ;
                 this.addRenderableWidget(button);
             }
         }
 
         // clear all button
         {
-            Button button = new Button(topX + (width / 2) - 50, topY + height - BUTTON_SIZE - 4, 100, BUTTON_SIZE + 2,
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_CLEAR_BUTTON),
-                    btn -> {
-                        CraftingQueueManager.INSTANCE.removeAll();
-                        QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
-                        this.renderables.clear();
+            Button button = Button.builder(Component.translatable(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_CLEAR_BUTTON),
+                            btn -> {
+                                CraftingQueueManager.INSTANCE.removeAll();
+                                QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
+                                this.renderables.clear();
 
-                        // send advancement packet
-                        PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.CLEAR_QUEUE));
-                    }) /*{
+                                // send advancement packet
+                                PacketHandler.send(PacketDistributor.SERVER.noArg(), new AdvancementData(ModAdvancements.Key.CLEAR_QUEUE));
+                            })
+                    .pos(topX + (width / 2) - 50, topY + height - BUTTON_SIZE - 4)
+                    .size(100, BUTTON_SIZE + 2)
+                    .build();
+                    /*{
                 @Override
                 public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
                     QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON_TOOLTIP), mouseX, mouseY);
                 }
-            }*/;
+            }*/
+            ;
             this.addRenderableWidget(button);
         }
 
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
     public void removed() {
         super.removed();
 
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+//        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
 
         // restore queue overlay and shopping list
         CTRuntime.INSTANCE.queueOverlayRequestedState = this.queueState;

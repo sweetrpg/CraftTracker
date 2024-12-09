@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class RecipeUtil {
         try {
             var costs = mgr.getResource(ingCostsResource);
             var props = new Properties();
-            props.load(costs.getInputStream());
+            props.load(costs.get().open());
             props.entrySet().forEach(entry -> {
                 var key = new ResourceLocation((String) entry.getKey());
                 var value = Integer.parseInt((String) entry.getValue());
@@ -51,7 +52,7 @@ public class RecipeUtil {
         try {
             var costs = mgr.getResource(ingOverridesResource);
             var props = new Properties();
-            props.load(costs.getInputStream());
+            props.load(costs.get().open());
             props.entrySet().forEach(entry -> {
                 var key = new ResourceLocation((String) entry.getKey());
                 var value = Integer.parseInt((String) entry.getValue());
@@ -73,8 +74,8 @@ public class RecipeUtil {
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: {}", itemId);
 
         var mgr = Minecraft.getInstance().level.getRecipeManager();
-        var recipes = mgr.getRecipes().stream()
-                .filter(r -> r.getResultItem().getItem().getRegistryName().equals(itemId))
+        List<? extends Recipe<?>> recipes = mgr.getRecipes().stream()
+                .filter(r -> r.getId().equals(itemId))
                 .toList();
 
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: recipes {}", recipes.stream().map(DebugUtil::printRecipe).toList());
@@ -94,7 +95,7 @@ public class RecipeUtil {
                 .map(i -> Arrays.asList(i.getItems()))
                 .filter(l -> !l.isEmpty())
                 .map(l -> l.get(0))
-                .map(i -> i.getItem().getRegistryName().toString())
+                .map(i -> ForgeRegistries.ITEMS.getKey(i.getItem()).toString())
                 .collect(Collectors.toSet());
 
         return ing.size() == 1;
@@ -114,7 +115,7 @@ public class RecipeUtil {
                 .map(i -> Arrays.asList(i.getItems()))
                 .filter(l -> !l.isEmpty())
                 .map(l -> l.get(0))
-                .map(i -> ObjectUtils.defaultIfNull(i.getItem().getRegistryName().getNamespace(), ""))
+                .map(i -> ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(i.getItem()).getNamespace(), ""))
                 .filter(n -> n.equals(namespace))
                 .collect(Collectors.toSet());
 
@@ -171,7 +172,7 @@ public class RecipeUtil {
 
         for(ItemStack stack : ingredient.getItems()) {
             // is the item in the override list?
-            var itemId = stack.getItem().getRegistryName();
+            var itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
             var count = stack.getCount();
 
             if(ingredientCostOverrides.containsKey(itemId)) {
@@ -188,7 +189,7 @@ public class RecipeUtil {
                     int cost = ingredientCostsByTag.get(tagId) * count;
 
                     // if the item's namespace is not 'minecraft:', increase the cost
-                    if(!ObjectUtils.defaultIfNull(stack.getItem().getRegistryName().getNamespace(), "").equals("minecraft") &&
+                    if(!ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace(), "").equals("minecraft") &&
                             !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
                         CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla item {} by {}",
                                 cost, tagId, NON_VANILLA_COST_MULTIPLIER);
@@ -222,7 +223,7 @@ public class RecipeUtil {
     public static int calculateItemCost(ItemStack stack) {
         CraftTracker.LOGGER.debug("#calculateItemCost: {}", DebugUtil.printItemStack(stack));
 
-        var itemId = stack.getItem().getRegistryName();
+        var itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
         var count = stack.getCount();
 
         if(ingredientCostOverrides.containsKey(itemId)) {
@@ -239,7 +240,7 @@ public class RecipeUtil {
                 int cost = ingredientCostsByTag.get(tagId) * count;
 
                 // if the item's namespace is not 'minecraft:', increase the cost
-                if(!ObjectUtils.defaultIfNull(stack.getItem().getRegistryName().getNamespace(), "").equals("minecraft") &&
+                if(!ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace(), "").equals("minecraft") &&
                         !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
                     CraftTracker.LOGGER.debug("RecipeUtil#calculateItemCost: increasing cost ({}) of non-vanilla item {} by {}",
                             cost, tagId, NON_VANILLA_COST_MULTIPLIER);
@@ -276,21 +277,21 @@ public class RecipeUtil {
         List<Tuple<? extends Recipe<?>, Integer>> recipeCosts = new ArrayList<>();
 
         for(Recipe<?> recipe : recipes) {
-            var cost = RecipeUtil.calculateRecipeCost(recipe);
-            var tuple = new Tuple<>(recipe, cost);
+            int cost = RecipeUtil.calculateRecipeCost(recipe);
+            Tuple<? extends Recipe<?>, Integer> tuple = new Tuple<>(recipe, cost);
 
             recipeCosts.add(tuple);
         }
 
         recipeCosts.sort((rc1, rc2) -> {
-            var result = rc1.getB().compareTo(rc2.getB());
+            int result = rc1.getB().compareTo(rc2.getB());
             if(result == 0) {
                 return rc1.getA().getId().compareTo(rc2.getA().getId());
             }
             return result;
         });
 
-        return recipeCosts.get(0).getA();
+        return recipeCosts.getFirst().getA();
     }
 
     /**
@@ -318,8 +319,8 @@ public class RecipeUtil {
         itemCosts.sort((rc1, rc2) -> {
             var result = rc1.getB().compareTo(rc2.getB());
             if(result == 0) {
-                return rc1.getA().getItem().getRegistryName().toString()
-                        .compareTo(rc2.getA().getItem().getRegistryName().toString());
+                return ForgeRegistries.ITEMS.getKey(rc1.getA().getItem()).toString()
+                        .compareTo(ForgeRegistries.ITEMS.getKey(rc2.getA().getItem()).toString());
             }
             return result;
         });

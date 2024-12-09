@@ -24,6 +24,6 @@ public class ModTriggers {
     }
 
     public static void register() {
-        ENTRIES.values().forEach(CriteriaTriggers::register);
+//        ENTRIES.values().forEach(CriteriaTriggers::register);
     }
 }

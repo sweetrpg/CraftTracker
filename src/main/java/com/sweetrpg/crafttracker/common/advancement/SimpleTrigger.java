@@ -2,14 +2,15 @@ package com.sweetrpg.crafttracker.common.advancement;
 
 import com.google.gson.JsonObject;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.EntityPredicate.Composite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 
@@ -37,7 +38,7 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 
     public static class Instance extends CriterionTriggerBase.Instance {
         public Instance(ResourceLocation idIn) {
-            super(idIn, Composite.ANY);
+            super(idIn, ContextAwarePredicate.create());
         }
 
         protected boolean test(@Nullable List<Supplier<Object>> suppliers) {

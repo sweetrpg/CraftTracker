@@ -14,21 +14,23 @@ import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.KeyUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.CraftingScreen;
-import net.minecraft.client.gui.screen.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.network.TranslatableComponent;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ClientEventHandler {
 
-    public static void onKeyInput(final InputEvent.KeyInputEvent event) {
+    public static void onKeyInput(final InputEvent.Key event) {
         CraftTracker.LOGGER.trace("#onKeyInput: {}", event);
 
         var screen = Minecraft.getInstance().screen;
@@ -83,23 +85,23 @@ public class ClientEventHandler {
         CraftTracker.LOGGER.debug("#handleToggleCraftList");
 
         var player = Minecraft.getInstance().player;
-        TranslatableComponent msg;
+        Component msg;
         switch(CTRuntime.INSTANCE.queueOverlayRequestedState) {
             case SHOW:
                 CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.HIDE;
-                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE);
+                msg = Component.translatable(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE);
                 player.displayClientMessage(msg, true);
                 break;
 
             case HIDE:
                 CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.DYNAMIC;
-                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC);
+                msg = Component.translatable(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC);
                 player.displayClientMessage(msg, true);
                 break;
 
             case DYNAMIC:
                 CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.SHOW;
-                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW);
+                msg = Component.translatable(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW);
                 player.displayClientMessage(msg, true);
                 break;
         }
@@ -141,30 +143,30 @@ public class ClientEventHandler {
                 sMgr.addItem(player, f.getItemId(), needed);
         });
 
-        PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.POPULATE_LIST));
+        PacketHandler.send(PacketDistributor.SERVER.noArg(), new AdvancementData(ModAdvancements.Key.POPULATE_LIST));
     }
 
     private static void handleToggleShoppingList() {
         CraftTracker.LOGGER.debug("#handleToggleShoppingList");
 
         var player = Minecraft.getInstance().player;
-        TranslatableComponent msg;
+        Component msg;
         switch(CTRuntime.INSTANCE.shoppingOverlayRequestedState) {
             case SHOW:
                 CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.HIDE;
-                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_HIDE);
+                msg = Component.translatable(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_HIDE);
                 player.displayClientMessage(msg, true);
                 break;
 
             case HIDE:
                 CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.DYNAMIC;
-                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC);
+                msg = Component.translatable(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC);
                 player.displayClientMessage(msg, true);
                 break;
 
             case DYNAMIC:
                 CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.SHOW;
-                msg = new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW);
+                msg = Component.translatable(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW);
                 player.displayClientMessage(msg, true);
                 break;
         }
@@ -178,15 +180,15 @@ public class ClientEventHandler {
                     CraftTracker.LOGGER.debug("#handleAddToQueue: type {}", ingredient.getType());
                     CraftTracker.LOGGER.debug("#handleAddToQueue: ingredient {}", ingredient.getIngredient());
 
-                    if(ingredient.getIngredient() instanceof ItemStack) {
-                        ResourceLocation res = ((ItemStack)itemStack).getItem().getRegistryName();
+                    if(ingredient.getIngredient() instanceof ItemStack itemStack) {
+                        ResourceLocation res = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
                         CraftTracker.LOGGER.debug("#handleAddToQueue: res {}", res);
 
                         var player = Minecraft.getInstance().player;
                         CraftingQueueManager.INSTANCE.addProduct(player, res, 1);
 
                         // send advancement packet
-                        PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.QUEUE_ITEM));
+                        PacketHandler.send(PacketDistributor.SERVER.noArg(), new AdvancementData(ModAdvancements.Key.QUEUE_ITEM));
                     }
                 });
     }
@@ -198,13 +200,13 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public static void onScreenInit(final ScreenEvent.InitScreenEvent.Post event) {
+    public static void onScreenInit(final ScreenEvent.Init.Post event) {
         CraftTracker.LOGGER.trace("#onScreenInit: {}", event);
 
     }
 
     @SubscribeEvent
-    public void onScreenDrawForeground(final ScreenEvent.DrawScreenEvent event) {
+    public void onScreenDrawForeground(final ScreenEvent.Render event) {
         CraftTracker.LOGGER.trace("#onScreenDrawForeground: {}", event);
 
         Screen screen = event.getScreen();

@@ -1,6 +1,6 @@
 {
-  "advancements.crafttracker.main.acquire_list_item.description": "Acquire an item that is in the shopping list",
-  "advancements.crafttracker.main.acquire_list_item.title": "Just Keep Shopping",
+  "advancements.crafttracker.main.acquire_item.description": "Acquire an item that is in the shopping list",
+  "advancements.crafttracker.main.acquire_item.title": "Just Keep Shopping",
   "advancements.crafttracker.main.clear_queue.description": "Clear the crafting queue entirely",
   "advancements.crafttracker.main.clear_queue.title": "Like A Boss",
   "advancements.crafttracker.main.craft_item.description": "Craft a queued item",

@@ -1,29 +1,40 @@
 {
+  "criteria": {
+    "main": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {}
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:paper"
-    },
-    "title": {
-      "translate": "advancements.crafttracker.main.root.title"
-    },
+    "announce_to_chat": true,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
     "description": {
       "translate": "advancements.crafttracker.main.root.description"
     },
     "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
     "hidden": false,
-    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
-  },
-  "criteria": {
-    "main": {
-      "trigger": "minecraft:tick",
-      "conditions": {}
+    "icon": {
+      "item": "minecraft:paper"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.crafttracker.main.root.title"
     }
   },
   "requirements": [
     [
       "main"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }
