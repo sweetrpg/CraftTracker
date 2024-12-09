@@ -25,3 +25,7 @@
 ## Where To Get It
 
 Download it from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/craft-tracker) or [Modrinth](https://modrinth.com/mod/craft-tracker).
+
+## Translations
+
+If you would like to help translate Craft Tracker into your language, please open [an issue](https://github.com/actions/setup-java/issues).
