@@ -38,7 +38,7 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 
     public static class Instance extends CriterionTriggerBase.Instance {
         public Instance(ResourceLocation idIn) {
-            super(idIn, Optional.of(ContextAwarePredicate.create()));
+            super(idIn, ContextAwarePredicate.create());
         }
 
         protected boolean test(@Nullable List<Supplier<Object>> suppliers) {

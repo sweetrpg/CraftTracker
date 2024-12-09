@@ -2,7 +2,9 @@ package com.sweetrpg.crafttracker.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.minecraft.advancements.AdvancementHolder;
+import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
+import com.sweetrpg.crafttracker.common.util.Util;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -33,14 +35,14 @@ public class CTAdvancementProvider extends ForgeAdvancementProvider {
     public static class DoggyAdvancementsSubProvider implements ForgeAdvancementProvider.AdvancementGenerator {
 
         @Override
-        public void generate(HolderLookup.Provider registries, Consumer<AdvancementHolder> consumer, ExistingFileHelper existingFileHelper) {
+        public void generate(HolderLookup.Provider registries, Consumer<Advancement> consumer, ExistingFileHelper existingFileHelper) {
             // TODO
-//            var root = ModAdvancements.ROOT.save(consumer, Util.getResourcePath("main/root"));
-//            var queueItem = ModAdvancements.QUEUE_ITEM.parent(root).save(consumer, Util.getResourcePath("main/queue_item"));
-//            var craftItem = ModAdvancements.CRAFT_ITEM.parent(queueItem).save(consumer, Util.getResourcePath("main/craft_item"));
-//            var populateList = ModAdvancements.POPULATE_LIST.parent(root).save(consumer, Util.getResourcePath("main/populate_list"));
-//            var acquireItem = ModAdvancements.ACQUIRE_ITEM.parent(populateList).save(consumer, Util.getResourcePath("main/acquire_item"));
-//            var clearQueue = ModAdvancements.CLEAR_QUEUE.parent(queueItem).save(consumer, Util.getResourcePath("main/clear_queue"));
+            var root = ModAdvancements.ROOT.deconstruct().save(consumer, Util.getResourcePath("main/root"));
+            var queueItem = ModAdvancements.QUEUE_ITEM.deconstruct().parent(root).save(consumer, Util.getResourcePath("main/queue_item"));
+            var craftItem = ModAdvancements.CRAFT_ITEM.deconstruct().parent(queueItem).save(consumer, Util.getResourcePath("main/craft_item"));
+            var populateList = ModAdvancements.POPULATE_LIST.deconstruct().parent(root).save(consumer, Util.getResourcePath("main/populate_list"));
+            var acquireItem = ModAdvancements.ACQUIRE_ITEM.deconstruct().parent(populateList).save(consumer, Util.getResourcePath("main/acquire_item"));
+            var clearQueue = ModAdvancements.CLEAR_QUEUE.deconstruct().parent(queueItem).save(consumer, Util.getResourcePath("main/clear_queue"));
 
         }
 
