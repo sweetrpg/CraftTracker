@@ -25,6 +25,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ClientEventHandler {
@@ -142,7 +143,7 @@ public class ClientEventHandler {
                 sMgr.addItem(player, f.getItemId(), needed);
         });
 
-        PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.POPULATE_LIST));
+        PacketHandler.send(PacketDistributor.SERVER.noArg(), new AdvancementData(ModAdvancements.Key.POPULATE_LIST));
     }
 
     private static void handleToggleShoppingList() {
@@ -187,7 +188,7 @@ public class ClientEventHandler {
                         CraftingQueueManager.INSTANCE.addProduct(player, res, 1);
 
                         // send advancement packet
-                        PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.QUEUE_ITEM));
+                        PacketHandler.send(PacketDistributor.SERVER.noArg(), new AdvancementData(ModAdvancements.Key.QUEUE_ITEM));
                     }
                 });
     }

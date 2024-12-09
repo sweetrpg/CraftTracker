@@ -17,6 +17,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
@@ -182,7 +183,7 @@ public class QueueManagementScreen extends Screen {
                                 this.renderables.clear();
 
                                 // send advancement packet
-                                PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.CLEAR_QUEUE));
+                                PacketHandler.send(PacketDistributor.SERVER.noArg(), new AdvancementData(ModAdvancements.Key.CLEAR_QUEUE));
                             })
                     .pos(topX + (width / 2) - 50, topY + height - BUTTON_SIZE - 4)
                     .size(100, BUTTON_SIZE + 2)

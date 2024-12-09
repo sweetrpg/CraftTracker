@@ -17,9 +17,13 @@ public final class PacketHandler {
         registerPacket(new AdvancementPacket(), AdvancementData.class);
     }
 
-    public static <MSG> void sendToServer(MSG message) {
-        CraftTracker.HANDLER.send(PacketDistributor.PLAYER.noArg(), message);
+    public static <MSG> void send(PacketDistributor.PacketTarget target, MSG message) {
+        CraftTracker.HANDLER.send(target, message);
     }
+
+//    public static <MSG> void sendToServer(MSG message) {
+//        CraftTracker.HANDLER.send(PacketDistributor.PLAYER.noArg(), message);
+//    }
 
     public static <MSG> void sendToPlayer(ServerPlayer player, MSG message) {
         CraftTracker.HANDLER.send(PacketDistributor.PLAYER.with(() -> player), message);

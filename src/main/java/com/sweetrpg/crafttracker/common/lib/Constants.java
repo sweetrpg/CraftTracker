@@ -15,7 +15,7 @@ public class Constants {
 
     // Network
     public static final ResourceLocation CHANNEL_NAME = Util.getResource("channel");
-    public static final Integer PROTOCOL_VERSION = 1;
+    public static final String PROTOCOL_VERSION = Integer.toString(1);
 
     // Language
     public static final String LOCALE_EN_US = "en_us";
