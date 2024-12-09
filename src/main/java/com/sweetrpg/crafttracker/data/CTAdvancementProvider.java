@@ -12,6 +12,7 @@ import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -22,17 +23,14 @@ public class CTAdvancementProvider extends ForgeAdvancementProvider {
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
     public CTAdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
-        super(output, registries, existingFileHelper,
-                List.of(new DoggyAdvancementsSubProvider())
-        );
+        super(output, registries, existingFileHelper, List.of(new AdvancementsSubProvider()));
     }
 
+    private static Path getPath(Path pathIn, Advancement advancementIn) {
+        return pathIn.resolve("data/" + advancementIn.getId().getNamespace() + "/advancements/" + advancementIn.getId().getPath() + ".json");
+    }
 
-    // private static Path getPath(Path pathIn, Advancement advancementIn) {
-    //     return pathIn.resolve("data/" + advancementIn.getId().getNamespace() + "/advancements/" + advancementIn.getId().getPath() + ".json");
-    // }
-
-    public static class DoggyAdvancementsSubProvider implements ForgeAdvancementProvider.AdvancementGenerator {
+    public static class AdvancementsSubProvider implements ForgeAdvancementProvider.AdvancementGenerator {
 
         @Override
         public void generate(HolderLookup.Provider registries, Consumer<Advancement> consumer, ExistingFileHelper existingFileHelper) {

@@ -14,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -32,6 +31,9 @@ public class ShoppingListOverlay {
     static int TEXT_HEIGHT = 12;
     static int MAX_STRING_LENGTH = 40;
 
+    public static void init() {
+        MinecraftForge.EVENT_BUS.register(new ShoppingListOverlay());
+    }
 
     @SubscribeEvent
     public void onRenderGuiOverlay(RenderGuiOverlayEvent event) {
@@ -84,7 +86,7 @@ public class ShoppingListOverlay {
 
         // if products list is empty, display "empty" message
         if(items.isEmpty()) {
-            graphics.drawCenteredString( gui.getFont(),
+            graphics.drawCenteredString(gui.getFont(),
                     Component.translatable(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_EMPTY),
                     (x + olWidth - 8) / 2, (y + olHeight - 6) / 2, MESSAGE_COLOR);
             return;
@@ -93,7 +95,7 @@ public class ShoppingListOverlay {
         var helpText = String.format("%s [%s]",
                 I18n.get(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_HELP),
                 ModKeyBindings.CLEAR_SHOPPING_LIST_MAPPING.getTranslatedKeyMessage().getString());
-        graphics.drawCenteredString( gui.getFont(), helpText,
+        graphics.drawCenteredString(gui.getFont(), helpText,
                 (x + olWidth - 8) / 2, olHeight - TEXT_HEIGHT, HELP_COLOR);
 
         int yPos = y + SECTION_TITLE_Y_OFFSET;
@@ -139,19 +141,15 @@ public class ShoppingListOverlay {
                         item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
                         countText);
                 CraftTracker.LOGGER.trace("text: {}", text);
-                graphics.drawString( gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
+                graphics.drawString(gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
             }
             else {
                 var text = item.getDescription().getString(MAX_STRING_LENGTH);
-                graphics.drawString( gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                graphics.drawString(gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
             }
 
             yPos += LINE_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (materials item {}): {}", i, yPos);
         }
-    }
-
-    public static void init() {
-        MinecraftForge.EVENT_BUS.register(new ShoppingListOverlay());
     }
 }

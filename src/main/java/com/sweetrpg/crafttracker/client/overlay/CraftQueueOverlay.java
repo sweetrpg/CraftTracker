@@ -34,6 +34,12 @@ public class CraftQueueOverlay {
     static int TEXT_HEIGHT = 12;
     static int MAX_STRING_LENGTH = 40;
 
+    public static void init() {
+        MinecraftForge.EVENT_BUS.register(new CraftQueueOverlay());
+//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "craft_queue", CraftQueueOverlay.CRAFT_QUEUE);
+//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "shopping_list", ShoppingListOverlay.SHOPPING_LIST);
+    }
+
     @SubscribeEvent
     public void onRenderGuiOverlay(RenderGuiOverlayEvent event) {
         CraftTracker.LOGGER.trace("CraftQueueOverlay#onRenderGuiOverlay");
@@ -305,12 +311,6 @@ public class CraftQueueOverlay {
                 CraftTracker.LOGGER.trace("yPos (materials item {}): {}", i, yPos);
             }
         }
-    }
-
-    public static void init() {
-        MinecraftForge.EVENT_BUS.register(new CraftQueueOverlay());
-//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "craft_queue", CraftQueueOverlay.CRAFT_QUEUE);
-//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "shopping_list", ShoppingListOverlay.SHOPPING_LIST);
     }
 
 }

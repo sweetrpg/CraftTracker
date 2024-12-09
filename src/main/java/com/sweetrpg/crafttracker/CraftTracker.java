@@ -9,6 +9,7 @@ import com.sweetrpg.crafttracker.common.event.EventHandler;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.registry.ModRecipeSerializers;
 import com.sweetrpg.crafttracker.common.registry.ModRegistries;
+import com.sweetrpg.crafttracker.data.CTAdvancementProvider;
 import com.sweetrpg.crafttracker.data.CTLangProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -101,7 +102,7 @@ public class CraftTracker {
         LOGGER.debug("event {}", event);
 
         //        BackwardsComp.init();
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+//        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         AddonManager.init();
     }
@@ -111,11 +112,12 @@ public class CraftTracker {
 
         DataGenerator gen = event.getGenerator();
         PackOutput packOutput = gen.getPackOutput();
+        var lookup = event.getLookupProvider();
 
         gen.addProvider(event.includeServer(), new CTLangProvider(packOutput, Constants.LOCALE_EN_US));
         gen.addProvider(event.includeServer(), new CTLangProvider(packOutput, Constants.LOCALE_EN_GB));
         gen.addProvider(event.includeServer(), new CTLangProvider(packOutput, Constants.LOCALE_DE_DE));
 
-//            gen.addProvider(event.includeServer(), new CTAdvancementProvider(gen));
+        gen.addProvider(event.includeServer(), new CTAdvancementProvider(packOutput, lookup, event.getExistingFileHelper()));
     }
 }
