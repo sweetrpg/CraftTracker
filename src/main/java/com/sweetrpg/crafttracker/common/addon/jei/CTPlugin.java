@@ -6,7 +6,6 @@ import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -22,55 +21,6 @@ public class CTPlugin implements IModPlugin {
     @Override
     public ResourceLocation getPluginUid() {
         return new ResourceLocation(Constants.MOD_ID, Constants.JEI_PLUGIN_ID);
-    }
-
-    @Override
-    public void registerItemSubtypes(ISubtypeRegistration registration) {
-        CraftTracker.LOGGER.debug("CTPlugin#registerItemSubtypes: {}", registration);
-
-    }
-
-    @Override
-    public void registerRecipes(IRecipeRegistration registration) {
-        CraftTracker.LOGGER.debug("CTPlugin#registerRecipes: {}", registration);
-
-    }
-
-    @Override
-    public void registerIngredients(IModIngredientRegistration registration) {
-        CraftTracker.LOGGER.debug("CTPlugin#registerIngredients: {}", registration);
-    }
-
-    @Override
-    public void registerCategories(IRecipeCategoryRegistration registration) {
-        CraftTracker.LOGGER.debug("CTPlugin#registerCategories: {}", registration);
-    }
-
-    @Override
-    public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-        CraftTracker.LOGGER.debug("CTPlugin#registerVanillaCategoryExtensions: {}", registration);
-    }
-
-    @Override
-    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        CraftTracker.LOGGER.debug("CTPlugin#registerRecipeTransferHandlers: {}", registration);
-    }
-
-    @Override
-    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        CraftTracker.LOGGER.debug("CTPlugin#registerRecipeCatalysts: {}", registration);
-    }
-
-    @Override
-    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        CraftTracker.LOGGER.debug("CTPlugin#registerGuiHandlers: {}", registration);
-
-    }
-
-    @Override
-    public void registerAdvanced(IAdvancedRegistration registration) {
-        CraftTracker.LOGGER.debug("CTPlugin#registerAdvanced: {}", registration);
-
     }
 
     @Override
