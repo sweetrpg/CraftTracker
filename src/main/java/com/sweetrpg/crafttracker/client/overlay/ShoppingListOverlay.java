@@ -74,8 +74,8 @@ public class ShoppingListOverlay {
         }
         var olWidth = Math.min((x + ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_WIDTH.get()), width - 10);
         var olHeight = Math.min((y + ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_HEIGHT.get()), height - 10);
-        var backgroundColor = 0x5f5f5f5f; // TODO: get from config?
-        var borderColor = 0x1f1f1f1f; // TODO: get from config?
+        var backgroundColor = 0x015f5f5f; // TODO: get from config
+        var borderColor = 0x021f1f1f; // TODO: get from config
 
         graphics.fill(x, y, olWidth, olHeight, borderColor);
         graphics.fill(x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
