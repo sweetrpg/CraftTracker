@@ -11,12 +11,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class ClientSetup {
 
-    public static void setupScreenManagers(final FMLClientSetupEvent event) {
-    }
-
-    public static void addClientReloadListeners(final RegisterClientReloadListenersEvent event) {
-    }
-
     public static void addKeyBindings(final FMLClientSetupEvent event) {
 
         MinecraftForge.EVENT_BUS.addListener(ClientEventHandler::onScreenInit);

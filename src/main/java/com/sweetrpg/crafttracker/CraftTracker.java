@@ -7,8 +7,6 @@ import com.sweetrpg.crafttracker.common.addon.AddonManager;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.event.EventHandler;
 import com.sweetrpg.crafttracker.common.lib.Constants;
-import com.sweetrpg.crafttracker.common.registry.ModRecipeSerializers;
-import com.sweetrpg.crafttracker.common.registry.ModRegistries;
 import com.sweetrpg.crafttracker.data.CTAdvancementProvider;
 import com.sweetrpg.crafttracker.data.CTLangProvider;
 import net.minecraft.data.DataGenerator;
@@ -53,15 +51,6 @@ public class CraftTracker {
         modEventBus.addListener(CommonSetup::init);
         modEventBus.addListener(this::interModProcess);
 
-        // Registries
-//        ModBlocks.BLOCKS.register(modEventBus);
-//        ModBlockEntityTypes.TILE_ENTITIES.register(modEventBus);
-//        ModItems.ITEMS.register(modEventBus);
-//        ModSerializers.SERIALIZERS.register(modEventBus);
-        ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
-
-        modEventBus.addListener(ModRegistries::newRegistry);
-
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
         forgeEventBus.addListener(this::serverStarting);
         forgeEventBus.addListener(this::registerCommands);
@@ -71,7 +60,6 @@ public class CraftTracker {
         // Client Events
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             modEventBus.addListener(this::clientSetup);
-            modEventBus.addListener(ClientSetup::addClientReloadListeners);
             modEventBus.addListener(ClientSetup::addKeyBindings);
 
             forgeEventBus.register(new ClientEventHandler());
@@ -94,15 +82,10 @@ public class CraftTracker {
     public void clientSetup(final FMLClientSetupEvent event) {
         LOGGER.debug("Client startup");
 
-        ClientSetup.setupScreenManagers(event);
-
     }
 
     protected void interModProcess(final InterModProcessEvent event) {
         LOGGER.debug("event {}", event);
-
-        //        BackwardsComp.init();
-//        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         AddonManager.init();
     }
