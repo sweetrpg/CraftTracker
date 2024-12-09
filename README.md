@@ -20,7 +20,7 @@
 
 ## Requirements
 
-* [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) &mdash; version 11.8.1.1034 or higher
+* [JEI](https://www.curseforge.com/minecraft/mc-mods/jei)
 
 ## Where To Get It
 
