@@ -33,7 +33,7 @@ displayName="Craft Tracker"
 [[dependencies.crafttracker]]
     modId="jei"
     mandatory=true
-    versionRange="[15.20.0.105,)"
+    versionRange="[19.21.0.247,)"
     ordering="NONE"
     side="BOTH"
 
@@ -44,12 +44,12 @@ displayName="Craft Tracker"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.crafttracker]]
-    modId="patchouli"
-    mandatory=false
-    versionRange="[1.20.1-84-FORGE,)"
-    ordering="NONE"
-    side="BOTH"
+#[[dependencies.crafttracker]]
+#    modId="patchouli"
+#    mandatory=false
+#    versionRange="[1.21.1-84-FORGE,)"
+#    ordering="NONE"
+#    side="BOTH"
 
 [modproperties.configured]
     catalogueImageIcon="configured_icon.png"

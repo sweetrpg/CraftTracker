@@ -38,7 +38,7 @@ println "Pipeline branch: " + (System.getenv('CI_COMMIT_BRANCH') ?: 'NONE')
 
 group = 'com.sweetrpg'
 archivesBaseName = "${project.name}-${project.target_mc_version}"
-version = System.getenv("MOD_VERSION") ?: new File(".release-info/${project.base_mc_version}/VERSION").text.trim()
+version = System.getenv("MOD_VERSION") ?: new File("${project.rootDir}/.release-info/${project.base_mc_version}/VERSION").text.trim()
 
 println "Project version: ${version}"
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
@@ -155,9 +155,9 @@ dependencies {
 
     implementation fg.deobf("curse.maven:patchouli-${ptch_project_id}:${ptch_file_id}")
      implementation fg.deobf("curse.maven:farmers-delight-${farmers_project_id}:${farmers_file_id}")
-     implementation fg.deobf("curse.maven:create-${create_project_id}:${create_file_id}")
+//     implementation fg.deobf("curse.maven:create-${create_project_id}:${create_file_id}")
      implementation fg.deobf("curse.maven:ars-nouveau-${ars_project_id}:${ars_file_id}")
-     implementation fg.deobf("curse.maven:curios-${curios_project_id}:${curios_file_id}")
+//     implementation fg.deobf("curse.maven:curios-${curios_project_id}:${curios_file_id}")
 //    implementation fg.deobf("curse.maven:celestial-exploration-${cexp_project_id}:${cexp_file_id}")
 //    implementation fg.deobf("curse.maven:azurelib-${azure_project_id}:${azure_file_id}")
     implementation fg.deobf("curse.maven:the-one-probe-${top_project_id}:${top_file_id}")
@@ -230,7 +230,7 @@ curseforge {
     apiKey = System.getenv('CURSEFORGE_API_KEY') ?: 0
     project {
         id = project.curseforge_project_id
-        changelog = file("CHANGELOG/${project.base_mc_version}/current.md")
+        changelog = file("${project.rootDir}/CHANGELOG/${project.base_mc_version}/current.md")
         changelogType = 'markdown'
         releaseType = findProperty("curseforge_release_type") ?: 'beta'
         addGameVersion project.target_mc_version
@@ -252,7 +252,7 @@ modrinth {
     versionType = project.modrinth_release_type
     uploadFile = jar
     gameVersions = [project.target_mc_version] // Must be an array, even with only one version
-    changelog = file("CHANGELOG/${project.base_mc_version}/current.md").text
+    changelog = file("${project.rootDir}/CHANGELOG/${project.base_mc_version}/current.md").text
     loaders = ["forge"]
     dependencies {
         optional.project "configured"
