@@ -56,7 +56,10 @@ public class Constants {
     public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW = "crafttracker.msg.shopping_list_overlay_mode.show";
     public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC = "crafttracker.msg.shopping_list_overlay_mode.dynamic";
 
+    // Config
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CALC_DEPTH = "crafttracker.config.client.calculation_depth";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_NON_VANILLA_COST_MULTIPLIER = "crafttracker.config.client.non_vanilla_cost_multiplier";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_NON_CRAFTING_COST_MULTIPLIER = "crafttracker.config.client.non_crafting_cost_multiplier";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_X = "crafttracker.config.client.craft_queue_x";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y = "crafttracker.config.client.craft_queue_y";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH = "crafttracker.config.client.craft_queue_width";
@@ -67,6 +70,8 @@ public class Constants {
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT = "crafttracker.config.client.shopping_list_height";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY = "crafttracker.config.client.craft_queue_hide_empty";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY = "crafttracker.config.client.shopping_list_hide_empty";
+    public static final String TRANSLATION_KEY_CONFIG_COMMON_COSTS_BY_TAG_TAGS = "crafttracker.config.common.costs_by_tag.tags";
+    public static final String TRANSLATION_KEY_CONFIG_COMMON_COST_OVERRIDES_ITEMS = "crafttracker.config.common.cost_overrides.items";
 
     // Advancements
     public static final String TRANSLATION_KEY_ADVANCEMENT_ROOT_TITLE = "advancements.crafttracker.main.root.title";

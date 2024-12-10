@@ -42,8 +42,6 @@ public class CraftingQueueManager {
 
     public static CraftingQueueManager INSTANCE = new CraftingQueueManager();
 
-    private static final int MAX_PROCESSING_LEVEL = ConfigHandler.CLIENT.CALCULATION_DEPTH.get();
-
     private Map<ResourceLocation, CraftingQueueProduct> endProducts = new HashMap<>();
     private Map<ResourceLocation, CraftingQueueItem> intermediateProducts = new HashMap<>();
     private Map<ResourceLocation, CraftingQueueItem> rawMaterials = new HashMap<>();
@@ -453,7 +451,7 @@ public class CraftingQueueManager {
             var subRecipes = RecipeUtil.getRecipesFor(id);
             CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes.stream().map(DebugUtil::printRecipe).toList());
 
-            if(subRecipes.isEmpty() || depth >= MAX_PROCESSING_LEVEL) {
+            if(subRecipes.isEmpty() || depth >= ConfigHandler.CLIENT.CALCULATION_DEPTH.get()) {
                 CraftTracker.LOGGER.debug("subRecipes is empty; ingredient {} is a raw material", ingredientId);
                 // no recipes for this ingredient, so it's a raw material
                 computedRecipe.rawMaterials.compute(id,

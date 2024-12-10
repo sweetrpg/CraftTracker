@@ -1,0 +1,2 @@
+- `[NEW]` Recipe calculation depth is now configurable
+- `[NEW]` Costs and multipliers are now configurable
