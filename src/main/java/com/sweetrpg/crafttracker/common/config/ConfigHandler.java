@@ -30,6 +30,7 @@ public class ConfigHandler {
 
     public static class ClientConfig {
 
+        public ForgeConfigSpec.IntValue CALCULATION_DEPTH;
         public ForgeConfigSpec.BooleanValue CRAFT_QUEUE_OVERLAY_HIDE_EMPTY;
         public ForgeConfigSpec.IntValue CRAFT_QUEUE_OVERLAY_X;
         public ForgeConfigSpec.IntValue CRAFT_QUEUE_OVERLAY_Y;
@@ -44,6 +45,8 @@ public class ConfigHandler {
         public ClientConfig(ForgeConfigSpec.Builder builder) {
             {
                 builder.push("General");
+
+                CALCULATION_DEPTH = builder.comment("").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CALC_DEPTH).defineInRange("calculation_depth", 3, 1, 5);
 
                 builder.pop();
             }
