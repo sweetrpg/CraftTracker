@@ -1,2 +1,0 @@
-- `[NEW]` Add Patchouli book
-- `[CHG]` Renamed the keybinding constants
