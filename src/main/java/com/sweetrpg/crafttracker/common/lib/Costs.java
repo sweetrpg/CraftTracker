@@ -6,7 +6,7 @@ import static java.util.Map.entry;
 
 public class Costs {
 
-    public static final Map<String, Integer> tags = Map.ofEntries(
+    public static final Map<String, Integer> tags = Map.<String, Integer>ofEntries(
             entry("c:animal_foods", 10),
             entry("c:armors", 10),
             entry("c:barrels/wooden", 10),
@@ -199,7 +199,6 @@ public class Costs {
             entry("forge:carpets", 10),
             entry("forge:chests/ender", 475),
             entry("forge:chests/trapped", 10),
-            entry("forge:chests/trapped", 10),
             entry("forge:chests/wooden", 10),
             entry("forge:chests", 10),
             entry("forge:coal_ores", 20),
@@ -263,7 +262,6 @@ public class Costs {
             entry("forge:glass_tinted", 20),
             entry("forge:glass", 10),
             entry("forge:gold_ores", 250),
-            entry("forge:gravel", 10),
             entry("forge:gravel", 2),
             entry("forge:gunpowder", 50),
             entry("forge:heads", 100),
@@ -296,27 +294,19 @@ public class Costs {
             entry("forge:ore_rates/dense", 10),
             entry("forge:ore_rates/singular", 10),
             entry("forge:ore_rates/sparse", 10),
+            entry("forge:ores_in_ground/deepslate", 10),
+            entry("forge:ores_in_ground/netherrack", 10),
+            entry("forge:ores_in_ground/stone", 10),
             entry("forge:ores/coal", 25),
             entry("forge:ores/copper", 50),
             entry("forge:ores/diamond", 500),
             entry("forge:ores/emerald", 400),
             entry("forge:ores/gold", 300),
-            entry("forge:ores_in_ground/deepslate", 10),
-            entry("forge:ores_in_ground/netherrack", 10),
-            entry("forge:ores_in_ground/stone", 10),
             entry("forge:ores/iron", 100),
             entry("forge:ores/lapis", 250),
             entry("forge:ores/netherite_scrap", 750),
             entry("forge:ores/quartz", 300),
             entry("forge:ores/redstone", 200),
-            entry("forge:ores/coal", 10),
-            entry("forge:ores/copper", 10),
-            entry("forge:ores/diamond", 10),
-            entry("forge:ores/emerald", 10),
-            entry("forge:ores/gold", 10),
-            entry("forge:ores/iron", 10),
-            entry("forge:ores/lapis", 10),
-            entry("forge:ores/redstone", 10),
             entry("forge:ores", 10),
             entry("forge:planks", 10),
             entry("forge:rails", 10),
@@ -815,7 +805,7 @@ public class Costs {
             entry("minecraft:nether_brick", 10),
             entry("minecraft:nether_gold_ore", 10),
             entry("minecraft:nether_quartz_ore", 10),
-            entry("minecraft:nether_star", 10),
+            entry("minecraft:nether_star", 900),
             entry("minecraft:nether_stars", 900),
             entry("minecraft:nether_wart", 10),
             entry("minecraft:netherite_axe", 1000),
@@ -1086,9 +1076,9 @@ public class Costs {
             entry("minecraft:yellow_wool", 10),
             entry("minecraft:zombie_head", 10),
             entry("minecraft:zombie_wall_head", 10)
-    );
+            );
 
-    public static final Map<String, Integer> itemOverrides = Map.ofEntries(
+    public static final Map<String, Integer> itemOverrides = Map.<String, Integer>ofEntries(
             entry("create:precision_mechanism", 250),
             entry("minecraft:trapped_chest", 11)
     );
