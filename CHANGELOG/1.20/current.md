@@ -1,1 +1,2 @@
-- `[NEW]` Release for 1.20!
+- `[CHG]` Release to catch up with 1.18 changes
+- `[FIX]` Updated German translation strings
