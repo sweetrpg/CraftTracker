@@ -1,0 +1,38 @@
+{
+  "name": "Key Bindings",
+  "icon": "minecraft:chest",
+  "category": "crafttracker:keys",
+  "pages": [
+    "There are several key bindings that let you perform certain functions with Craft Tracker",
+    {
+      "type": "patchouli:text",
+      "title": "Add to Queue",
+      "text": "This key ($(k:crafttracker.addToQueue)) will cause the item your mouse pointer is over to be added to the queue.$(br2)Currently, this must be done in the JEI ingredient overlay, which appears when you open any kind of crafting container."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Craft Queue Mode",
+      "text": "This key ($(k:crafttracker.toggleCraftQueue)) will cycle between the three display modes of the crafting queue overlay:$(br2)$(o)hide$() -- don't show the crafting queue at all;$(br2)$(o)always$() -- keep the crafting queue overlay open all the time;$(br2)$(o)dynamic$() -- only show the crafting queue when it has items in it."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Shopping List Mode",
+      "text": "This key ($(k:crafttracker.toggleShoppingList)) will cycle between the three display modes of the shopping list overlay:$(br2)$(o)hide$() -- don't show the shopping list at all;$(br2)$(o)always$() -- keep the shopping list overlay open all the time;$(br2)$(o)dynamic$() -- only show the shopping list when it has items in it."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Open the Queue Manager",
+      "text": "This key ($(k:crafttracker.openQueueManager)) opens the Queue Manager screen, which lets you make adjustments to the crafting queue."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Populate the Shopping List",
+      "text": "This key ($(k:crafttracker.populateShoppingList)) will update the shopping list with the items that are currently in the crafting queue's raw materials section, setting the amount to how much you need of each item. Items that you already have will not be added."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Clear the Shopping List",
+      "text": "This key ($(k:crafttracker.clearShoppingList)) will cause the shopping list's contents to be cleared."
+    }
+  ]
+}

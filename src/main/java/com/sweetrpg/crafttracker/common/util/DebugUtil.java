@@ -63,6 +63,7 @@ public class DebugUtil {
 
         builder.append(", tags=[");
         builder.append(String.join(",", itemStack.getTags().map(TagKey::toString).toList()));
+        builder.append("]");
 
         builder.append(" }");
 

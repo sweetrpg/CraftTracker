@@ -1,0 +1,8 @@
+{
+  "name": "Adding Items",
+  "icon": "minecraft:gold_ingot",
+  "category": "crafttracker:queue",
+  "pages": [
+    "To add an item to the crafting queue, use the Add to Queue key.$(br2)Currently, you must do this in the JEI ingredient overlay."
+  ]
+}
