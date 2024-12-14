@@ -1,0 +1,11 @@
+{
+  "name": "The Shopping List",
+  "icon": "minecraft:paper",
+  "category": "crafttracker:shopping",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The shopping list displays items that you need to go out and collect so that you can make the things in your crafting queue.$(br2)Once populated, items are automatically removed from the list when you have acquired the desired amount."
+    }
+  ]
+}

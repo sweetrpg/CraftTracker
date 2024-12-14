@@ -1,0 +1,16 @@
+{
+  "name": "The Queue Manager",
+  "icon": "minecraft:paper",
+  "category": "crafttracker:queue",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The queue manager lets you make changes to the queue."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Entries",
+      "text": "The queue manager contains a list of the items that you've added to the crafting queue.$(br2)Each line shows a single item, displaying its icon, name, and the number of times you wish to craft it."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Item Costs",
+  "icon": "minecraft:gold_ingot",
+  "category": "crafttracker:config",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "This section covers changes you can make that affect how Craft Tracker determines the best recipe for making something in the queue.$(br2)Configuration values in this section are integers that set the cost of a recipe's ingredient."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Tags",
+      "text": "This is a set of key/value mappings for tags that are applied to an ingredient.$(br2)Ingredients may have multiple tags, in which case, Craft Tracker will use the highest value when determining an ingredient's cost."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Overrides",
+      "text": "This is a set of key/value mappings for specific items.$(br2)If you want to make sure that an item has a specific cost, add an entry here with the item's mod ID and item ID, and a value for the cost of the item. This will override any cost determined by the item's tags."
+    }
+  ]
+}
