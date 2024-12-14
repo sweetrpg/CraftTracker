@@ -2,21 +2,13 @@ package com.sweetrpg.crafttracker.common.util.calc;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
-import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.util.DebugUtil;
-import com.sweetrpg.crafttracker.common.util.RecipeUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.commons.lang3.ObjectUtils;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * Calculates the cost of an ingredient
@@ -79,7 +71,7 @@ public class IngredientCostCalculator implements ICostCalculator {
                     CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
 
                     if(multiplier != null) {
-                        var newCost =(int) (cost * multiplier.get());
+                        var newCost = (int) (cost * multiplier.get());
                         CraftTracker.LOGGER.debug("#calculate: increasing cost of tag {} in namespace {} by {}: from {} to {}",
                                 tagId, tagNamespace, multiplier.get(),
                                 cost, newCost);

@@ -4,7 +4,6 @@ import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.util.DebugUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -51,7 +50,7 @@ public class RecipeCostCalculator implements ICostCalculator {
         CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
 
         if(multiplier != null) {
-            var newCost =(int) (cost * multiplier.get());
+            var newCost = (int) (cost * multiplier.get());
             CraftTracker.LOGGER.debug("#calculate: increasing cost of recipe {} in namespace {} by {}: from {} to {}",
                     recipe.getId(), recipeNamespace, multiplier.get(),
                     cost, newCost);
@@ -63,7 +62,7 @@ public class RecipeCostCalculator implements ICostCalculator {
 
         var typeMultiplier = ConfigHandler.COMMON.recipeTypeEntries.get(recipeType.toString());
         if(typeMultiplier != null) {
-            var newCost =(int) (cost * typeMultiplier.get());
+            var newCost = (int) (cost * typeMultiplier.get());
             CraftTracker.LOGGER.debug("#calculate: increasing cost of recipe type {} by {}: from {} to {}",
                     recipeType, typeMultiplier.get(),
                     cost, newCost);

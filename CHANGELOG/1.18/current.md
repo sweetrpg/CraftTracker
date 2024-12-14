@@ -1,2 +1,5 @@
 - `[NEW]` Recipe calculation depth is now configurable
 - `[NEW]` Costs and multipliers are now configurable
+- `[FIX]` Cost values fixed for some tags
+- `[FIX]` Some tag values fixed
+- `[DEV]` Removed some unneeded code

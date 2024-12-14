@@ -3,8 +3,6 @@ package com.sweetrpg.crafttracker.common.util.calc;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.util.DebugUtil;
-import com.sweetrpg.crafttracker.common.util.RecipeUtil;
-import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -66,7 +64,7 @@ public class ItemCostCalculator implements ICostCalculator {
                 CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
 
                 if(multiplier != null) {
-                    var newCost =(int) (cost * multiplier.get());
+                    var newCost = (int) (cost * multiplier.get());
                     CraftTracker.LOGGER.debug("#calculate: increasing cost of tag {} in namespace {} by {}: from {} to {}",
                             tagId, tagNamespace, multiplier.get(),
                             cost, newCost);
