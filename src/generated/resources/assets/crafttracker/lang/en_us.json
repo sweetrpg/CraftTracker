@@ -48,6 +48,6 @@
   "key.crafttracker.clearShoppingList": "Clear Shopping List",
   "key.crafttracker.openQueueManager": "Open Queue Manager",
   "key.crafttracker.populateShoppingList": "Populate Shopping List",
-  "key.crafttracker.toggleCraftQueue": "Toggle Craft Queue",
-  "key.crafttracker.toggleShoppingList": "Toggle Shopping List"
+  "key.crafttracker.toggleCraftQueue": "Craft Queue Overlay Mode",
+  "key.crafttracker.toggleShoppingList": "Shopping List Overlay Mode"
 }
