@@ -53,17 +53,17 @@ public class CraftQueueOverlay {
                 return;
 
             case DYNAMIC:
-                if(ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_HIDE_EMPTY.get() &&
+                if(ConfigHandler.CLIENT.craftQueueOverlayHideEmpty.get() &&
                         products.isEmpty()) {
                     return;
                 }
                 break;
         }
 
-        var x = ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_X.get();
-        var y = ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_Y.get();
-        var olWidth = Math.min((ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_X.get() + ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_WIDTH.get()), width - 10);
-        var olHeight = Math.min((ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_Y.get() + ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_HEIGHT.get()), height - 10);
+        var x = ConfigHandler.CLIENT.craftQueueOverlayX.get();
+        var y = ConfigHandler.CLIENT.craftQueueOverlayY.get();
+        var olWidth = Math.min((ConfigHandler.CLIENT.craftQueueOverlayX.get() + ConfigHandler.CLIENT.craftQueueOverlayWidth.get()), width - 10);
+        var olHeight = Math.min((ConfigHandler.CLIENT.craftQueueOverlayY.get() + ConfigHandler.CLIENT.craftQueueOverlayHeight.get()), height - 10);
         var backgroundColor = 0x5f5f5f5f; // TODO: get from config
         var borderColor = 0x1f1f1f1f; // TODO: get from config
 
