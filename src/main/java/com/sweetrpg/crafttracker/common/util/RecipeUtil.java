@@ -1,68 +1,29 @@
 package com.sweetrpg.crafttracker.common.util;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.util.calc.ItemCostCalculator;
+import com.sweetrpg.crafttracker.common.util.calc.RecipeCostCalculator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Helper functions for handling recipes
  */
 public class RecipeUtil {
-
-    public static final float NON_VANILLA_COST_MULTIPLIER = 1.2f;
-    public static final float NON_CRAFTING_COST_MULTIPLIER = 1.25f;
-
-    private static Map<ResourceLocation, Integer> ingredientCostsByTag = new HashMap<>();
-    private static Map<ResourceLocation, Integer> ingredientCostOverrides = new HashMap<>();
-
-    static {
-        var mgr = Minecraft.getInstance().getResourceManager();
-
-        var ingCostsResource = new ResourceLocation(Constants.MOD_ID, "ingredient-costs.properties");
-        try {
-            var costs = mgr.getResource(ingCostsResource);
-            var props = new Properties();
-            props.load(costs.get().open());
-            props.entrySet().forEach(entry -> {
-                var key = new ResourceLocation((String) entry.getKey());
-                var value = Integer.parseInt((String) entry.getValue());
-                ingredientCostsByTag.put(key, value);
-            });
-        }
-        catch (IOException e) {
-            CraftTracker.LOGGER.error("I/O exception when trying to load ingredient costs file", e);
-        }
-
-        var ingOverridesResource = new ResourceLocation(Constants.MOD_ID, "ingredient-overrides.properties");
-        try {
-            var costs = mgr.getResource(ingOverridesResource);
-            var props = new Properties();
-            props.load(costs.get().open());
-            props.entrySet().forEach(entry -> {
-                var key = new ResourceLocation((String) entry.getKey());
-                var value = Integer.parseInt((String) entry.getValue());
-                ingredientCostOverrides.put(key, value);
-            });
-        }
-        catch (IOException e) {
-            CraftTracker.LOGGER.error("I/O exception when trying to load ingredient overrides file", e);
-        }
-    }
 
     /**
      * Looks up recipes that will output the specified item
@@ -74,8 +35,9 @@ public class RecipeUtil {
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: {}", itemId);
 
         var mgr = Minecraft.getInstance().level.getRecipeManager();
-        List<? extends Recipe<?>> recipes = mgr.getRecipes().stream()
-                .filter(r -> r.getId().equals(itemId))
+        RegistryAccess access = Minecraft.getInstance().level.registryAccess();
+        var recipes = mgr.getRecipes().stream()
+                .filter(r -> ForgeRegistries.ITEMS.getKey(r.getResultItem(access).getItem()).equals(itemId))
                 .toList();
 
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: recipes {}", recipes.stream().map(DebugUtil::printRecipe).toList());
@@ -123,145 +85,6 @@ public class RecipeUtil {
     }
 
     /**
-     * Calculates the "cost" of a recipe.
-     * <p/>
-     * Computes the cost of a recipe from:
-     *   - the sum of its ingredients' costs
-     *   - whether the recipe is "vanilla"
-     *   - whether the recipe is "simple" (crafted vs. smelted, etc.)
-     *
-     * @param recipe The recipe to calculate
-     * @return A integer value of the recipe's cost
-     */
-    public static int calculateRecipeCost(Recipe<?> recipe) {
-        CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", DebugUtil.printRecipe(recipe));
-
-        int cost = recipe.getIngredients().stream()
-                .map(RecipeUtil::calculateIngredientCost)
-                .reduce(0, Integer::sum);
-
-        // if the item's namespace is not 'minecraft:', increase the cost
-        if(!recipe.getId().getNamespace().equals("minecraft")) {
-            CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla recipe {} by {}",
-                    cost, DebugUtil.printRecipe(recipe), NON_VANILLA_COST_MULTIPLIER);
-            cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
-        }
-
-        if(!(recipe instanceof CraftingRecipe)) {
-            CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-crafting table recipe {} by {}",
-                    cost, DebugUtil.printRecipe(recipe), NON_CRAFTING_COST_MULTIPLIER);
-            cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
-        }
-
-        return cost;
-    }
-
-    /**
-     * Calculates the cost of an ingredient
-     * <p/>
-     * Computes the cost of an ingredient by looking at the constituent items (i.e., if the ingredient is a tag, looking
-     * at the cost of items that match the tag).
-     * An item's cost can be set in the override list.
-     * The ultimate cost of an ingredient will be the highest cost of the items matching its tag.
-     *
-     * @param ingredient The ingredient to calculate
-     * @return An integer value of the ingredient's cost
-     */
-    public static int calculateIngredientCost(Ingredient ingredient) {
-        CraftTracker.LOGGER.debug("RecipeUtil#getIngredientCost: {}", DebugUtil.printIngredient(ingredient));
-
-        for(ItemStack stack : ingredient.getItems()) {
-            // is the item in the override list?
-            var itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
-            var count = stack.getCount();
-
-            if(ingredientCostOverrides.containsKey(itemId)) {
-                CraftTracker.LOGGER.debug("found item {} in override list", itemId);
-                return ingredientCostOverrides.get(itemId) * count;
-            }
-
-            // it's not, so check its tags
-            int highestCost = 0;
-            for(TagKey<Item> tag : stack.getTags().toList()) {
-                var tagId = tag.location();
-                if(ingredientCostsByTag.containsKey(tagId)) {
-                    CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                    int cost = ingredientCostsByTag.get(tagId) * count;
-
-                    // if the item's namespace is not 'minecraft:', increase the cost
-                    if(!ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace(), "").equals("minecraft") &&
-                            !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
-                        CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla item {} by {}",
-                                cost, tagId, NON_VANILLA_COST_MULTIPLIER);
-                        cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
-                    }
-
-                    if(cost > highestCost) {
-                        highestCost = cost;
-                    }
-                }
-            }
-            if(highestCost > 0) {
-                return highestCost;
-            }
-        }
-
-        CraftTracker.LOGGER.debug("#calculateIngredientCost: fell through to default cost");
-        return 1;
-    }
-
-    /**
-     * Calculates the cost of an item stack
-     * <p/>
-     * The logic here is the same as for {@link #calculateIngredientCost(Ingredient)}, except that it applies to an
-     * {@link ItemStack}. See that method's documentation for details, with the caveat that this method will fall
-     * back on an item's rarity if all other calculations are insufficient.
-     *
-     * @param stack The stack to calculate
-     * @return An integer value of the item stack's cost
-     */
-    public static int calculateItemCost(ItemStack stack) {
-        CraftTracker.LOGGER.debug("#calculateItemCost: {}", DebugUtil.printItemStack(stack));
-
-        var itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
-        var count = stack.getCount();
-
-        if(ingredientCostOverrides.containsKey(itemId)) {
-            CraftTracker.LOGGER.debug("found item {} in override list", itemId);
-            return ingredientCostOverrides.get(itemId) * count;
-        }
-
-        // it's not, so check its tags
-        int highestCost = 0;
-        for(TagKey<Item> tag : stack.getTags().toList()) {
-            var tagId = tag.location();
-            if(ingredientCostsByTag.containsKey(tagId)) {
-                CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                int cost = ingredientCostsByTag.get(tagId) * count;
-
-                // if the item's namespace is not 'minecraft:', increase the cost
-                if(!ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace(), "").equals("minecraft") &&
-                        !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
-                    CraftTracker.LOGGER.debug("RecipeUtil#calculateItemCost: increasing cost ({}) of non-vanilla item {} by {}",
-                            cost, tagId, NON_VANILLA_COST_MULTIPLIER);
-                    cost = (int) (cost * NON_VANILLA_COST_MULTIPLIER);
-                }
-
-                if(cost > highestCost) {
-                    highestCost = (int) cost;
-                }
-            }
-        }
-        if(highestCost > 0) {
-            return highestCost;
-        }
-
-        CraftTracker.LOGGER.debug("#calculateIngredientCost: fell through to rarity");
-        var rarity = stack.getItem().getRarity(stack);
-        return Math.max(rarity.ordinal() * count, count);
-    }
-
-    /**
      * Given a list of recipes, return the one that is least expensive.
      *
      * @param recipes A list of recipes to examine
@@ -277,21 +100,26 @@ public class RecipeUtil {
         List<Tuple<? extends Recipe<?>, Integer>> recipeCosts = new ArrayList<>();
 
         for(Recipe<?> recipe : recipes) {
-            int cost = RecipeUtil.calculateRecipeCost(recipe);
-            Tuple<? extends Recipe<?>, Integer> tuple = new Tuple<>(recipe, cost);
+            CraftTracker.LOGGER.debug("recipe: {}", DebugUtil.printRecipe(recipe));
+            var cost = new RecipeCostCalculator(recipe).calculate();
+            CraftTracker.LOGGER.debug("cost: {}", cost);
+            var tuple = new Tuple<>(recipe, cost);
 
             recipeCosts.add(tuple);
         }
 
+        CraftTracker.LOGGER.debug("sorting recipes");
         recipeCosts.sort((rc1, rc2) -> {
-            int result = rc1.getB().compareTo(rc2.getB());
+            var result = rc1.getB().compareTo(rc2.getB());
             if(result == 0) {
                 return rc1.getA().getId().compareTo(rc2.getA().getId());
             }
             return result;
         });
 
-        return recipeCosts.getFirst().getA();
+        var itemToReturn = recipeCosts.get(0).getA();
+        CraftTracker.LOGGER.debug("returning top item from sorted recipes: {}", DebugUtil.printRecipe(itemToReturn));
+        return itemToReturn;
     }
 
     /**
@@ -304,18 +132,30 @@ public class RecipeUtil {
         CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", Arrays.stream(stacks).map(DebugUtil::printItemStack).toList());
 
         if(stacks.length == 1) {
+            CraftTracker.LOGGER.debug("only 1 item in the stack; returning that");
             return stacks[0];
         }
 
         List<Tuple<ItemStack, Integer>> itemCosts = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
-            var cost = RecipeUtil.calculateItemCost(stack);
+            CraftTracker.LOGGER.debug("stack: {}", DebugUtil.printItemStack(stack));
+            var cost = new ItemCostCalculator(stack).calculate();
+            CraftTracker.LOGGER.debug("cost: {}", cost);
             var tuple = new Tuple<>(stack, cost);
 
             itemCosts.add(tuple);
         }
 
+        CraftTracker.LOGGER.debug("Considering the costs of {} items:", itemCosts.size());
+        itemCosts.forEach(t -> {
+            var s = t.getA();
+            var c = t.getB();
+
+            CraftTracker.LOGGER.debug("item: {}, cost: {}", ForgeRegistries.ITEMS.getKey(s.getItem()), c);
+        });
+
+        CraftTracker.LOGGER.debug("sorting items");
         itemCosts.sort((rc1, rc2) -> {
             var result = rc1.getB().compareTo(rc2.getB());
             if(result == 0) {
@@ -325,7 +165,9 @@ public class RecipeUtil {
             return result;
         });
 
-        return itemCosts.get(0).getA();
+        var itemToReturn = itemCosts.get(0).getA();
+        CraftTracker.LOGGER.debug("returning top item from sorted items: {}", DebugUtil.printItemStack(itemToReturn));
+        return itemToReturn;
     }
 
 }

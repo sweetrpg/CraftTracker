@@ -1,6 +1,7 @@
 package com.sweetrpg.crafttracker.common.manager;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueItem;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
 import com.sweetrpg.crafttracker.common.storage.CraftingQueueStorage;
@@ -9,6 +10,7 @@ import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.RecipeUtil;
 import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
@@ -24,10 +26,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -40,8 +39,6 @@ import java.util.*;
 public class CraftingQueueManager {
 
     public static CraftingQueueManager INSTANCE = new CraftingQueueManager();
-
-    private static final int MAX_PROCESSING_LEVEL = 3;
 
     private Map<ResourceLocation, CraftingQueueProduct> endProducts = new HashMap<>();
     private Map<ResourceLocation, CraftingQueueItem> intermediateProducts = new HashMap<>();
@@ -66,13 +63,15 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("file: {}", file);
 
         try {
-            try (InputStream in = Files.newInputStream(file, StandardOpenOption.READ)) {
-                var data = NbtIo.readCompressed(in);
-                var products = CraftingQueueStorage.load(data);
-                products.forEach((k, v) -> v.setRecipes(RecipeUtil.getRecipesFor(k)));
-                this.endProducts = products;
-                this.computeAll();
-            }
+            InputStream in = Files.newInputStream(file, StandardOpenOption.READ);
+            var data = NbtIo.readCompressed(in);
+            var products = CraftingQueueStorage.load(data);
+            products.forEach((k, v) -> v.setRecipes(RecipeUtil.getRecipesFor(k)));
+            this.endProducts = products;
+            this.computeAll();
+        }
+        catch (NoSuchFileException e) {
+            // ignore
         }
         catch (IOException e) {
             CraftTracker.LOGGER.error("An error occurred while loading crafting queue [" + file + "]", e);
@@ -280,10 +279,6 @@ public class CraftingQueueManager {
     public void computeAll() {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeAll");
 
-//        this.intermediateProducts.clear();
-//        this.rawMaterials.clear();
-//        this.fuel.clear();
-
         ProcessingContext ctx = new ProcessingContext();
 
         this.endProducts.forEach((k, v) -> {
@@ -378,16 +373,15 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
 
         // if we're not at the root, and
-        //   1. the ingredients are in a different namespace than the holder, or
+        //   1. the ingredients are in a different namespace than the recipe, or
         //   2. the ingredients are in a different namespace than the result item
-//        var recipe = Minecraft.getInstance().level.getRecipeManager().getRecipeFor(holder.value().getType(), holder, Minecraft.getInstance().level).get().value();
-//        var recipeNamespace = ObjectUtils.getIfNull(ForgeRegistries.RECIPE_TYPES.getKey(holder.getType()), () -> new ResourceLocation("", "")).getNamespace();
         var recipeNamespace = ObjectUtils.defaultIfNull(recipe.getId().getNamespace(), "");
-        var itemNamespace = ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()).getItem()).getNamespace(), "");
+        RegistryAccess access = Minecraft.getInstance().level.registryAccess();
+        var itemNamespace = ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(recipe.getResultItem(access).getItem()).getNamespace(), "");
         if(depth > 0 &&
                 (!RecipeUtil.areIngredientsSameNamespace(recipeNamespace, ingredients) ||
                         !RecipeUtil.areIngredientsSameNamespace(itemNamespace, ingredients))) {
-            CraftTracker.LOGGER.debug("ingredients for sub-holder are not in the same namespace as the holder: {}",
+            CraftTracker.LOGGER.debug("ingredients for sub-recipe are not in the same namespace as the recipe: {}",
                     DebugUtil.printRecipe(recipe));
             return null;
         }
@@ -454,7 +448,7 @@ public class CraftingQueueManager {
             var subRecipes = RecipeUtil.getRecipesFor(id);
             CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes.stream().map(DebugUtil::printRecipe).toList());
 
-            if(subRecipes.isEmpty() || depth >= MAX_PROCESSING_LEVEL) {
+            if(subRecipes.isEmpty() || depth >= ConfigHandler.CLIENT.calculationDepth.get()) {
                 CraftTracker.LOGGER.debug("subRecipes is empty; ingredient {} is a raw material", ingredientId);
                 // no recipes for this ingredient, so it's a raw material
                 computedRecipe.rawMaterials.compute(id,
@@ -472,8 +466,8 @@ public class CraftingQueueManager {
                 var computedSubRecipe = this.computeRecipe(chosenSubRecipe, amountRequired * iterations, depth + 1);
                 CraftTracker.LOGGER.debug("computedSubRecipe: {}", computedSubRecipe);
                 if(computedSubRecipe == null) {
-                    CraftTracker.LOGGER.debug("computed sub-holder for {} returned is null; treat as raw material", DebugUtil.printRecipe(chosenSubRecipe));
-                    // if the sub-holder comes back null, then treat the result item as a raw material
+                    CraftTracker.LOGGER.debug("computed sub-recipe for {} returned is null; treat as raw material", DebugUtil.printRecipe(chosenSubRecipe));
+                    // if the sub-recipe comes back null, then treat the result item as a raw material
                     computedRecipe.rawMaterials.compute(id,
                             (itemId, quantity) ->
                                     ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId))
@@ -531,15 +525,7 @@ public class CraftingQueueManager {
 
         @Override
         public String toString() {
-            return MessageFormat.format("""
-                            ProcessingContext[
-                              intermediateProducts={0}
-                              rawMaterials={1}
-                              fuel={2}
-                              handledItems={3}
-                              computedRecipes={4}
-                            ]
-                            """,
+            return MessageFormat.format("ProcessingContext[ intermediateProducts={0}, rawMaterials={1}, fuel={2}, handledItems={3}, computedRecipes={4} ]",
                     intermediateProducts, rawMaterials, fuel, handledItems, computedRecipes);
         }
     }
@@ -583,13 +569,7 @@ public class CraftingQueueManager {
 
         @Override
         public String toString() {
-            return MessageFormat.format("""
-                            ComputedRecipeItem[
-                              itemId={0}
-                              amount={1}
-                              tag={2}
-                            ]
-                            """,
+            return MessageFormat.format("ComputedRecipeItem[ itemId={0}, amount={1}, tag={2} ]",
                     itemId, amount, tag);
         }
     }
@@ -615,28 +595,14 @@ public class CraftingQueueManager {
 
         @Override
         public String toString() {
-            return MessageFormat.format("""
-                            ComputedRecipe[
-                              recipeId={0}
-                              intermediateProducts={1}
-                              rawMaterials={2}
-                              fuel={3}
-                            ]
-                            """,
+            return MessageFormat.format("ComputedRecipe[ recipeId={0}, intermediateProducts={1}, rawMaterials={2}, fuel={3} ]",
                     recipeId, intermediateProducts, rawMaterials, fuel);
         }
     }
 
     @Override
     public String toString() {
-        return MessageFormat.format("""                
-                        CraftingQueueManager[
-                          endProducts={0}
-                          intermediateProducts={1}
-                          rawMaterials={2}
-                          fuel={3}
-                        ]
-                        """,
+        return MessageFormat.format(" CraftingQueueManager[ endProducts={0}, intermediateProducts={1}, rawMaterials={2}, fuel={3} ]",
                 endProducts, intermediateProducts, rawMaterials, fuel);
     }
 }

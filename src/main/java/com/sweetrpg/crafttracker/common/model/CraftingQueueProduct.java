@@ -64,14 +64,7 @@ public class CraftingQueueProduct {
 
     @Override
     public String toString() {
-        return MessageFormat.format("""
-                        CraftingQueueProduct[
-                          itemId={0}
-                          recipes={1}
-                          iterations={2}
-                          index={3}
-                        ]
-                        """,
+        return MessageFormat.format("CraftingQueueProduct[ itemId={0}, recipes={1}, iterations={2}, index={3} ]",
                 productId, recipes, iterations, index);
     }
 }
