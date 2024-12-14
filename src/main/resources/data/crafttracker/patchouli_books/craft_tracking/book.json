@@ -1,0 +1,10 @@
+{
+  "name": "Tracking Crafts",
+  "landing_text": "This volume should help you in making the best use of Craft Tracker.$(br2)There is information in here on how to use the crafting queue and shopping list, and how to configure the mod.",
+  "version": 1,
+  "show_progress": false,
+  "creative_tab": "crafttracker",
+  "text_overflow_mode": "resize",
+  "pause_game": true,
+  "model": "patchouli:book_blue"
+}
