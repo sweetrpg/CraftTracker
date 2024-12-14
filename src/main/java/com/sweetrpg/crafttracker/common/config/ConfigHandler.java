@@ -4,10 +4,13 @@ import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.lib.Costs;
 import com.sweetrpg.crafttracker.common.lib.Multipliers;
+import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
@@ -34,14 +37,27 @@ public class ConfigHandler {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, configClientSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, configCommonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, configServerSpec);
+
+        modEventBus.addListener(ConfigHandler::configEventHandler);
+    }
+
+    public static void configEventHandler(ModConfigEvent event) {
+        CraftTracker.LOGGER.debug("#configEventHandler: {}", event);
+
+        if(event instanceof ModConfigEvent.Reloading &&
+                ((event.getConfig().getType() == ModConfig.Type.CLIENT) ||
+                        (event.getConfig().getType() == ModConfig.Type.COMMON)) &&
+                Minecraft.getInstance().level != null) {
+            CraftTracker.LOGGER.debug("config is reloading");
+
+            CraftingQueueManager.INSTANCE.computeAll();
+        }
     }
 
     public static class ClientConfig {
 
         // General
         public ForgeConfigSpec.IntValue calculationDepth;
-//        public ForgeConfigSpec.DoubleValue NON_VANILLA_COST_MULTIPLIER;
-//        public ForgeConfigSpec.DoubleValue NON_CRAFTING_COST_MULTIPLIER;
 
         // Craft Queue
         public ForgeConfigSpec.BooleanValue craftQueueOverlayHideEmpty;
@@ -62,8 +78,6 @@ public class ConfigHandler {
                 builder.push("General");
 
                 calculationDepth = builder.comment("Determines how far down the tree the queue calculation will go before it stops").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CALC_DEPTH).defineInRange("calculation_depth", 3, 1, 5);
-//                NON_VANILLA_COST_MULTIPLIER = builder.comment("Sets the cost multiplier for non-vanilla recipes").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_NON_VANILLA_COST_MULTIPLIER).defineInRange("non_vanilla_cost_multiplier", 1.2f, 1, 1000);
-//                NON_CRAFTING_COST_MULTIPLIER = builder.comment("Sets the cost multiplier for non-crafting table recipes").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_NON_CRAFTING_COST_MULTIPLIER).defineInRange("non_crafting_cost_multiplier", 1.25f, 1, 1000);
 
                 builder.pop();
             }
