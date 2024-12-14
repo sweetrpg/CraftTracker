@@ -5,6 +5,7 @@ import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.util.DebugUtil;
 import com.sweetrpg.crafttracker.common.util.RecipeUtil;
 import com.sweetrpg.crafttracker.common.util.Util;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -51,29 +52,39 @@ public class ItemCostCalculator implements ICostCalculator {
         int highestCost = 0;
         for(TagKey<Item> tag : stack.getTags().toList()) {
             var tagId = tag.location();
+            CraftTracker.LOGGER.debug("looking at tagId: {}", tagId);
+
             if(ConfigHandler.COMMON.tagEntries.containsKey(tagId)) {
                 CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                int cost = ConfigHandler.COMMON.tagEntries.get(tagId).get() * count;
 
-                // if the item's namespace is not 'minecraft:', increase the cost
-                if(!ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), Util.getResource("", "")).getNamespace().equals("minecraft") &&
-                        !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
-                    var multiplier = ConfigHandler.CLIENT.NON_VANILLA_COST_MULTIPLIER.get();
-                    CraftTracker.LOGGER.debug("RecipeUtil#calculateItemCost: increasing cost ({}) of non-vanilla item {} by {}",
-                            cost, tagId, multiplier);
-                    cost = (int) (cost * multiplier);
+                int cost = ConfigHandler.COMMON.tagEntries.get(tagId).get() * count;
+                CraftTracker.LOGGER.debug("cost of tag {} is {}", tagId, cost);
+
+                var tagNamespace = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation("", "")).getNamespace();
+                CraftTracker.LOGGER.debug("tagNamespace: {}", tagNamespace);
+                var multiplier = ConfigHandler.COMMON.namespaceEntries.get(tagNamespace);
+                CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
+
+                if(multiplier != null) {
+                    var newCost =(int) (cost * multiplier.get());
+                    CraftTracker.LOGGER.debug("#calculate: increasing cost of tag {} in namespace {} by {}: from {} to {}",
+                            tagId, tagNamespace, multiplier.get(),
+                            cost, newCost);
+                    cost = newCost;
                 }
 
                 if(cost > highestCost) {
+                    CraftTracker.LOGGER.trace("replacing highestCost with new value: was {}, is {}", highestCost, cost);
                     highestCost = (int) cost;
                 }
             }
         }
         if(highestCost > 0) {
+            CraftTracker.LOGGER.debug("returning highest cost: {}", highestCost);
             return highestCost;
         }
 
-        CraftTracker.LOGGER.debug("#calculateIngredientCost: fell through to rarity");
+        CraftTracker.LOGGER.debug("#calculate: fell through to rarity");
         var rarity = stack.getItem().getRarity(stack);
         return Math.max(rarity.ordinal() * count, count);
     }

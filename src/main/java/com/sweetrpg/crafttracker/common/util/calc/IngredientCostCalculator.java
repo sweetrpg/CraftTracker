@@ -46,9 +46,11 @@ public class IngredientCostCalculator implements ICostCalculator {
      */
     @Override
     public int calculate() {
-        CraftTracker.LOGGER.debug("RecipeUtil#getIngredientCost: {}", DebugUtil.printIngredient(ingredient));
+        CraftTracker.LOGGER.debug("#getIngredientCost: {}", DebugUtil.printIngredient(ingredient));
 
         for(ItemStack stack : ingredient.getItems()) {
+            CraftTracker.LOGGER.debug("stack: {}", DebugUtil.printItemStack(stack));
+
             // is the item in the override list?
             var itemId = stack.getItem().getRegistryName();
             var count = stack.getCount();
@@ -62,25 +64,36 @@ public class IngredientCostCalculator implements ICostCalculator {
             int highestCost = 0;
             for(TagKey<Item> tag : stack.getTags().toList()) {
                 var tagId = tag.location();
-                if(ConfigHandler.COMMON.tagEntries.containsKey(tagId)) {
-                    CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
-                    int cost = ConfigHandler.COMMON.tagEntries.get(tagId).get() * count;
+                CraftTracker.LOGGER.debug("looking at tagId: {}", tagId);
 
-                    // if the item's namespace is not 'minecraft:', increase the cost
-                    if(!ObjectUtils.defaultIfNull(stack.getItem().getRegistryName().getNamespace(), "").equals("minecraft") &&
-                            !ObjectUtils.defaultIfNull(tagId.getNamespace(), "").equals("minecraft")) {
-                        var multiplier = ConfigHandler.CLIENT.NON_VANILLA_COST_MULTIPLIER.get();
-                        CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla item {} by {}",
-                                cost, tagId, multiplier);
-                        cost = (int) (cost * multiplier);
+                if(ConfigHandler.COMMON.tagEntries.containsKey(tagId)) {
+                    CraftTracker.LOGGER.debug("found tag {} in tag list", tagId);
+
+                    int cost = ConfigHandler.COMMON.tagEntries.get(tagId).get() * count;
+                    CraftTracker.LOGGER.debug("cost of tag {} is {}", tagId, cost);
+
+                    // adjust the cost by the namespace's multiplier
+                    var tagNamespace = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation("", "")).getNamespace();
+                    CraftTracker.LOGGER.debug("tagNamespace: {}", tagNamespace);
+                    var multiplier = ConfigHandler.COMMON.namespaceEntries.get(tagNamespace);
+                    CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
+
+                    if(multiplier != null) {
+                        var newCost =(int) (cost * multiplier.get());
+                        CraftTracker.LOGGER.debug("#calculate: increasing cost of tag {} in namespace {} by {}: from {} to {}",
+                                tagId, tagNamespace, multiplier.get(),
+                                cost, newCost);
+                        cost = newCost;
                     }
 
                     if(cost > highestCost) {
+                        CraftTracker.LOGGER.trace("replacing highestCost with new value: was {}, is {}", highestCost, cost);
                         highestCost = cost;
                     }
                 }
             }
             if(highestCost > 0) {
+                CraftTracker.LOGGER.debug("returning highest cost: {}", highestCost);
                 return highestCost;
             }
         }

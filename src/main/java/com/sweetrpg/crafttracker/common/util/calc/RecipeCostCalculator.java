@@ -3,8 +3,10 @@ package com.sweetrpg.crafttracker.common.util.calc;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.util.DebugUtil;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * Calculates the "cost" of a recipe.
@@ -34,28 +36,38 @@ public class RecipeCostCalculator implements ICostCalculator {
      */
     @Override
     public int calculate() {
-        CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: {}", DebugUtil.printRecipe(recipe));
+        CraftTracker.LOGGER.debug("#calculate: {}", DebugUtil.printRecipe(recipe));
 
         int cost = recipe.getIngredients().stream()
                 .map(IngredientCostCalculator::new)
                 .map(IngredientCostCalculator::calculate)
                 .reduce(0, Integer::sum);
+        CraftTracker.LOGGER.debug("summed cost of items: {}", cost);
 
-        // if the item's namespace is not 'minecraft:', increase the cost
-        if(!recipe.getId().getNamespace().equals("minecraft")) {
-            var multiplier = ConfigHandler.CLIENT.NON_VANILLA_COST_MULTIPLIER.get();
-            CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-vanilla recipe {} by {}",
-                    cost, DebugUtil.printRecipe(recipe), multiplier);
-            cost = (int) (cost * multiplier);
+        // adjust the cost by the namespace's multiplier
+        var recipeNamespace = ObjectUtils.defaultIfNull(recipe.getId(), new ResourceLocation("", "")).getNamespace();
+        CraftTracker.LOGGER.debug("recipeNamespace: {}", recipeNamespace);
+        var multiplier = ConfigHandler.COMMON.namespaceEntries.get(recipeNamespace);
+        CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
+
+        if(multiplier != null) {
+            var newCost =(int) (cost * multiplier.get());
+            CraftTracker.LOGGER.debug("#calculate: increasing cost of recipe {} in namespace {} by {}: from {} to {}",
+                    recipe.getId(), recipeNamespace, multiplier.get(),
+                    cost, newCost);
+            cost = newCost;
         }
 
-        CraftTracker.LOGGER.debug("recipe type: {}", recipe.getType());
+        var recipeType = recipe.getType();
+        CraftTracker.LOGGER.debug("recipe type: {}", recipeType);
 
-        if(!(recipe instanceof CraftingRecipe)) {
-            var multiplier = ConfigHandler.CLIENT.NON_CRAFTING_COST_MULTIPLIER.get();
-            CraftTracker.LOGGER.debug("RecipeUtil#calculateRecipeCost: increasing cost ({}) of non-crafting table recipe {} by {}",
-                    cost, DebugUtil.printRecipe(recipe), multiplier);
-            cost = (int) (cost * multiplier);
+        var typeMultiplier = ConfigHandler.COMMON.recipeTypeEntries.get(recipeType.toString());
+        if(typeMultiplier != null) {
+            var newCost =(int) (cost * typeMultiplier.get());
+            CraftTracker.LOGGER.debug("#calculate: increasing cost of recipe type {} by {}: from {} to {}",
+                    recipeType, typeMultiplier.get(),
+                    cost, newCost);
+            cost = newCost;
         }
 
         CraftTracker.LOGGER.debug("returning cost: {}", cost);

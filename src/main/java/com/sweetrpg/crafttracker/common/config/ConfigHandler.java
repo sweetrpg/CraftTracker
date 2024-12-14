@@ -2,6 +2,8 @@ package com.sweetrpg.crafttracker.common.config;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.lib.Costs;
+import com.sweetrpg.crafttracker.common.lib.Multipliers;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -16,55 +18,52 @@ public class ConfigHandler {
     public static ClientConfig CLIENT;
     public static CommonConfig COMMON;
     public static ServerConfig SERVER;
-    private static ForgeConfigSpec CONFIG_CLIENT_SPEC;
-    private static ForgeConfigSpec CONFIG_COMMON_SPEC;
-    private static ForgeConfigSpec CONFIG_SERVER_SPEC;
 
     public static void init(IEventBus modEventBus) {
         Pair<ClientConfig, ForgeConfigSpec> clientPair = new ForgeConfigSpec.Builder().configure(ClientConfig::new);
-        CONFIG_CLIENT_SPEC = clientPair.getRight();
+        ForgeConfigSpec configClientSpec = clientPair.getRight();
         CLIENT = clientPair.getLeft();
         Pair<CommonConfig, ForgeConfigSpec> commonPair = new ForgeConfigSpec.Builder().configure(CommonConfig::new);
-        CONFIG_COMMON_SPEC = commonPair.getRight();
+        ForgeConfigSpec configCommonSpec = commonPair.getRight();
         COMMON = commonPair.getLeft();
         Pair<ServerConfig, ForgeConfigSpec> serverPair = new ForgeConfigSpec.Builder().configure(ServerConfig::new);
-        CONFIG_SERVER_SPEC = serverPair.getRight();
+        ForgeConfigSpec configServerSpec = serverPair.getRight();
         SERVER = serverPair.getLeft();
 
         CraftTracker.LOGGER.debug("register configs");
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CONFIG_CLIENT_SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CONFIG_COMMON_SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, CONFIG_SERVER_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, configClientSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, configCommonSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, configServerSpec);
     }
 
     public static class ClientConfig {
 
         // General
-        public ForgeConfigSpec.IntValue CALCULATION_DEPTH;
-        public ForgeConfigSpec.DoubleValue NON_VANILLA_COST_MULTIPLIER;
-        public ForgeConfigSpec.DoubleValue NON_CRAFTING_COST_MULTIPLIER;
+        public ForgeConfigSpec.IntValue calculationDepth;
+//        public ForgeConfigSpec.DoubleValue NON_VANILLA_COST_MULTIPLIER;
+//        public ForgeConfigSpec.DoubleValue NON_CRAFTING_COST_MULTIPLIER;
 
         // Craft Queue
-        public ForgeConfigSpec.BooleanValue CRAFT_QUEUE_OVERLAY_HIDE_EMPTY;
-        public ForgeConfigSpec.IntValue CRAFT_QUEUE_OVERLAY_X;
-        public ForgeConfigSpec.IntValue CRAFT_QUEUE_OVERLAY_Y;
-        public ForgeConfigSpec.IntValue CRAFT_QUEUE_OVERLAY_WIDTH;
-        public ForgeConfigSpec.IntValue CRAFT_QUEUE_OVERLAY_HEIGHT;
+        public ForgeConfigSpec.BooleanValue craftQueueOverlayHideEmpty;
+        public ForgeConfigSpec.IntValue craftQueueOverlayX;
+        public ForgeConfigSpec.IntValue craftQueueOverlayY;
+        public ForgeConfigSpec.IntValue craftQueueOverlayWidth;
+        public ForgeConfigSpec.IntValue craftQueueOverlayHeight;
 
         // Shopping List
-        public ForgeConfigSpec.BooleanValue SHOPPING_LIST_OVERLAY_HIDE_EMPTY;
-        public ForgeConfigSpec.IntValue SHOPPING_LIST_OVERLAY_X;
-        public ForgeConfigSpec.IntValue SHOPPING_LIST_OVERLAY_Y;
-        public ForgeConfigSpec.IntValue SHOPPING_LIST_OVERLAY_WIDTH;
-        public ForgeConfigSpec.IntValue SHOPPING_LIST_OVERLAY_HEIGHT;
+        public ForgeConfigSpec.BooleanValue shoppingListOverlayHideEmpty;
+        public ForgeConfigSpec.IntValue shoppingListOverlayX;
+        public ForgeConfigSpec.IntValue shoppingListOverlayY;
+        public ForgeConfigSpec.IntValue shoppingListOverlayWidth;
+        public ForgeConfigSpec.IntValue shoppingListOverlayHeight;
 
         public ClientConfig(ForgeConfigSpec.Builder builder) {
             {
                 builder.push("General");
 
-                CALCULATION_DEPTH = builder.comment("Determines how far down the tree the queue calculation will go before it stops").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CALC_DEPTH).defineInRange("calculation_depth", 3, 1, 5);
-                NON_VANILLA_COST_MULTIPLIER = builder.comment("Sets the cost multiplier for non-vanilla recipes").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_NON_VANILLA_COST_MULTIPLIER).defineInRange("non_vanilla_cost_multiplier", 1.2f, 1, 1000);
-                NON_CRAFTING_COST_MULTIPLIER = builder.comment("Sets the cost multiplier for non-crafting table recipes").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_NON_CRAFTING_COST_MULTIPLIER).defineInRange("non_crafting_cost_multiplier", 1.25f, 1, 1000);
+                calculationDepth = builder.comment("Determines how far down the tree the queue calculation will go before it stops").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CALC_DEPTH).defineInRange("calculation_depth", 3, 1, 5);
+//                NON_VANILLA_COST_MULTIPLIER = builder.comment("Sets the cost multiplier for non-vanilla recipes").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_NON_VANILLA_COST_MULTIPLIER).defineInRange("non_vanilla_cost_multiplier", 1.2f, 1, 1000);
+//                NON_CRAFTING_COST_MULTIPLIER = builder.comment("Sets the cost multiplier for non-crafting table recipes").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_NON_CRAFTING_COST_MULTIPLIER).defineInRange("non_crafting_cost_multiplier", 1.25f, 1, 1000);
 
                 builder.pop();
             }
@@ -72,11 +71,11 @@ public class ConfigHandler {
             {
                 builder.push("CraftQueue");
 
-                CRAFT_QUEUE_OVERLAY_HIDE_EMPTY = builder.comment("Sets whether the craft queue overlay should be displayed only when it has items in it.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY).define("craft_queue_hide_empty", true);
-                CRAFT_QUEUE_OVERLAY_X = builder.comment("Sets the X screen location for the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_X).defineInRange("craft_queue_x", 10, -1000, 10000);
-                CRAFT_QUEUE_OVERLAY_Y = builder.comment("Sets the Y screen location for the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y).defineInRange("craft_queue_y", 60, -1000, 10000);
-                CRAFT_QUEUE_OVERLAY_WIDTH = builder.comment("Sets the width of the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH).defineInRange("craft_queue_width", 300, 100, 10000);
-                CRAFT_QUEUE_OVERLAY_HEIGHT = builder.comment("Sets the height of the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HEIGHT).defineInRange("craft_queue_height", 500, 100, 10000);
+                craftQueueOverlayHideEmpty = builder.comment("Sets whether the craft queue overlay should be displayed only when it has items in it.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY).define("craft_queue_hide_empty", true);
+                craftQueueOverlayX = builder.comment("Sets the X screen location for the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_X).defineInRange("craft_queue_x", 10, -1000, 10000);
+                craftQueueOverlayY = builder.comment("Sets the Y screen location for the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y).defineInRange("craft_queue_y", 60, -1000, 10000);
+                craftQueueOverlayWidth = builder.comment("Sets the width of the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH).defineInRange("craft_queue_width", 300, 100, 10000);
+                craftQueueOverlayHeight = builder.comment("Sets the height of the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HEIGHT).defineInRange("craft_queue_height", 500, 100, 10000);
 
                 builder.pop();
             }
@@ -84,11 +83,11 @@ public class ConfigHandler {
             {
                 builder.push("ShoppingList");
 
-                SHOPPING_LIST_OVERLAY_HIDE_EMPTY = builder.comment("Sets whether the 'shopping list' overlay should be displayed only when it has items in it.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY).define("shopping_list_hide_empty", true);
-                SHOPPING_LIST_OVERLAY_X = builder.comment("Sets the X screen location for the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_X).defineInRange("shopping_list_x", -10, -1000, 10000);
-                SHOPPING_LIST_OVERLAY_Y = builder.comment("Sets the Y screen location for the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_Y).defineInRange("shopping_list_y", 60, -1000, 10000);
-                SHOPPING_LIST_OVERLAY_WIDTH = builder.comment("Sets the width of the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_WIDTH).defineInRange("shopping_list_width", 300, 100, 10000);
-                SHOPPING_LIST_OVERLAY_HEIGHT = builder.comment("Sets the height of the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT).defineInRange("shopping_list_height", 500, 100, 10000);
+                shoppingListOverlayHideEmpty = builder.comment("Sets whether the 'shopping list' overlay should be displayed only when it has items in it.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY).define("shopping_list_hide_empty", true);
+                shoppingListOverlayX = builder.comment("Sets the X screen location for the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_X).defineInRange("shopping_list_x", -10, -1000, 10000);
+                shoppingListOverlayY = builder.comment("Sets the Y screen location for the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_Y).defineInRange("shopping_list_y", 60, -1000, 10000);
+                shoppingListOverlayWidth = builder.comment("Sets the width of the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_WIDTH).defineInRange("shopping_list_width", 300, 100, 10000);
+                shoppingListOverlayHeight = builder.comment("Sets the height of the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT).defineInRange("shopping_list_height", 500, 100, 10000);
 
                 builder.pop();
             }
