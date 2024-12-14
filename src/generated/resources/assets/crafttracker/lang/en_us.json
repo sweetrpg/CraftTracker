@@ -43,11 +43,11 @@
   "crafttracker.screen.shopping_list.empty_message": "The shopping list is empty.",
   "crafttracker.screen.shopping_list.help_message": "To clear the list:",
   "crafttracker.screen.shopping_list.title": "Shopping List",
-  "key.addToQueue": "Add to Queue",
   "key.categories.crafttracker": "Craft Tracker",
-  "key.clearShoppingList": "Clear Shopping List",
-  "key.openQueueManager": "Open Queue Manager",
-  "key.populateShoppingList": "Populate Shopping List",
-  "key.toggleCraftQueue": "Toggle Craft Queue",
-  "key.toggleShoppingList": "Toggle Shopping List"
+  "key.crafttracker.addToQueue": "Add to Queue",
+  "key.crafttracker.clearShoppingList": "Clear Shopping List",
+  "key.crafttracker.openQueueManager": "Open Queue Manager",
+  "key.crafttracker.populateShoppingList": "Populate Shopping List",
+  "key.crafttracker.toggleCraftQueue": "Craft Queue Overlay Mode",
+  "key.crafttracker.toggleShoppingList": "Shopping List Overlay Mode"
 }

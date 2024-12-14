@@ -1,0 +1,10 @@
+{
+  "name": "Calculating Items",
+  "icon": "minecraft:diamond",
+  "category": "crafttracker:queue",
+  "pages": [
+    "When an item is added to the crafting queue, Craft Tracker examines the ingredients required to make the item.$(br2)If an ingredient is also crafted, Craft Tracker also look at what is required to make that item, ultimately compiling a list of \"intermediate\" crafted items and raw materials.$(br2)If there are multiple ways to make an item, Craft Tracker calculates the \"cost\" of that method using a variety of factors, and chooses the \"cheapest\" one.",
+    "Some of the things that factor into the \"cost\" of a recipe and its constituent items are:$(br2)$(li)The tags associated with the item$(li)A specific overridden cost value for the item$(li)Multipliers for the namespace of the recipe or ingredient$(li)Multipliers for the type of recipe",
+    "Most of the factors affecting cost can be $(l:config)configured$(/l)."
+  ]
+}

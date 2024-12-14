@@ -1,0 +1,21 @@
+{
+  "name": "Craft Queue Overlay",
+  "icon": "minecraft:iron_pickaxe",
+  "category": "crafttracker:config",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "This section covers some configuration for displaying the crafting queue overlay."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Size and Position",
+      "text": "These values will determine where the overlay is positioned on the screen, and how big it will be.$(br2)Note that a negative value for X or Y will cause the overlay to be positioned relative to the right or bottom edge of the screen."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Visibility",
+      "text": "This value determines whether the overlay will appear on the screen if it is empty."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Multipliers",
+  "icon": "minecraft:raw_iron",
+  "category": "crafttracker:config",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "This section covers changes you can make that affect how Craft Tracker determines the best recipe for making something in the queue.$(br2)Configuration values in this section are decimal numbers that determine how the cost of a recipe is adjusted. The value is multiplied against the calculated cost as a percentage, so a value less than 1.0 will lower the cost of a recipe, and higher than 1.0 will raise the cost."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Namespaces",
+      "text": "This is a set of key/value mappings for recipe namespaces, i.e., mod IDs.$(br2)The key is a mod ID, and will affect any recipe that is provided by that mod."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Recipe Types",
+      "text": "This is a set of key/value mappings for recipe types.$(br2)The key is the mod ID and type ID of the recipe type."
+    }
+  ]
+}
