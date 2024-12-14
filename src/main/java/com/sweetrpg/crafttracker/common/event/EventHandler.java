@@ -12,7 +12,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemSmeltedEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -22,18 +21,6 @@ import static com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandD
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID)
 public class EventHandler {
-
-//    @SubscribeEvent
-//    public void onEntitySpawn(final EntityJoinWorldEvent event) {
-//        CraftTracker.LOGGER.trace("EventHandler#onEntitySpawn: {}", event);
-//
-//    }
-
-    @SubscribeEvent
-    public void playerLoggedIn(final PlayerLoggedInEvent event) {
-        CraftTracker.LOGGER.debug("EventHandler#playerLoggedIn: {}", event);
-
-    }
 
     @SubscribeEvent
     public void onItemCrafted(final ItemCraftedEvent event) {

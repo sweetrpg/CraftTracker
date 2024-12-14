@@ -16,6 +16,6 @@ public class AdvancementUtil {
         if(ModTriggers.ENTRIES.get(ct.getCriterion().getPath()) instanceof SimpleTrigger trigger) {
             trigger.trigger(player);
         }
-
     }
+
 }

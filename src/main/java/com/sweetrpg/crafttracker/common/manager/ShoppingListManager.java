@@ -15,6 +15,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -196,6 +197,12 @@ public class ShoppingListManager {
 
         public void setQuantity(int quantity) {
             this.quantity = quantity;
+        }
+
+        @Override
+        public String toString() {
+            return MessageFormat.format("ListItem[ itemId={0}, quantity={1} ]",
+                    itemId, quantity);
         }
     }
 }
