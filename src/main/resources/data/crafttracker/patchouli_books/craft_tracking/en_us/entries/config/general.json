@@ -1,0 +1,16 @@
+{
+  "name": "General Configuration",
+  "icon": "minecraft:diamond_pickaxe",
+  "category": "crafttracker:config",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "These are general configuration options for the mod."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "calculation_depth",
+      "text": "This configuration value lets you determine how far Craft Tracker will \"walk\" down the crafting tree when trying to determine what needs to be added to the intermediate crafting and raw materials lists.$(br2)This value is a safety measure, as there are many possibilities for getting into an endless loop."
+    }
+  ]
+}
