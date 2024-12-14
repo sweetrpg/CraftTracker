@@ -51,7 +51,7 @@ jobs:
           git add .release-info/${branch_version}/RELEASE_HASH
           git commit -m "Update ${branch_version} RELEASE_HASH"
           version=$(cat .release-info/${branch_version}/VERSION)
-          git tag "release-${version}"
+          git tag "release-${branch_version}-${version}"
 
           echo "# $version" > CHANGELOG/${branch_version}/${version}.md
           echo "" >> CHANGELOG/${branch_version}/${version}.md
