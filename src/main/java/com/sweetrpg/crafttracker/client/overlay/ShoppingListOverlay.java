@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -56,23 +55,23 @@ public class ShoppingListOverlay {
                 return;
 
             case DYNAMIC:
-                if(ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_HIDE_EMPTY.get() &&
+                if(ConfigHandler.CLIENT.shoppingListOverlayHideEmpty.get() &&
                         items.isEmpty()) {
                     return;
                 }
                 break;
         }
 
-        var x = ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_X.get();
+        var x = ConfigHandler.CLIENT.shoppingListOverlayX.get();
         if(x < 0) {
-            x = width - (ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_WIDTH.get() + Math.abs(x));
+            x = width - (ConfigHandler.CLIENT.shoppingListOverlayWidth.get() + Math.abs(x));
         }
-        var y = ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_Y.get();
+        var y = ConfigHandler.CLIENT.shoppingListOverlayY.get();
         if(x < 0) {
-            y = width - (ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_HEIGHT.get() + Math.abs(y));
+            y = width - (ConfigHandler.CLIENT.shoppingListOverlayHeight.get() + Math.abs(y));
         }
-        var olWidth = Math.min((x + ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_WIDTH.get()), width - 10);
-        var olHeight = Math.min((y + ConfigHandler.CLIENT.SHOPPING_LIST_OVERLAY_HEIGHT.get()), height - 10);
+        var olWidth = Math.min((x + ConfigHandler.CLIENT.shoppingListOverlayWidth.get()), width - 10);
+        var olHeight = Math.min((y + ConfigHandler.CLIENT.shoppingListOverlayHeight.get()), height - 10);
         var backgroundColor = 0x5f5f5f5f; // TODO: get from config?
         var borderColor = 0x1f1f1f1f; // TODO: get from config?
 

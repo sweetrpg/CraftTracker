@@ -56,6 +56,8 @@ public class Constants {
     public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW = "crafttracker.msg.shopping_list_overlay_mode.show";
     public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC = "crafttracker.msg.shopping_list_overlay_mode.dynamic";
 
+    // Config
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_CALC_DEPTH = "crafttracker.config.client.calculation_depth";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_X = "crafttracker.config.client.craft_queue_x";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y = "crafttracker.config.client.craft_queue_y";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH = "crafttracker.config.client.craft_queue_width";

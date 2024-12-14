@@ -1,1 +1,1 @@
-- `[NEW]` Release for 1.19!
+- `[CHG]` Release to catch up with 1.18 changes

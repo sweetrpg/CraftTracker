@@ -7,13 +7,13 @@ import com.sweetrpg.crafttracker.common.addon.AddonManager;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.event.EventHandler;
 import com.sweetrpg.crafttracker.common.lib.Constants;
-import com.sweetrpg.crafttracker.common.registry.*;
 import com.sweetrpg.crafttracker.data.CTAdvancementProvider;
 import com.sweetrpg.crafttracker.data.CTLangProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -22,7 +22,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
@@ -49,15 +48,6 @@ public class CraftTracker {
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(CommonSetup::init);
         modEventBus.addListener(this::interModProcess);
-
-        // Registries
-        ModBlocks.BLOCKS.register(modEventBus);
-        ModBlockEntityTypes.TILE_ENTITIES.register(modEventBus);
-        ModItems.ITEMS.register(modEventBus);
-//        ModSerializers.SERIALIZERS.register(modEventBus);
-        ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
-
-        modEventBus.addListener(ModRegistries::newRegistry);
 
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
         forgeEventBus.addListener(this::serverStarting);

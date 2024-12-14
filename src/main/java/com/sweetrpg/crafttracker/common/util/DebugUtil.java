@@ -23,26 +23,24 @@ public class DebugUtil {
     public static String printIngredient(Ingredient ingredient) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Ingredient{\n");
+        builder.append("Ingredient{ ");
 
-        builder.append("\titems=[\n");
+        builder.append("items=[ ");
         Arrays.stream(ingredient.getItems())
                 .forEach(i -> {
-                    builder.append("\t\tregistryName=");
+                    builder.append("registryName=");
                     builder.append(ForgeRegistries.ITEMS.getKey(i.getItem()));
-                    builder.append("\n");
 
-                    builder.append("\t\ttags=[");
+                    builder.append(", tags=[");
                     builder.append(String.join(",", i.getTags().map(TagKey::toString).toList()));
-                    builder.append("]\n");
+                    builder.append("]");
 
-                    builder.append("\t\tcount=");
+                    builder.append(", count=");
                     builder.append(i.getCount());
-                    builder.append("\n");
                 });
-        builder.append("\t]\n");
+        builder.append(" ]");
 
-        builder.append("}");
+        builder.append(" }");
 
         return builder.toString();
     }
@@ -56,21 +54,19 @@ public class DebugUtil {
     public static String printItemStack(ItemStack itemStack) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("ItemStack{\n");
+        builder.append("ItemStack{ ");
 
-        builder.append("\tregistryName=");
+        builder.append("registryName=");
         builder.append(ForgeRegistries.ITEMS.getKey(itemStack.getItem()));
-        builder.append("\n");
 
-        builder.append("\tcount=");
+        builder.append(", count=");
         builder.append(itemStack.getCount());
-        builder.append("\n");
 
-        builder.append("\ttags=[");
+        builder.append(", tags=[");
         builder.append(String.join(",", itemStack.getTags().map(TagKey::toString).toList()));
-        builder.append("]\n");
+        builder.append("]");
 
-        builder.append("}");
+        builder.append(" }");
 
         return builder.toString();
     }
@@ -84,12 +80,12 @@ public class DebugUtil {
     public static String printItem(Item item) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Item{");
+        builder.append("Item{ ");
 
         builder.append("registryName=");
         builder.append(ForgeRegistries.ITEMS.getKey(item));
 
-        builder.append("}");
+        builder.append(" }");
 
         return builder.toString();
     }
@@ -103,23 +99,21 @@ public class DebugUtil {
     public static String printRecipe(Recipe<?> recipe) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Recipe{\n");
+        builder.append("Recipe{ ");
 
-        builder.append("\tid=");
+        builder.append("id=");
         builder.append(recipe.getId());
-        builder.append("\n");
 
-        builder.append("\tresultItem=");
+        builder.append(", resultItem=");
         builder.append(DebugUtil.printItemStack(recipe.getResultItem()));
-        builder.append("\n");
 
-        builder.append("\tingredients=[\n\t\t");
-        builder.append(String.join(",\n\t\t", recipe.getIngredients().stream()
+        builder.append(", ingredients=[ ");
+        builder.append(String.join(",", recipe.getIngredients().stream()
                 .map(DebugUtil::printIngredient)
                 .toList()));
-        builder.append("\t]\n");
+        builder.append(" ]");
 
-        builder.append("}");
+        builder.append(" }");
 
         return builder.toString();
     }
