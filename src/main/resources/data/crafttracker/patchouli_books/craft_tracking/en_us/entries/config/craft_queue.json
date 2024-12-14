@@ -1,0 +1,7 @@
+{
+  "name": "Configuring the Craft Queue Overlay",
+  "icon": "minecraft:iron_pickaxe",
+  "category": "crafttracker:config",
+  "pages": [
+  ]
+}

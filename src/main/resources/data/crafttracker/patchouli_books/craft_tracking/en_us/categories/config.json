@@ -1,0 +1,6 @@
+{
+  "name": "Configuration",
+  "description": "How to customize Craft Tracker to suit your crafting needs.",
+  "icon": "minecraft:iron_pickaxe",
+  "sortnum": 2
+}

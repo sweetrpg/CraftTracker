@@ -1,0 +1,7 @@
+{
+  "name": "General Configuration",
+  "icon": "minecraft:diamond_pickaxe",
+  "category": "crafttracker:config",
+  "pages": [
+  ]
+}
