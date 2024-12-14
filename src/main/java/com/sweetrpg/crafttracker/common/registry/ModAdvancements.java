@@ -4,10 +4,8 @@ import com.sweetrpg.crafttracker.common.util.Util;
 import com.sweetrpg.crafttracker.data.DisplayInfoBuilder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.RequirementsStrategy;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.TickTrigger;
-import net.minecraft.world.item.Items;
+import net.minecraft.advancements.IRequirementsStrategy;
+import net.minecraft.item.Items;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +24,7 @@ public class ModAdvancements {
                     .background("stone.png")
                     .build())
             .addCriterion(MAIN_CRITERION, new TickTrigger.TriggerInstance(EntityPredicate.Composite.ANY))
-            .requirements(RequirementsStrategy.OR));
+            .requirements(IRequirementsStrategy.OR));
     public static final Advancement QUEUE_ITEM = create("queue_item", Key.QUEUE_ITEM, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
                     .icon(Items.PAPER)
@@ -35,7 +33,7 @@ public class ModAdvancements {
                     .background("stone.png")
                     .build())
             .addCriterion(MAIN_CRITERION, ModTriggers.addSimple("queue_item").instance())
-            .requirements(RequirementsStrategy.OR));
+            .requirements(IRequirementsStrategy.OR));
     public static final Advancement CRAFT_ITEM = create("craft_item", Key.CRAFT_ITEM, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
                     .icon(Items.CRAFTING_TABLE)
@@ -44,7 +42,7 @@ public class ModAdvancements {
                     .background("stone.png")
                     .build())
             .addCriterion(MAIN_CRITERION, ModTriggers.addSimple("craft_item").instance())
-            .requirements(RequirementsStrategy.OR));
+            .requirements(IRequirementsStrategy.OR));
     public static final Advancement POPULATE_LIST = create("populate_list", Key.POPULATE_LIST, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
                     .icon(Items.PAPER)

@@ -16,9 +16,9 @@ buildscript {
 }
 
 plugins {
-    id "com.modrinth.minotaur" version "2.+"
     // It's safest to have this on 2.+ to get the latest features and
     // bug fixes without having to worry about breaking changes.
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -53,33 +53,23 @@ configurations {
     apiRuntimeOnly.extendsFrom(runtimeOnly)
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 repositories {
     maven { // JEI
         url "https://dvs1.progwml6.com/files/maven"
         content { includeGroup "mezz.jei" }
     }
-    maven {
+    maven { // The One Probe
         url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
     }
-    maven {
+    maven { // ???
         url 'https://maven.blamejared.com'
-    }
-    maven { // PARCHMENT
-       url = "https://maven.parchmentmc.org"
-    }
-    maven {
-        url "https://modmaven.k-4u.nl"
-        content { includeGroup "mezz.jei" }
     }
 }
 
 minecraft {
-    mappings channel: 'official', version: project.mc_version
+    mappings channel: 'parchment', version: project.parchment_version
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -138,8 +128,8 @@ dependencies {
     implementation fg.deobf("curse.maven:create-${create_project_id}:${create_file_id}")
     implementation fg.deobf("curse.maven:ars-nouveau-${ars_project_id}:${ars_file_id}")
     implementation fg.deobf("curse.maven:curios-${curios_project_id}:${curios_file_id}")
-    // implementation fg.deobf("curse.maven:celestial-exploration-${cexp_project_id}:${cexp_file_id}")
-    // implementation fg.deobf("curse.maven:azurelib-${azure_project_id}:${azure_file_id}")
+//    implementation fg.deobf("curse.maven:celestial-exploration-${cexp_project_id}:${cexp_file_id}")
+//    implementation fg.deobf("curse.maven:azurelib-${azure_project_id}:${azure_file_id}")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiter_version}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiter_version}")
@@ -164,10 +154,10 @@ def replaceResources = tasks.register('replaceResources', Copy) {
     it.from(sourceSets.main.resources) {
         include 'META-INF/mods.toml'
         expand([
-            'version': project.version,
-            'minecraft_version_range': project.minecraft_version_range,
-            'forge_version_range': project.forge_version_range,
-            'fml_version_range': project.fml_version_range,
+                'version': project.version,
+                'minecraft_version_range': project.minecraft_version_range,
+                'forge_version_range': project.forge_version_range,
+                'fml_version_range': project.fml_version_range,
         ])
     }
     it.into "$buildDir/resources/main/"
@@ -188,13 +178,13 @@ jar {
 
     manifest {
         attributes([
-            "Specification-Title": project.name,
-            "Specification-Vendor": "SweetRPG",
-            "Specification-Version": project.version,
-            "Implementation-Title": project.name,
-            "Implementation-Version": project.version,
-            "Implementation-Vendor" :"SweetRPG",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Specification-Title": project.name,
+                "Specification-Vendor": "SweetRPG",
+                "Specification-Version": project.version,
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version,
+                "Implementation-Vendor" :"SweetRPG",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
@@ -211,11 +201,6 @@ curseforge {
         changelogType = 'markdown'
         releaseType = findProperty("curseforge_release_type") ?: 'beta'
         addGameVersion project.target_mc_version
-//        for (String v : project.additional_mc_versions.split(',')) {
-//            if (v) {
-//                addGameVersion v
-//            }
-//        }
         relations {
             optionalDependency 'configured'
             requiredDependency 'jei'

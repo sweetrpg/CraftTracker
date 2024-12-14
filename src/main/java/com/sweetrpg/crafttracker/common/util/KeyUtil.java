@@ -1,7 +1,7 @@
 package com.sweetrpg.crafttracker.common.util;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.InputMappings;
 
 /**
  * Keyboard handling utility functions
@@ -15,7 +15,7 @@ public class KeyUtil {
      * @return A boolean value indicating if the key is down or not
      */
     public static boolean isKeyDown(int key) {
-        return InputConstants.isKeyDown(Minecraft.getInstance()
+        return InputMappings.isKeyDown(Minecraft.getInstance()
                 .getWindow()
                 .getWindow(), key);
     }

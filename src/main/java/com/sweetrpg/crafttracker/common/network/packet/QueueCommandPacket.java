@@ -4,9 +4,8 @@ import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.network.IPacket;
 import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -24,7 +23,7 @@ public class QueueCommandPacket implements IPacket<QueueCommandData> {
     }
 
     @Override
-    public final void handle(QueueCommandData data, Supplier<Context> ctx) {
+    public final void handle(QueueCommandData data, Supplier<NetworkEvent.Context> ctx) {
         CraftTracker.LOGGER.debug("AddToQueuePacket#handle: {}", data);
 
         ctx.get().enqueueWork(() -> {

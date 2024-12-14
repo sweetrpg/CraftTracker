@@ -6,10 +6,10 @@ import com.google.gson.GsonBuilder;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.data.AdvancementProvider;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DirectoryCache;
+import net.minecraft.data.IDataProvider;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,7 +40,7 @@ public class CTAdvancementProvider extends AdvancementProvider {
     }
 
     @Override
-    public void run(HashCache cache) {
+    public void run(DirectoryCache cache) {
         Path path = this.generator.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
         Consumer<Advancement> consumer = (advancement) -> {
@@ -51,7 +51,7 @@ public class CTAdvancementProvider extends AdvancementProvider {
                 Path path1 = getPath(path, advancement);
 
                 try {
-                    DataProvider.save(GSON, cache, advancement.deconstruct().serializeToJson(), path1);
+                    IDataProvider.save(GSON, cache, advancement.deconstruct().serializeToJson(), path1);
                 }
                 catch (IOException ioexception) {
                     LOGGER.error("Couldn't save advancement {}", path1, ioexception);

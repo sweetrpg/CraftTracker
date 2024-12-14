@@ -3,8 +3,8 @@ loaderVersion="${fml_version_range}"
 license="MIT"
 issueTrackerURL="https://github.com/sweetrpg/CraftTracker/issues"
 displayURL="https://minecraft.curseforge.com/projects/craft-tracker/"
-logoFile= "ct_logo.png"
-displayName = "Craft Tracker"
+logoFile="ct_logo.png"
+displayName="Craft Tracker"
 
 [[mods]]
     modId="crafttracker"
@@ -33,7 +33,7 @@ displayName = "Craft Tracker"
 [[dependencies.crafttracker]]
     modId="jei"
     mandatory=true
-    versionRange="[9.7.2.281,)"
+    versionRange="[7.8.0.1013,)"
     ordering="NONE"
     side="BOTH"
 
@@ -47,7 +47,7 @@ displayName = "Craft Tracker"
 [[dependencies.crafttracker]]
     modId="patchouli"
     mandatory=false
-    versionRange="[1.18.2-71.1,)"
+    versionRange="[1.16.4-53.3,)"
     ordering="NONE"
     side="BOTH"
 

@@ -2,7 +2,7 @@ package com.sweetrpg.crafttracker.client.event;
 
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Handlers for various events.

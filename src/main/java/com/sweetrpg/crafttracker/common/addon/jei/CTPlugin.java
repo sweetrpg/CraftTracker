@@ -9,8 +9,8 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
@@ -86,7 +86,7 @@ public class CTPlugin implements IModPlugin {
 
         // TODO: move this elsewhere to remove hard dependency on JEI
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            Player player = Minecraft.getInstance().player;
+            PlayerEntity player = Minecraft.getInstance().player;
             CraftingQueueManager.INSTANCE.load(player);
             ShoppingListManager.INSTANCE.load(player);
         });

@@ -1,12 +1,12 @@
 package com.sweetrpg.crafttracker.data;
 
+import net.java.games.input.Component;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.function.Supplier;
 
@@ -15,8 +15,8 @@ import java.util.function.Supplier;
  */
 public class DisplayInfoBuilder {
 
-    private Component title;
-    private Component description;
+    private ITextComponent title;
+    private ITextComponent description;
     private ItemStack icon;
     private ResourceLocation background;
     private FrameType frame;
@@ -29,27 +29,19 @@ public class DisplayInfoBuilder {
     }
 
     public DisplayInfoBuilder translate(String key) {
-        this.title(new TranslatableComponent("advancements." + key + ".title"));
-        this.description(new TranslatableComponent("advancements." + key + ".description"));
+        this.title(new TranslationTextComponent("advancements." + key + ".title"));
+        this.description(new TranslationTextComponent("advancements." + key + ".description"));
         return this;
     }
 
-    public DisplayInfoBuilder title(Component titleIn) {
+    public DisplayInfoBuilder title(ITextComponent titleIn) {
         this.title = titleIn;
         return this;
     }
 
-    public DisplayInfoBuilder description(Component descriptionIn) {
+    public DisplayInfoBuilder description(ITextComponent descriptionIn) {
         this.description = descriptionIn;
         return this;
-    }
-
-    public DisplayInfoBuilder icon(Supplier<? extends ItemLike> stackIn) {
-        return this.icon(stackIn.get());
-    }
-
-    public DisplayInfoBuilder icon(ItemLike provider) {
-        return this.icon(new ItemStack(provider.asItem()));
     }
 
     public DisplayInfoBuilder icon(ItemStack stackIn) {

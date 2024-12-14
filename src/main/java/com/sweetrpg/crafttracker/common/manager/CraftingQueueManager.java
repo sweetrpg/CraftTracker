@@ -1,6 +1,7 @@
 package com.sweetrpg.crafttracker.common.manager;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueItem;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
 import com.sweetrpg.crafttracker.common.storage.CraftingQueueStorage;
@@ -9,28 +10,18 @@ import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.RecipeUtil;
 import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtIo;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.Recipe;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Manages the crafting queue.
@@ -41,8 +32,6 @@ import java.util.stream.Collectors;
 public class CraftingQueueManager {
 
     public static CraftingQueueManager INSTANCE = new CraftingQueueManager();
-
-    private static final int MAX_PROCESSING_LEVEL = 3;
 
     private Map<ResourceLocation, CraftingQueueProduct> endProducts = new HashMap<>();
     private Map<ResourceLocation, CraftingQueueItem> intermediateProducts = new HashMap<>();
@@ -67,13 +56,15 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("file: {}", file);
 
         try {
-            try (InputStream in = Files.newInputStream(file, StandardOpenOption.READ)) {
-                var data = NbtIo.readCompressed(in);
-                var products = CraftingQueueStorage.load(data);
-                products.forEach((k, v) -> v.setRecipes(RecipeUtil.getRecipesFor(k)));
-                this.endProducts = products;
-                this.computeAll();
-            }
+            InputStream in = Files.newInputStream(file, StandardOpenOption.READ);
+            var data = NbtIo.readCompressed(in);
+            var products = CraftingQueueStorage.load(data);
+            products.forEach((k, v) -> v.setRecipes(RecipeUtil.getRecipesFor(k)));
+            this.endProducts = products;
+            this.computeAll();
+        }
+        catch (NoSuchFileException e) {
+            // ignore
         }
         catch (IOException e) {
             CraftTracker.LOGGER.error("An error occurred while loading crafting queue [" + file + "]", e);
@@ -122,7 +113,9 @@ public class CraftingQueueManager {
      * @return A {@link List} of {@link CraftingQueueProduct} representing the products in the queue
      */
     public List<CraftingQueueProduct> getEndProducts() {
-        return new ArrayList<>(endProducts.values());
+        return endProducts.values()
+                .stream()
+                .toList();
     }
 
     /**
@@ -131,7 +124,9 @@ public class CraftingQueueManager {
      * @return A {@link List} of {@link CraftingQueueItem} representing the intermediates in the queue
      */
     public List<CraftingQueueItem> getIntermediates() {
-        return new ArrayList<>(intermediateProducts.values());
+        return intermediateProducts.values()
+                .stream()
+                .toList();
     }
 
     /**
@@ -140,7 +135,9 @@ public class CraftingQueueManager {
      * @return A {@link List} of {@link CraftingQueueItem} representing the materials in the queue
      */
     public List<CraftingQueueItem> getRawMaterials() {
-        return new ArrayList<>(rawMaterials.values());
+        return rawMaterials.values()
+                .stream()
+                .toList();
     }
 
     /**
@@ -149,7 +146,9 @@ public class CraftingQueueManager {
      * @return A {@link List} of {@link CraftingQueueItem} representing the fuels in the queue
      */
     public List<CraftingQueueItem> getFuel() {
-        return new ArrayList<>(fuel.values());
+        return fuel.values()
+                .stream()
+                .toList();
     }
 
     /**
@@ -157,8 +156,8 @@ public class CraftingQueueManager {
      * <p/>
      * This will trigger a recalculation of the entire queue.
      *
-     * @param player The player whose queue is being adjusted
-     * @param itemId The item to add to the queue
+     * @param player   The player whose queue is being adjusted
+     * @param itemId   The item to add to the queue
      * @param quantity The amount to add
      */
     public void addProduct(PlayerEntity player, ResourceLocation itemId, int quantity) {
@@ -188,8 +187,8 @@ public class CraftingQueueManager {
      * A convenience method to adjust the quantity of a product.
      * This will call the appropriate add* or remove* method.
      *
-     * @param player The player whose queue is being adjusted
-     * @param itemId The item to adjust
+     * @param player   The player whose queue is being adjusted
+     * @param itemId   The item to adjust
      * @param quantity The amount to adjust; positive values will increase the amount, negative values will reduce it.
      */
     public void adjustProduct(PlayerEntity player, ResourceLocation itemId, int quantity) {
@@ -220,8 +219,8 @@ public class CraftingQueueManager {
     /**
      * Removes a single end product, or a quantity of it, from the queue.
      *
-     * @param player The player whose queue is being adjusted
-     * @param itemId The item to remove from the queue
+     * @param player   The player whose queue is being adjusted
+     * @param itemId   The item to remove from the queue
      * @param quantity The amount of the item to remove. If this value is the greater than or equal to the amount
      *                 currently in the queue, the item is removed entirely.
      */
@@ -273,10 +272,6 @@ public class CraftingQueueManager {
     public void computeAll() {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeAll");
 
-//        this.intermediateProducts.clear();
-//        this.rawMaterials.clear();
-//        this.fuel.clear();
-
         ProcessingContext ctx = new ProcessingContext();
 
         this.endProducts.forEach((k, v) -> {
@@ -293,7 +288,7 @@ public class CraftingQueueManager {
     /**
      * Starts the computation of an end product's intermediates and materials.
      *
-     * @param ctx The context to use for processing the queue
+     * @param ctx     The context to use for processing the queue
      * @param product The product to process
      */
     void computeProduct(ProcessingContext ctx, CraftingQueueProduct product) {
@@ -356,10 +351,10 @@ public class CraftingQueueManager {
      * If the recipe's namespace or the result item's namespace differ from the ingredients, the function will exit
      * early with a `null` return value in order to prevent strange suggestions of intermediates and raw materials.
      *
-     * @param recipe The recipe to compute
+     * @param recipe     The recipe to compute
      * @param iterations The desired number of times the recipe is to be crafted by the player
-     * @param depth The current depth of processing the queue. This is metadata about the processing context used to
-     *              prevent potential loops in looking up required items.
+     * @param depth      The current depth of processing the queue. This is metadata about the processing context used to
+     *                   prevent potential loops in looking up required items.
      * @return A computed recipe, or `null` if certain criteria are not met or thresholds are crossed.
      */
     ComputedRecipe computeRecipe(Recipe<?> recipe, int iterations, int depth) {
@@ -445,7 +440,7 @@ public class CraftingQueueManager {
             var subRecipes = RecipeUtil.getRecipesFor(id);
             CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes.stream().map(DebugUtil::printRecipe).toList());
 
-            if(subRecipes.isEmpty() || depth >= MAX_PROCESSING_LEVEL) {
+            if(subRecipes.isEmpty() || depth >= ConfigHandler.CLIENT.calculationDepth.get()) {
                 CraftTracker.LOGGER.debug("subRecipes is empty; ingredient {} is a raw material", ingredientId);
                 // no recipes for this ingredient, so it's a raw material
                 computedRecipe.rawMaterials.compute(id,
@@ -522,13 +517,7 @@ public class CraftingQueueManager {
 
         @Override
         public String toString() {
-            return MessageFormat.format(                            "ProcessingContext[\n" +
-                              "  intermediateProducts={0}\n" +
-                              "  rawMaterials={1}\n" +
-                              "  fuel={2}\n" +
-                              "  handledItems={3}\n" +
-                              "  computedRecipes={4}\n" +
-                            "]",
+            return MessageFormat.format("ProcessingContext[ intermediateProducts={0}, rawMaterials={1}, fuel={2}, handledItems={3}, computedRecipes={4} ]",
                     intermediateProducts, rawMaterials, fuel, handledItems, computedRecipes);
         }
     }
@@ -572,11 +561,7 @@ public class CraftingQueueManager {
 
         @Override
         public String toString() {
-            return MessageFormat.format(                            "ComputedRecipeItem[\n"+
-                            "  itemId={0}\n" +
-                            "  amount={1}\n"+
-                            "  tag={2}\n"+
-                            "]",
+            return MessageFormat.format("ComputedRecipeItem[ itemId={0}, amount={1}, tag={2} ]",
                     itemId, amount, tag);
         }
     }
@@ -593,6 +578,7 @@ public class CraftingQueueManager {
 
         /**
          * Constructs the object with the ID of the recipe it represents.
+         *
          * @param recipeId The recipe ID
          */
         ComputedRecipe(ResourceLocation recipeId) {
@@ -601,24 +587,14 @@ public class CraftingQueueManager {
 
         @Override
         public String toString() {
-            return MessageFormat.format(                            "ComputedRecipe[\n"+
-                            "  recipeId={0}\n"+
-                            "  intermediateProducts={1}\n"+
-                            "  rawMaterials={2}\n"+
-                            "  fuel={3}\n"+
-                            "]",
+            return MessageFormat.format("ComputedRecipe[ recipeId={0}, intermediateProducts={1}, rawMaterials={2}, fuel={3} ]",
                     recipeId, intermediateProducts, rawMaterials, fuel);
         }
     }
 
     @Override
     public String toString() {
-        return MessageFormat.format(                                        "CraftingQueueManager[\n"+
-                        "  endProducts={0}\n"+
-                        "  intermediateProducts={1}\n"+
-                        "  rawMaterials={2}\n"+
-                        "  fuel={3}\n"+
-                        "]",
+        return MessageFormat.format(" CraftingQueueManager[ endProducts={0}, intermediateProducts={1}, rawMaterials={2}, fuel={3} ]",
                 endProducts, intermediateProducts, rawMaterials, fuel);
     }
 }

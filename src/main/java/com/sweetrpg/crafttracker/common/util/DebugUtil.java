@@ -1,10 +1,10 @@
 package com.sweetrpg.crafttracker.common.util;
 
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
+
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 
 import java.util.Arrays;
 
@@ -22,26 +22,24 @@ public class DebugUtil {
     public static String printIngredient(Ingredient ingredient) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Ingredient{\n");
+        builder.append("Ingredient{ ");
 
-        builder.append("\titems=[\n");
+        builder.append("items=[ ");
         Arrays.stream(ingredient.getItems())
                 .forEach(i -> {
-                    builder.append("\t\tregistryName=");
+                    builder.append("registryName=");
                     builder.append(i.getItem().getRegistryName());
-                    builder.append("\n");
 
-                    builder.append("\t\ttags=[");
-                    builder.append(String.join(",", i.getTags().map(TagKey::toString).toList()));
-                    builder.append("]\n");
+                    builder.append(", tags=[");
+                    builder.append(String.join(",", i.getItem().getTags().stream().map(TagKey::toString).toList()));
+                    builder.append("]");
 
-                    builder.append("\t\tcount=");
+                    builder.append(", count=");
                     builder.append(i.getCount());
-                    builder.append("\n");
                 });
-        builder.append("\t]\n");
+        builder.append(" ]");
 
-        builder.append("}");
+        builder.append(" }");
 
         return builder.toString();
     }
@@ -55,21 +53,19 @@ public class DebugUtil {
     public static String printItemStack(ItemStack itemStack) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("ItemStack{\n");
+        builder.append("ItemStack{ ");
 
-        builder.append("\tregistryName=");
+        builder.append("registryName=");
         builder.append(itemStack.getItem().getRegistryName());
-        builder.append("\n");
 
-        builder.append("\tcount=");
+        builder.append(", count=");
         builder.append(itemStack.getCount());
-        builder.append("\n");
 
-        builder.append("\ttags=[");
-        builder.append(String.join(",", itemStack.getTags().map(TagKey::toString).toList()));
-        builder.append("]\n");
+        builder.append(", tags=[");
+        builder.append(String.join(",", itemStack.getItem().getTags().stream().map(TagKey::toString).toList()));
+        builder.append("]");
 
-        builder.append("}");
+        builder.append(" }");
 
         return builder.toString();
     }
@@ -83,12 +79,12 @@ public class DebugUtil {
     public static String printItem(Item item) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Item{");
+        builder.append("Item{ ");
 
         builder.append("registryName=");
         builder.append(item.getRegistryName());
 
-        builder.append("}");
+        builder.append(" }");
 
         return builder.toString();
     }
@@ -99,26 +95,24 @@ public class DebugUtil {
      * @param recipe The recipe to output
      * @return A formatted string
      */
-    public static String printRecipe(Recipe<?> recipe) {
+    public static String printRecipe(IRecipe<?> recipe) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Recipe{\n");
+        builder.append("Recipe{ ");
 
-        builder.append("\tid=");
+        builder.append("id=");
         builder.append(recipe.getId());
-        builder.append("\n");
 
-        builder.append("\tresultItem=");
+        builder.append(", resultItem=");
         builder.append(DebugUtil.printItemStack(recipe.getResultItem()));
-        builder.append("\n");
 
-        builder.append("\tingredients=[\n\t\t");
-        builder.append(String.join(",\n\t\t", recipe.getIngredients().stream()
+        builder.append(", ingredients=[ ");
+        builder.append(String.join(",", recipe.getIngredients().stream()
                 .map(DebugUtil::printIngredient)
                 .toList()));
-        builder.append("\t]\n");
+        builder.append(" ]");
 
-        builder.append("}");
+        builder.append(" }");
 
         return builder.toString();
     }

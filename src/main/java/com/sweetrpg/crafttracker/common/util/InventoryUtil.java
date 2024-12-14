@@ -1,8 +1,8 @@
 package com.sweetrpg.crafttracker.common.util;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,8 +22,8 @@ public class InventoryUtil {
      * @param itemId The item to look for
      * @return The amount of the item
      */
-    public static int getQuantityOf(Player player, ResourceLocation itemId) {
-        var inventory = player.getInventory();
+    public static int getQuantityOf(PlayerEntity player, ResourceLocation itemId) {
+        var inventory = player.inventory;
 
         var item = ForgeRegistries.ITEMS.getValue(itemId);
         var stack = item.getDefaultInstance();

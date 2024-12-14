@@ -2,13 +2,10 @@ package com.sweetrpg.crafttracker.common.advancement;
 
 import com.google.common.collect.Maps;
 import com.sweetrpg.crafttracker.common.util.Util;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.PlayerAdvancements;
-import net.minecraft.server.level.ServerPlayer;
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.advancements.ICriterionTrigger;
+import net.minecraft.advancements.PlayerAdvancements;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -19,7 +16,7 @@ import java.util.function.Supplier;
 @MethodsReturnNonnullByDefault
 public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instance> implements CriterionTrigger<T> {
     private final ResourceLocation id;
-    protected final Map<PlayerAdvancements, Set<Listener<T>>> listeners = Maps.newHashMap();
+    protected final Map<PlayerAdvancements, Set<ICriterionTrigger.Listener<T>>> listeners = Maps.newHashMap();
 
     public CriterionTriggerBase(String id) {
         this.id = Util.getResource(id);

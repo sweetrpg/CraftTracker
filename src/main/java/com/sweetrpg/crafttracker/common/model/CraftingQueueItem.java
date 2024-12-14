@@ -1,6 +1,8 @@
 package com.sweetrpg.crafttracker.common.model;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
+
+import java.text.MessageFormat;
 
 /**
  * A value object for holding intermediate, material, and fuel information from the crafting queue.
@@ -70,5 +72,11 @@ public class CraftingQueueItem {
 
     public void setTag(boolean tag) {
         this.tag = tag;
+    }
+
+    @Override
+    public String toString() {
+        return MessageFormat.format("CraftingQueueItem[ itemId={0}, amount={1}, tag={2} ]",
+                itemId, amount, tag);
     }
 }

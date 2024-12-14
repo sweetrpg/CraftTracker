@@ -1,17 +1,13 @@
 package com.sweetrpg.crafttracker.common.advancement;
 
 import com.google.gson.JsonObject;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.EntityPredicate.Composite;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.function.Supplier;
-
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -27,7 +23,7 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
         return new Instance(this.getId());
     }
 
-    public void trigger(ServerPlayer player) {
+    public void trigger(Entity player) {
         super.trigger(player, (List) null);
     }
 

@@ -2,13 +2,12 @@ package com.sweetrpg.crafttracker.common.storage;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.util.NBTUtil;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.storage.WorldSavedData;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -18,10 +17,10 @@ import java.util.UUID;
 /**
  * A class to managed persistence of shopping list data.
  */
-public class ShoppingListStorage extends SavedData {
+public class ShoppingListStorage extends WorldSavedData {
 
     private @Nullable UUID ownerId;
-    private Vec3 shoppingListPosition;
+    private Vector3d shoppingListPosition;
     private boolean shoppingListVisible;
     private Map<ResourceLocation, Integer> products = new HashMap<>();
 
@@ -29,6 +28,7 @@ public class ShoppingListStorage extends SavedData {
      * Default constructor.
      */
     public ShoppingListStorage() {
+        super();
     }
 
     /**
@@ -50,7 +50,7 @@ public class ShoppingListStorage extends SavedData {
      * @param nbt The root tag to add the shopping list data to
      * @return A map of the shopping list data
      */
-    public static Map<ResourceLocation, Integer> load(CompoundTag nbt) {
+    public void load(CompoundNBT nbt) {
         CraftTracker.LOGGER.debug("ShoppingListStorage#load: {}", nbt);
 
         ShoppingListStorage store = new ShoppingListStorage();
@@ -60,10 +60,10 @@ public class ShoppingListStorage extends SavedData {
         store.shoppingListPosition = NBTUtil.getVector3d(nbt);
         store.shoppingListVisible = nbt.getBoolean(ShoppingListStorage.Keys.SHOPPING_LIST_VISIBLE);
 
-        ListTag list = nbt.getList(ShoppingListStorage.Keys.LIST_DATA, Tag.TAG_COMPOUND);
+        ListNBT list = nbt.getList(ShoppingListStorage.Keys.LIST_DATA, Constants.NBT.TAG_COMPOUND);
 
         for(int i = 0; i < list.size(); ++i) {
-            CompoundTag productData = list.getCompound(i);
+            CompoundNBT productData = list.getCompound(i);
 
             var itemId = NBTUtil.getResourceLocation(productData, ShoppingListStorage.Keys.ITEM_ID);
             var quantity = productData.getInt(ShoppingListStorage.Keys.QUANTITY);
@@ -81,17 +81,17 @@ public class ShoppingListStorage extends SavedData {
      * @return The root tag
      */
     @Override
-    public @NotNull CompoundTag save(@NotNull CompoundTag compound) {
+    public  CompoundNBT save( CompoundNBT compound) {
         CraftTracker.LOGGER.debug("ShoppingListStorage#save: {}", compound);
 
         NBTUtil.putUniqueId(compound, ShoppingListStorage.Keys.OWNER_ID, this.ownerId);
         NBTUtil.putVector3d(compound, this.shoppingListPosition);
         compound.putBoolean(ShoppingListStorage.Keys.SHOPPING_LIST_VISIBLE, this.shoppingListVisible);
 
-        ListTag list = new ListTag();
+        ListNBT list = new ListNBT();
 
         this.products.forEach((k, v) -> {
-            CompoundTag itemData = new CompoundTag();
+            CompoundNBT itemData = new CompoundNBT();
 
             NBTUtil.putResourceLocation(itemData, ShoppingListStorage.Keys.ITEM_ID, k);
             itemData.putInt(ShoppingListStorage.Keys.QUANTITY, v);

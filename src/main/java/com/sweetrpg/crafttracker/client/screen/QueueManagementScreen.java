@@ -1,6 +1,6 @@
 package com.sweetrpg.crafttracker.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
@@ -12,13 +12,12 @@ import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
@@ -27,7 +26,7 @@ import static com.sweetrpg.crafttracker.common.lib.CTRuntime.OverlayState.SUPPRE
 
 public class QueueManagementScreen extends Screen {
 
-    public final Player player;
+    public final PlayerEntity player;
 
     public static final int TITLE_COLOR = 0xbbbbbbbb;
     public static final int TITLE_HEIGHT = 20;
@@ -47,8 +46,8 @@ public class QueueManagementScreen extends Screen {
     private CTRuntime.OverlayState queueState;
     private CTRuntime.OverlayState shoppingState;
 
-    public QueueManagementScreen(Player player) {
-        super(new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE));
+    public QueueManagementScreen(PlayerEntity player) {
+        super(new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE));
         this.player = player;
 
         this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
@@ -73,7 +72,7 @@ public class QueueManagementScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack poseStack, int mouseX, int mouseY, float partialTicks) {
 
         int width = Math.max(200, this.width / 3);
         int height = this.height - 100;
@@ -103,7 +102,7 @@ public class QueueManagementScreen extends Screen {
             GuiComponent.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
 
             // icon
-            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+            var drawable = CTPlugin.jeiRuntime
                     .createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
             drawable.draw(poseStack, topX + ITEM_X_ICON_OFFSET, y + 2);
 
@@ -163,7 +162,7 @@ public class QueueManagementScreen extends Screen {
         // clear all button
         {
             Button button = new Button(topX + (width / 2) - 50, topY + height - BUTTON_SIZE - 4, 100, BUTTON_SIZE + 2,
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_CLEAR_BUTTON),
+                    new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_CLEAR_BUTTON),
                     btn -> {
                         CraftingQueueManager.INSTANCE.removeAll();
                         QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();

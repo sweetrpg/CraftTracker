@@ -10,13 +10,15 @@ import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
+@OnlyIn(Dist.CLIENT)
 public class CraftQueueOverlay {
 
     static int TITLE_COLOR = 0x99999999;
@@ -31,7 +33,12 @@ public class CraftQueueOverlay {
     static int TEXT_HEIGHT = 12;
     static int MAX_STRING_LENGTH = 40;
 
-    public static final IIngameOverlay CRAFT_QUEUE = (gui, poseStack, partialTicks, width, height) -> {
+    public static void init() {
+        MinecraftForge.EVENT_BUS.register(new CraftQueueOverlay());
+    }
+
+    @SubscribeEvent(priority = EventPriority.NORMAL)
+    public void onRender(RenderGameOverlayEvent event) {
         CraftTracker.LOGGER.trace("CRAFT_QUEUE");
 
         var mgr = CraftingQueueManager.INSTANCE;
@@ -53,17 +60,17 @@ public class CraftQueueOverlay {
                 return;
 
             case DYNAMIC:
-                if(ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_HIDE_EMPTY.get() &&
+                if(ConfigHandler.CLIENT.craftQueueOverlayHideEmpty.get() &&
                         products.isEmpty()) {
                     return;
                 }
                 break;
         }
 
-        var x = ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_X.get();
-        var y = ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_Y.get();
-        var olWidth = Math.min((ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_X.get() + ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_WIDTH.get()), width - 10);
-        var olHeight = Math.min((ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_Y.get() + ConfigHandler.CLIENT.CRAFT_QUEUE_OVERLAY_HEIGHT.get()), height - 10);
+        var x = ConfigHandler.CLIENT.craftQueueOverlayX.get();
+        var y = ConfigHandler.CLIENT.craftQueueOverlayY.get();
+        var olWidth = Math.min((ConfigHandler.CLIENT.craftQueueOverlayX.get() + ConfigHandler.CLIENT.craftQueueOverlayWidth.get()), width - 10);
+        var olHeight = Math.min((ConfigHandler.CLIENT.craftQueueOverlayY.get() + ConfigHandler.CLIENT.craftQueueOverlayHeight.get()), height - 10);
         var backgroundColor = 0x5f5f5f5f; // TODO: get from config
         var borderColor = 0x1f1f1f1f; // TODO: get from config
 

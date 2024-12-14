@@ -1,8 +1,8 @@
 package com.sweetrpg.crafttracker.client.screen;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.java.games.input.Component;
+import net.minecraft.client.gui.fonts.Font;
+import net.minecraft.util.text.TextComponent;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.sweetrpg.crafttracker.common.lib;
 
 import com.sweetrpg.crafttracker.common.util.Util;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
 
 public class Constants {
 
@@ -22,9 +22,6 @@ public class Constants {
     public static final String LOCALE_EN_GB = "en_gb";
     public static final String LOCALE_DE_DE = "de_de";
 
-    // Key bindings
-    public static final String KEY_BINDINGS_CATEGORY_TITLE = "key.categories.crafttracker";
-
     // Translation keys
     public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_TITLE = "crafttracker.screen.craft_queue.title";
     public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_EMPTY = "crafttracker.screen.craft_queue.empty_message";
@@ -43,12 +40,6 @@ public class Constants {
     public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_DEC_BUTTON_TOOLTIP = "crafttracker.screen.queue_mgr.button.dec.tooltip";
     public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_INC_BUTTON_TOOLTIP = "crafttracker.screen.queue_mgr.button.inc.tooltip";
     public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_DEL_BUTTON_TOOLTIP = "crafttracker.screen.queue_mgr.button.del.tooltip";
-    public static final String TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE = "key.addToQueue";
-    public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFT_QUEUE_TITLE = "key.toggleCraftQueue";
-    public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPING_LIST_TITLE = "key.toggleShoppingList";
-    public static final String TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE = "key.openQueueManager";
-    public static final String TRANSLATION_KEY_BINDINGS_POPULATE_SHOPPING_LIST_TITLE = "key.populateShoppingList";
-    public static final String TRANSLATION_KEY_BINDINGS_CLEAR_SHOPPING_LIST_TITLE = "key.clearShoppingList";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE = "crafttracker.msg.queue_overlay_mode.hide";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW = "crafttracker.msg.queue_overlay_mode.show";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC = "crafttracker.msg.queue_overlay_mode.dynamic";
@@ -56,6 +47,17 @@ public class Constants {
     public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW = "crafttracker.msg.shopping_list_overlay_mode.show";
     public static final String TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC = "crafttracker.msg.shopping_list_overlay_mode.dynamic";
 
+    // Key bindings
+    public static final String KEY_BINDINGS_CATEGORY_TITLE = "key.categories.crafttracker";
+    public static final String TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE = "key.crafttracker.addToQueue";
+    public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFT_QUEUE_TITLE = "key.crafttracker.toggleCraftQueue";
+    public static final String TRANSLATION_KEY_BINDINGS_TOGGLE_SHOPPING_LIST_TITLE = "key.crafttracker.toggleShoppingList";
+    public static final String TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE = "key.crafttracker.openQueueManager";
+    public static final String TRANSLATION_KEY_BINDINGS_POPULATE_SHOPPING_LIST_TITLE = "key.crafttracker.populateShoppingList";
+    public static final String TRANSLATION_KEY_BINDINGS_CLEAR_SHOPPING_LIST_TITLE = "key.crafttracker.clearShoppingList";
+
+    // Config
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_CALC_DEPTH = "crafttracker.config.client.calculation_depth";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_X = "crafttracker.config.client.craft_queue_x";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y = "crafttracker.config.client.craft_queue_y";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH = "crafttracker.config.client.craft_queue_width";

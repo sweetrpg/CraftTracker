@@ -3,18 +3,14 @@ package com.sweetrpg.crafttracker.common.manager;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.storage.ShoppingListStorage;
 import com.sweetrpg.crafttracker.common.util.Util;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtIo;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,18 +36,19 @@ public class ShoppingListManager {
      *
      * @param player The player whose shopping list should be loaded
      */
-    public void load(Player player) {
+    public void load(PlayerEntity player) {
         CraftTracker.LOGGER.info("Loading shopping list for {}", player);
 
         Path file = Util.getStoragePath().resolve("shopping.nbt").toAbsolutePath();
         CraftTracker.LOGGER.debug("file: {}", file);
 
         try {
-            try (InputStream in = Files.newInputStream(file, StandardOpenOption.READ)) {
-                var data = NbtIo.readCompressed(in);
-                var items = ShoppingListStorage.load(data);
-                this.items = items;
-            }
+            InputStream in = Files.newInputStream(file, StandardOpenOption.READ);
+            var data = NbtIo.readCompressed(in);
+            this.items = ShoppingListStorage.load(data);
+        }
+        catch (NoSuchFileException e) {
+            // ignore
         }
         catch (IOException e) {
             CraftTracker.LOGGER.error("An error occurred while loading shopping list [" + file + "]", e);
@@ -63,7 +60,7 @@ public class ShoppingListManager {
      *
      * @param player The player whose shopping list should be saved
      */
-    public void save(Player player) {
+    public void save(PlayerEntity player) {
         CraftTracker.LOGGER.info("Saving shopping list for {}", player);
 
         Path file = Util.getStoragePath().resolve("shopping.nbt").toAbsolutePath();
@@ -112,7 +109,7 @@ public class ShoppingListManager {
      *
      * @param player The player whose shopping list should be cleared
      */
-    public void clearItems(Player player) {
+    public void clearItems(PlayerEntity player) {
         CraftTracker.LOGGER.debug("#clearItems: {}", player);
 
         this.items.clear();
@@ -123,11 +120,11 @@ public class ShoppingListManager {
     /**
      * Adds an item to the shopping list. Merges with an existing item if there is one.
      *
-     * @param player The player whose shopping list is updated
-     * @param itemId The ID of the item to add
+     * @param player   The player whose shopping list is updated
+     * @param itemId   The ID of the item to add
      * @param quantity The amount of the item to add
      */
-    public void addItem(Player player, ResourceLocation itemId, int quantity) {
+    public void addItem(PlayerEntity player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("#addItem: {}", player);
 
         this.items.compute(itemId, (k, v) -> {
@@ -144,12 +141,12 @@ public class ShoppingListManager {
     /**
      * Removes an item from the shopping list
      *
-     * @param player The player whose shopping list is updated
-     * @param itemId The ID of the item to remove
+     * @param player   The player whose shopping list is updated
+     * @param itemId   The ID of the item to remove
      * @param quantity The amount of the item to remove. If the quantity is equal to or greater than what is currently
      *                 in the list, the entire entry is removed.
      */
-    public void removeItem(Player player, ResourceLocation itemId, int quantity) {
+    public void removeItem(PlayerEntity player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("#removeItem: {}", player);
 
         this.items.computeIfPresent(itemId, (k, v) -> {
@@ -174,7 +171,7 @@ public class ShoppingListManager {
         /**
          * Default constructor.
          *
-         * @param itemId The ID of the item
+         * @param itemId   The ID of the item
          * @param quantity The quantity of the item
          */
         public ListItem(ResourceLocation itemId, int quantity) {
@@ -196,6 +193,12 @@ public class ShoppingListManager {
 
         public void setQuantity(int quantity) {
             this.quantity = quantity;
+        }
+
+        @Override
+        public String toString() {
+            return MessageFormat.format("ListItem[ itemId={0}, quantity={1} ]",
+                    itemId, quantity);
         }
     }
 }

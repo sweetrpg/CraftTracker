@@ -1,11 +1,11 @@
 package com.sweetrpg.crafttracker.data;
 
 import com.google.common.collect.Maps;
+import net.java.games.input.Component;
 import net.minecraft.advancements.*;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class CTAdvancements implements Consumer<Consumer<Advancement>> {
         private AdvancementRewards rewards = AdvancementRewards.EMPTY;
         private Map<String, Criterion> criteria = Maps.newLinkedHashMap();
         private String[][] requirements;
-        private RequirementsStrategy requirementsStrategy = RequirementsStrategy.AND;
+        private IRequirementsStrategy requirementsStrategy = IRequirementsStrategy.AND;
 
         private Builder(@Nullable ResourceLocation parentIdIn, @Nullable DisplayInfo displayIn, AdvancementRewards rewardsIn, Map<String, Criterion> criteriaIn, String[][] requirementsIn) {
            this.parentId = parentIdIn;
@@ -53,12 +53,8 @@ public class CTAdvancements implements Consumer<Consumer<Advancement>> {
            return this;
         }
 
-        public CTAdvancements.Builder withDisplay(ItemStack stack, Component title, Component description, @Nullable ResourceLocation background, FrameType frame, boolean showToast, boolean announceToChat, boolean hidden) {
+        public CTAdvancements.Builder withDisplay(ItemStack stack, ITextComponent title, ITextComponent description, @Nullable ResourceLocation background, FrameType frame, boolean showToast, boolean announceToChat, boolean hidden) {
            return this.withDisplay(new DisplayInfo(stack, title, description, background, frame, showToast, announceToChat, hidden));
-        }
-
-        public CTAdvancements.Builder withDisplay(ItemLike itemIn, Component title, Component description, @Nullable ResourceLocation background, FrameType frame, boolean showToast, boolean announceToChat, boolean hidden) {
-           return this.withDisplay(new DisplayInfo(new ItemStack(itemIn.asItem()), title, description, background, frame, showToast, announceToChat, hidden));
         }
 
         public CTAdvancements.Builder withDisplay(DisplayInfo displayIn) {
@@ -78,7 +74,7 @@ public class CTAdvancements implements Consumer<Consumer<Advancement>> {
         /**
          * Adds a criterion to the list of criteria
          */
-        public CTAdvancements.Builder withCriterion(String key, CriterionTriggerInstance criterionIn) {
+        public CTAdvancements.Builder withCriterion(String key, ICriterionInstance criterionIn) {
            return this.withCriterion(key, new Criterion(criterionIn));
         }
 
@@ -94,7 +90,7 @@ public class CTAdvancements implements Consumer<Consumer<Advancement>> {
            }
         }
 
-        public CTAdvancements.Builder withRequirementsStrategy(RequirementsStrategy strategy) {
+        public CTAdvancements.Builder withRequirementsStrategy(IRequirementsStrategy strategy) {
            this.requirementsStrategy = strategy;
            return this;
         }
