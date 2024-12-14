@@ -53,12 +53,13 @@ jobs:
           echo "patch" > .release-info/${{ github.ref_name }}/BUMP_LEVEL
       - name: Wrapper validation
         uses: gradle/actions/wrapper-validation@v4
-      - name: Build with Gradle
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          arguments: build test --console=verbose
+      - name: Build and test
         env:
           MOD_VERSION: "${{ steps.bump_version.outputs.new_version }}"
+        run: |
+          ./gradlew build test --console=verbose
       - name: Commit version file
         run: |
           git config --global user.email "ci@sweetrpg.com"
