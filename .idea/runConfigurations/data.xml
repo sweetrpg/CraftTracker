@@ -2,10 +2,10 @@
 <component>
   <configuration default="false" factoryName="Application" name="data" singleton="false" type="Application">
     <option name="MAIN_CLASS_NAME" value="net.minecraftforge.userdev.LaunchTesting"/>
-    <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=debug -Dmixin.env.remapRefMap=true -Dmixin.env.refMapRemappingFile=/Users/paulyhedral/Code/Minecraft/SweetRPG/CraftTracker/build/createSrgToMcp/output.srg -XX:+IgnoreUnrecognizedVMOptions --add-exports=java.base/sun.security.util=ALL-UNNAMED --add-exports=jdk.naming.dns/com.sun.jndi.dns=java.naming --add-opens=java.base/java.util.jar=ALL-UNNAMED"/>
-    <option name="PROGRAM_PARAMETERS" value="--mod crafttracker --all --output &quot;/Users/paulyhedral/Code/Minecraft/SweetRPG/CraftTracker/src/generated/resources&quot; --existing &quot;/Users/paulyhedral/Code/Minecraft/SweetRPG/CraftTracker/src/main/resources&quot;"/>
+    <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=debug -Dmixin.env.remapRefMap=true -Dmixin.env.refMapRemappingFile=/Users/paulyhedral/Code/Minecraft/SweetRPG/CraftTracker/1.16/build/createSrgToMcp/output.srg -XX:+IgnoreUnrecognizedVMOptions --add-exports=java.base/sun.security.util=ALL-UNNAMED --add-exports=jdk.naming.dns/com.sun.jndi.dns=java.naming --add-opens=java.base/java.util.jar=ALL-UNNAMED"/>
+    <option name="PROGRAM_PARAMETERS" value="--mod crafttracker --all --output &quot;/Users/paulyhedral/Code/Minecraft/SweetRPG/CraftTracker/1.16/src/generated/resources&quot; --existing &quot;/Users/paulyhedral/Code/Minecraft/SweetRPG/CraftTracker/1.16/src/main/resources&quot;"/>
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run"/>
-    <module name="CraftTracker.main"/>
+    <module name="1.16.main"/>
     <envs>
       <env name="MOD_CLASSES" value="crafttracker%%$PROJECT_DIR$/build/resources/main:crafttracker%%$PROJECT_DIR$/build/classes/java/main"/>
       <env name="MCP_MAPPINGS" value="official_1.16.5"/>
