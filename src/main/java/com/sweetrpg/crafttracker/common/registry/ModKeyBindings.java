@@ -23,4 +23,5 @@ public class ModKeyBindings {
         ClientRegistry.registerKeyBinding(POPULATE_SHOPPING_LIST_MAPPING);
         ClientRegistry.registerKeyBinding(CLEAR_SHOPPING_LIST_MAPPING);
     }
+
 }

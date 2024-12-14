@@ -28,3 +28,4 @@ logs
 forge*changelog.txt
 /src/generated/resources/.cache/
 .DS_Store
+*.java-ish

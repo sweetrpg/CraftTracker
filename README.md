@@ -17,12 +17,15 @@
 
 * Add items to a queue to keep track of what you need
 * Setup a shopping list so you know what to gather
-* Share the shopping list with other players so they can help
 
 ## Required Mods
 
-* [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) &mdash; version 9.7.2.281 or higher
+* [JEI](https://www.curseforge.com/minecraft/mc-mods/jei)
 
 ## Where To Get It
 
 Download it from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/craft-tracker) or [Modrinth](https://modrinth.com/mod/craft-tracker).
+
+## Translations
+
+If you would like to help translate Craft Tracker into your language, please open [an issue](https://github.com/actions/setup-java/issues).
