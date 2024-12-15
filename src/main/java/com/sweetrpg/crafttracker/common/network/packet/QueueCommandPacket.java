@@ -4,6 +4,7 @@ import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.network.IPacket;
 import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -12,12 +13,12 @@ import java.util.function.Supplier;
 public class QueueCommandPacket implements IPacket<QueueCommandData> {
 
     @Override
-    public void encode(QueueCommandData data, FriendlyByteBuf buf) {
+    public void encode(QueueCommandData data, PacketBuffer buf) {
         buf.writeEnum(data.command);
     }
 
     @Override
-    public QueueCommandData decode(FriendlyByteBuf buf) {
+    public QueueCommandData decode(PacketBuffer buf) {
         var command = buf.readEnum(QueueCommandData.QueueCommand.class);
         return new QueueCommandData(command);
     }

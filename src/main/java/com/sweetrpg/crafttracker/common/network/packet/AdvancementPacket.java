@@ -5,6 +5,7 @@ import com.sweetrpg.crafttracker.common.network.IPacket;
 import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.util.AdvancementUtil;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -12,12 +13,12 @@ import java.util.function.Supplier;
 public class AdvancementPacket implements IPacket<AdvancementData> {
 
     @Override
-    public void encode(AdvancementData data, FriendlyByteBuf buf) {
+    public void encode(AdvancementData data, PacketBuffer buf) {
         buf.writeEnum(data.advancement);
     }
 
     @Override
-    public AdvancementData decode(FriendlyByteBuf buf) {
+    public AdvancementData decode(PacketBuffer buf) {
         var advancement = buf.readEnum(ModAdvancements.Key.class);
         return new AdvancementData(advancement);
     }

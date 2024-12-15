@@ -5,6 +5,11 @@ import com.sweetrpg.crafttracker.data.DisplayInfoBuilder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.IRequirementsStrategy;
+import net.minecraft.advancements.criterion.EnterBlockTrigger;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.LocationPredicate;
+import net.minecraft.advancements.criterion.PositionTrigger;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
 import java.util.HashMap;
@@ -18,16 +23,16 @@ public class ModAdvancements {
     public static final Advancement START = null;
     public static final Advancement ROOT = create("root", Key.ROOT, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
-                    .icon(Items.PAPER)
+                    .icon(new ItemStack(Items.PAPER))
                     .frame(FrameType.TASK)
                     .translate("crafttracker.main.root")
                     .background("stone.png")
                     .build())
-            .addCriterion(MAIN_CRITERION, new TickTrigger.TriggerInstance(EntityPredicate.Composite.ANY))
+            .addCriterion(MAIN_CRITERION, PositionTrigger.Instance.located(LocationPredicate.ANY))
             .requirements(IRequirementsStrategy.OR));
     public static final Advancement QUEUE_ITEM = create("queue_item", Key.QUEUE_ITEM, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
-                    .icon(Items.PAPER)
+                    .icon(new ItemStack(Items.PAPER))
                     .frame(FrameType.TASK)
                     .translate("crafttracker.main.queue_item")
                     .background("stone.png")
@@ -36,7 +41,7 @@ public class ModAdvancements {
             .requirements(IRequirementsStrategy.OR));
     public static final Advancement CRAFT_ITEM = create("craft_item", Key.CRAFT_ITEM, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
-                    .icon(Items.CRAFTING_TABLE)
+                    .icon(new ItemStack(Items.CRAFTING_TABLE))
                     .frame(FrameType.TASK)
                     .translate("crafttracker.main.craft_item")
                     .background("stone.png")
@@ -45,31 +50,31 @@ public class ModAdvancements {
             .requirements(IRequirementsStrategy.OR));
     public static final Advancement POPULATE_LIST = create("populate_list", Key.POPULATE_LIST, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
-                    .icon(Items.PAPER)
+                    .icon(new ItemStack(Items.PAPER))
                     .frame(FrameType.TASK)
                     .translate("crafttracker.main.populate_list")
                     .background("stone.png")
                     .build())
             .addCriterion(MAIN_CRITERION, ModTriggers.addSimple("populate_list").instance())
-            .requirements(RequirementsStrategy.OR));
+            .requirements(IRequirementsStrategy.OR));
     public static final Advancement ACQUIRE_ITEM = create("acquire_item", Key.ACQUIRE_ITEM, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
-                    .icon(Items.CRAFTING_TABLE)
+                    .icon(new ItemStack(Items.CRAFTING_TABLE))
                     .frame(FrameType.TASK)
                     .translate("crafttracker.main.acquire_item")
                     .background("stone.png")
                     .build())
             .addCriterion(MAIN_CRITERION, ModTriggers.addSimple("acquire_item").instance())
-            .requirements(RequirementsStrategy.OR));
+            .requirements(IRequirementsStrategy.OR));
     public static final Advancement CLEAR_QUEUE = create("clear_queue", Key.CLEAR_QUEUE, () -> Advancement.Builder.advancement()
             .display(DisplayInfoBuilder.create()
-                    .icon(Items.CRAFTING_TABLE)
+                    .icon(new ItemStack(Items.CRAFTING_TABLE))
                     .frame(FrameType.TASK)
                     .translate("crafttracker.main.clear_queue")
                     .background("stone.png")
                     .build())
             .addCriterion(MAIN_CRITERION, ModTriggers.addSimple("clear_queue").instance())
-            .requirements(RequirementsStrategy.OR));
+            .requirements(IRequirementsStrategy.OR));
 
 
     public static <T extends Advancement.Builder> Advancement create(final String name, Key key, Supplier<T> sup) {

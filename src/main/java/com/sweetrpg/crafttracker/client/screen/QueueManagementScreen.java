@@ -11,11 +11,14 @@ import com.sweetrpg.crafttracker.common.network.PacketHandler;
 import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.helpers.IJeiHelpers;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -26,7 +29,7 @@ import static com.sweetrpg.crafttracker.common.lib.CTRuntime.OverlayState.SUPPRE
 
 public class QueueManagementScreen extends Screen {
 
-    public final PlayerEntity player;
+    public final ClientPlayerEntity player;
 
     public static final int TITLE_COLOR = 0xbbbbbbbb;
     public static final int TITLE_HEIGHT = 20;
@@ -46,7 +49,7 @@ public class QueueManagementScreen extends Screen {
     private CTRuntime.OverlayState queueState;
     private CTRuntime.OverlayState shoppingState;
 
-    public QueueManagementScreen(PlayerEntity player) {
+    public QueueManagementScreen(ClientPlayerEntity player) {
         super(new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE));
         this.player = player;
 
@@ -74,6 +77,11 @@ public class QueueManagementScreen extends Screen {
     @Override
     public void render(MatrixStack poseStack, int mouseX, int mouseY, float partialTicks) {
 
+        var mc = Minecraft.getInstance();
+        if(mc.gui == null) {
+            return;
+        }
+
         int width = Math.max(200, this.width / 3);
         int height = this.height - 100;
         int topX = (this.width / 2) - (width / 2);
@@ -82,7 +90,7 @@ public class QueueManagementScreen extends Screen {
         this.renderBackground(poseStack);
 
         // title
-        GuiComponent.drawCenteredString(poseStack, this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
+        mc.gui.drawCenteredString(poseStack, this.font, I18n.get(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_TITLE), this.width / 2, topY + 2, TITLE_COLOR);
 
         // products
         for(int i = 0; i < this.productItems.size(); i++) {
@@ -99,19 +107,20 @@ public class QueueManagementScreen extends Screen {
             }
 
             // background
-            GuiComponent.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
+            mc.gui.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
 
             // icon
-            var drawable = CTPlugin.jeiRuntime
-                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
-            drawable.draw(poseStack, topX + ITEM_X_ICON_OFFSET, y + 2);
+//            mc.gui.;
+//            var drawable = CTPlugin.jeiRuntime
+//                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
+//            drawable.draw(poseStack, topX + ITEM_X_ICON_OFFSET, y + 2);
 
             // name
             this.font.draw(poseStack, item.getDescription(), topX + ITEM_X_TEXT_OFFSET, y + 6, ITEM_COLOR);
 
             // quantity and adjustment buttons
             {
-                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("-"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new StringTextComponent("-"), btn -> {
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), -1);
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                 }) /*{
@@ -121,14 +130,14 @@ public class QueueManagementScreen extends Screen {
                     }
                 }*/;
                 button.active = pItem.getIterations() > 1;
-                this.addRenderableWidget(button);
+                this.addButton(button);
             }
             {
                 var text = String.format("%d", pItem.getIterations());
-                GuiComponent.drawCenteredString(poseStack, this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
+                mc.gui.drawCenteredString(poseStack, this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
             }
             {
-                Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("+"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new StringTextComponent("+"), btn -> {
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), 1);
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                 }) /*{
@@ -137,7 +146,7 @@ public class QueueManagementScreen extends Screen {
                         QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_INC_BUTTON_TOOLTIP), mouseX, mouseY);
                     }
                 }*/;
-                this.addRenderableWidget(button);
+                this.addButton(button);
             }
 
             // variations
@@ -145,17 +154,17 @@ public class QueueManagementScreen extends Screen {
 
             // delete button
             {
-                Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new TextComponent("x"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new StringTextComponent("x"), btn -> {
                     CraftingQueueManager.INSTANCE.removeProduct(player, pItem.getProductId());
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
-                    this.renderables.clear();
+                    this.buttons.clear();
                 }) /*{
                     @Override
                     public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
                         QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_DEL_BUTTON_TOOLTIP), mouseX, mouseY);
                     }
                 }*/;
-                this.addRenderableWidget(button);
+                this.addButton(button);
             }
         }
 
@@ -166,7 +175,7 @@ public class QueueManagementScreen extends Screen {
                     btn -> {
                         CraftingQueueManager.INSTANCE.removeAll();
                         QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
-                        this.renderables.clear();
+                        this.buttons.clear();
 
                         // send advancement packet
                         PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.CLEAR_QUEUE));
@@ -176,7 +185,7 @@ public class QueueManagementScreen extends Screen {
                     QueueManagementScreen.this.renderTooltip(poseStack, new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_QUEUEMGR_CLEAR_BUTTON_TOOLTIP), mouseX, mouseY);
                 }
             }*/;
-            this.addRenderableWidget(button);
+            this.addButton(button);
         }
 
         super.render(poseStack, mouseX, mouseY, partialTicks);

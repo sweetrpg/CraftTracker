@@ -10,7 +10,14 @@ import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.RecipeUtil;
 import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -57,8 +64,10 @@ public class CraftingQueueManager {
 
         try {
             InputStream in = Files.newInputStream(file, StandardOpenOption.READ);
-            var data = NbtIo.readCompressed(in);
-            var products = CraftingQueueStorage.load(data);
+            var data = CompressedStreamTools.readCompressed(in);
+            var cqs = new CraftingQueueStorage();
+            cqs.load(data);
+            var products = cqs.getData();
             products.forEach((k, v) -> v.setRecipes(RecipeUtil.getRecipesFor(k)));
             this.endProducts = products;
             this.computeAll();
@@ -94,13 +103,12 @@ public class CraftingQueueManager {
 
         try {
             boolean overwritten = Files.deleteIfExists(file);
-            try (OutputStream out = Files.newOutputStream(file, StandardOpenOption.CREATE)) {
-                var root = new CompoundTag();
-                var storage = new CraftingQueueStorage();
-                storage.putData(this.endProducts);
-                var data = storage.save(root);
-                NbtIo.writeCompressed(data, out);
-            }
+            OutputStream out = Files.newOutputStream(file, StandardOpenOption.CREATE);
+            var root = new CompoundNBT();
+            var storage = new CraftingQueueStorage();
+            storage.putData(this.endProducts);
+            var data = storage.save(root);
+            CompressedStreamTools.writeCompressed(data, out);
         }
         catch (IOException e) {
             CraftTracker.LOGGER.error("An error occurred while saving crafting queue [" + file + "]", e);
@@ -160,7 +168,7 @@ public class CraftingQueueManager {
      * @param itemId   The item to add to the queue
      * @param quantity The amount to add
      */
-    public void addProduct(PlayerEntity player, ResourceLocation itemId, int quantity) {
+    public void addProduct(ClientPlayerEntity player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#addProduct: {}, quantity: {}", itemId, quantity);
 
         if(quantity < 1) return;
@@ -191,7 +199,7 @@ public class CraftingQueueManager {
      * @param itemId   The item to adjust
      * @param quantity The amount to adjust; positive values will increase the amount, negative values will reduce it.
      */
-    public void adjustProduct(PlayerEntity player, ResourceLocation itemId, int quantity) {
+    public void adjustProduct(ClientPlayerEntity player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#adjustProduct: {}, quantity: {}", itemId, quantity);
 
         if(quantity < 0)
@@ -206,7 +214,7 @@ public class CraftingQueueManager {
      * @param player The player whose queue is being adjusted
      * @param itemId The item to remove from the queue
      */
-    public void removeProduct(PlayerEntity player, ResourceLocation itemId) {
+    public void removeProduct(ClientPlayerEntity player, ResourceLocation itemId) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}", itemId);
 
         this.endProducts.remove(itemId);
@@ -224,7 +232,7 @@ public class CraftingQueueManager {
      * @param quantity The amount of the item to remove. If this value is the greater than or equal to the amount
      *                 currently in the queue, the item is removed entirely.
      */
-    public void removeProduct(PlayerEntity player, ResourceLocation itemId, int quantity) {
+    public void removeProduct(ClientPlayerEntity player, ResourceLocation itemId, int quantity) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#removeProduct: {}, quantity: {}", itemId, quantity);
 
         if(quantity < 1) return;
@@ -357,7 +365,7 @@ public class CraftingQueueManager {
      *                   prevent potential loops in looking up required items.
      * @return A computed recipe, or `null` if certain criteria are not met or thresholds are crossed.
      */
-    ComputedRecipe computeRecipe(Recipe<?> recipe, int iterations, int depth) {
+    ComputedRecipe computeRecipe(IRecipe<?> recipe, int iterations, int depth) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", DebugUtil.printRecipe(recipe));
 
         var computedRecipe = new ComputedRecipe(recipe.getId());
@@ -388,10 +396,10 @@ public class CraftingQueueManager {
             }
 
             CraftTracker.LOGGER.debug("ingredient class: {}", ingredient.getClass());
-            CraftTracker.LOGGER.debug("ingredient.values: {}", (Object) ingredient.values);
+//            CraftTracker.LOGGER.debug("ingredient.values: {}", (Object) ingredient.values);
 
             Boolean tag;
-            if(ingredient.values.length > 0 && ingredient.values[0] instanceof Ingredient.TagValue) {
+            if(ingredient.getItems().length > 0 /* && ingredient.getItems()[0]. instanceof Ingredient.TagList */) {
                 // ingredient is a tag
                 tag = true;
             }
@@ -402,12 +410,17 @@ public class CraftingQueueManager {
             ItemStack chosenStack = RecipeUtil.chooseLeastExpensiveOf(ingredient.getItems());
             ingredientTally.compute(chosenStack.getItem().getRegistryName(), (ingredientId, tuple) -> {
 //                return ObjectUtils.defaultIfNull(amount, 0) + 1;
-                tuple = ObjectUtils.defaultIfNull(tuple, new Tuple<>(false, 0));
-                tuple.setA(tag);
-                tuple.setB(tuple.getB() + 1);
+                if(tuple == null) {
+                    return new Tuple<>(tag, 1);
+                }
+
+                return new Tuple<>(tag, tuple.getB() + 1);
+//                var newTuple = ObjectUtils.defaultIfNull(tuple, new Tuple<Boolean, Integer>(false, 0));
 //                newTuple.setA(tag);
-//                newTuple.setB();
-                return tuple;
+//                newTuple.setB(tuple.getB() + 1);
+////                newTuple.setA(tag);
+////                newTuple.setB();
+//                return newTuple;
             });
         }
 

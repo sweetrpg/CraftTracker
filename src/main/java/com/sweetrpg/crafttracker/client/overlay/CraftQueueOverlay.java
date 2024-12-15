@@ -8,8 +8,11 @@ import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
+import com.sweetrpg.crafttracker.common.util.Util;
 import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -17,6 +20,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.client.resources.I18n;
 
 @OnlyIn(Dist.CLIENT)
 public class CraftQueueOverlay {
@@ -38,8 +42,13 @@ public class CraftQueueOverlay {
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void onRender(RenderGameOverlayEvent event) {
+    public void onRender(RenderGameOverlayEvent.Post event) {
         CraftTracker.LOGGER.trace("CRAFT_QUEUE");
+
+        var mc = Minecraft.getInstance();
+        if(mc.gui == null) {
+            return;
+        }
 
         var mgr = CraftingQueueManager.INSTANCE;
         var products = mgr.getEndProducts().stream().sorted((i1, i2) -> {
@@ -49,6 +58,8 @@ public class CraftQueueOverlay {
             if(item2 == null) return 0;
             return item1.getDescription().getString().compareTo(item2.getDescription().getString());
         }).toList();
+
+        var poseStack = event.getMatrixStack();
 
         switch(CTRuntime.INSTANCE.queueOverlayRequestedState) {
             case SHOW:
@@ -69,22 +80,24 @@ public class CraftQueueOverlay {
 
         var x = ConfigHandler.CLIENT.craftQueueOverlayX.get();
         var y = ConfigHandler.CLIENT.craftQueueOverlayY.get();
+        var width = mc.getWindow().getWidth();
+        var height = mc.getWindow().getHeight();
         var olWidth = Math.min((ConfigHandler.CLIENT.craftQueueOverlayX.get() + ConfigHandler.CLIENT.craftQueueOverlayWidth.get()), width - 10);
         var olHeight = Math.min((ConfigHandler.CLIENT.craftQueueOverlayY.get() + ConfigHandler.CLIENT.craftQueueOverlayHeight.get()), height - 10);
-        var backgroundColor = 0x5f5f5f5f; // TODO: get from config
-        var borderColor = 0x1f1f1f1f; // TODO: get from config
+        var backgroundColor = Util.parseColor(ConfigHandler.CLIENT.craftQueueOverlayBackgroundColor.get(), 16, Constants.BACKGROUND_COLOR);
+        var borderColor = Util.parseColor(ConfigHandler.CLIENT.craftQueueOverlayBorderColor.get(), 16, Constants.BORDER_COLOR);
 
-        GuiComponent.fill(poseStack, x, y, olWidth, olHeight, borderColor);
-        GuiComponent.fill(poseStack, x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
+        mc.gui.fill(poseStack, x, y, olWidth, olHeight, borderColor);
+        mc.gui.fill(poseStack, x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
 
-        GuiComponent.drawCenteredString(poseStack, gui.getFont(),
-                new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_TITLE),
+        mc.gui.drawCenteredString(poseStack, mc.gui.getFont(),
+                new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_TITLE),
                 (x + olWidth - 8) / 2, y + 6, TITLE_COLOR);
 
         // if products list is empty, display "empty" message
         if(products.isEmpty()) {
-            GuiComponent.drawCenteredString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_EMPTY),
+            mc.gui.drawCenteredString(poseStack, mc.gui.getFont(),
+                    new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_EMPTY),
                     (x + olWidth - 8) / 2, (y + olHeight - 6) / 2, MESSAGE_COLOR);
             return;
         }
@@ -92,7 +105,7 @@ public class CraftQueueOverlay {
         var helpText = String.format("%s [%s]",
                 I18n.get(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_HELP),
                 ModKeyBindings.OPEN_QUEUE_MANAGER_MAPPING.getTranslatedKeyMessage().getString());
-        GuiComponent.drawCenteredString(poseStack, gui.getFont(), helpText,
+        mc.gui.drawCenteredString(poseStack, mc.gui.getFont(), helpText,
                 (x + olWidth - 8) / 2, olHeight - TEXT_HEIGHT, HELP_COLOR);
 
         int yPos = y + SECTION_TITLE_Y_OFFSET;
@@ -101,8 +114,8 @@ public class CraftQueueOverlay {
         // SECTION: end products
 
         // title
-        GuiComponent.drawString(poseStack, gui.getFont(),
-                new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_PRODUCTS),
+        mc.gui.drawString(poseStack, mc.gui.getFont(),
+                new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_PRODUCTS),
                 x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
         yPos += TEXT_HEIGHT + 2;
         CraftTracker.LOGGER.trace("yPos (after product title): {}", yPos);
@@ -119,17 +132,17 @@ public class CraftQueueOverlay {
             var selectedRecipe = p.getRecipes().get(p.getIndex());
             var amountProduced = selectedRecipe.getResultItem().getCount() * p.getIterations();
             stack.setCount(amountProduced);
-            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-            drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+//            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//            drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
             var text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getIterations());
-            GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+            mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
 
             yPos += LINE_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (product item {}): {}", i, yPos);
         }
 
-        Player player = Minecraft.getInstance().player;
+        PlayerEntity player = Minecraft.getInstance().player;
 
         // SECTION: intermediates
 
@@ -138,8 +151,8 @@ public class CraftQueueOverlay {
             CraftTracker.LOGGER.trace("yPos (before intermediates title): {}", yPos);
 
             // title
-            GuiComponent.drawString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_INTERMEDIATES),
+            mc.gui.drawString(poseStack, mc.gui.getFont(),
+                    new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_INTERMEDIATES),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (after intermediates title): {}", yPos);
@@ -165,9 +178,9 @@ public class CraftQueueOverlay {
                     continue;
                 }
 
-                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -177,12 +190,12 @@ public class CraftQueueOverlay {
                             inter.isTag() ? "*" : "",
                             countText);
                     CraftTracker.LOGGER.trace("text: {}", text);
-                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
+                    mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                 }
                 else {
                     var text = item.getDescription().getString(MAX_STRING_LENGTH) +
                             (inter.isTag() ? "*" : "");
-                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                    mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
                 }
 
                 yPos += LINE_HEIGHT + 2;
@@ -197,8 +210,8 @@ public class CraftQueueOverlay {
             CraftTracker.LOGGER.trace("yPos (before materials title): {}", yPos);
 
             // title
-            GuiComponent.drawString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_MATERIALS),
+            mc.gui.drawString(poseStack, mc.gui.getFont(),
+                    new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_MATERIALS),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (after materials title): {}", yPos);
@@ -222,9 +235,9 @@ public class CraftQueueOverlay {
                     continue;
                 }
 
-                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -234,12 +247,12 @@ public class CraftQueueOverlay {
                             m.isTag() ? "*" : "",
                             countText);
                     CraftTracker.LOGGER.trace("text: {}", text);
-                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
+                    mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                 }
                 else {
                     var text = item.getDescription().getString(MAX_STRING_LENGTH) +
                             (m.isTag() ? "*" : "");
-                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                    mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
                 }
 
                 yPos += LINE_HEIGHT + 2;
@@ -254,8 +267,8 @@ public class CraftQueueOverlay {
             CraftTracker.LOGGER.trace("yPos (before fuel title): {}", yPos);
 
             // title
-            GuiComponent.drawString(poseStack, gui.getFont(),
-                    new TranslatableComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_FUEL),
+            mc.gui.drawString(poseStack, mc.gui.getFont(),
+                    new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_FUEL),
                     x + SECTION_X_OFFSET, yPos, SECTION_COLOR);
             yPos += TEXT_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos: {}", yPos);
@@ -279,9 +292,9 @@ public class CraftQueueOverlay {
                     continue;
                 }
 
-                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -291,12 +304,12 @@ public class CraftQueueOverlay {
                             f.isTag() ? "*" : "",
                             countText);
                     CraftTracker.LOGGER.trace("text: {}", text);
-                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
+                    mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
                 }
                 else {
                     var text = item.getDescription().getString(MAX_STRING_LENGTH) +
                             (f.isTag() ? "*" : "");
-                    GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                    mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
                 }
 
                 yPos += LINE_HEIGHT + 2;

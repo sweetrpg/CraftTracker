@@ -5,6 +5,9 @@ import com.sweetrpg.crafttracker.common.util.Util;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
+import net.minecraft.advancements.criterion.CriterionInstance;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -14,7 +17,7 @@ import java.util.function.Supplier;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instance> implements CriterionTrigger<T> {
+public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instance> implements ICriterionTrigger<T> {
     private final ResourceLocation id;
     protected final Map<PlayerAdvancements, Set<ICriterionTrigger.Listener<T>>> listeners = Maps.newHashMap();
 
@@ -22,13 +25,13 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
         this.id = Util.getResource(id);
     }
 
-    public void addPlayerListener(PlayerAdvancements playerAdvancementsIn, CriterionTrigger.Listener<T> listener) {
-        Set<CriterionTrigger.Listener<T>> playerListeners = (Set) this.listeners.computeIfAbsent(playerAdvancementsIn, (k) -> new HashSet());
+    public void addPlayerListener(PlayerAdvancements playerAdvancementsIn, Listener<T> listener) {
+        Set<Listener<T>> playerListeners = (Set) this.listeners.computeIfAbsent(playerAdvancementsIn, (k) -> new HashSet());
         playerListeners.add(listener);
     }
 
-    public void removePlayerListener(PlayerAdvancements playerAdvancementsIn, CriterionTrigger.Listener<T> listener) {
-        Set<CriterionTrigger.Listener<T>> playerListeners = (Set) this.listeners.get(playerAdvancementsIn);
+    public void removePlayerListener(PlayerAdvancements playerAdvancementsIn, Listener<T> listener) {
+        Set<Listener<T>> playerListeners = (Set) this.listeners.get(playerAdvancementsIn);
         if(playerListeners != null) {
             playerListeners.remove(listener);
             if(playerListeners.isEmpty()) {
@@ -46,13 +49,13 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
         return this.id;
     }
 
-    protected void trigger(ServerPlayer player, @Nullable List<Supplier<Object>> suppliers) {
+    protected void trigger(ServerPlayerEntity player, @Nullable List<Supplier<Object>> suppliers) {
         PlayerAdvancements playerAdvancements = player.getAdvancements();
-        Set<CriterionTrigger.Listener<T>> playerListeners = (Set) this.listeners.get(playerAdvancements);
+        Set<Listener<T>> playerListeners = (Set) this.listeners.get(playerAdvancements);
         if(playerListeners != null) {
-            List<CriterionTrigger.Listener<T>> list = new LinkedList();
+            List<Listener<T>> list = new LinkedList();
 
-            for(CriterionTrigger.Listener<T> listener : playerListeners) {
+            for(Listener<T> listener : playerListeners) {
                 if(((Instance) listener.getTriggerInstance()).test(suppliers)) {
                     list.add(listener);
                 }
@@ -63,8 +66,8 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 
     }
 
-    public abstract static class Instance extends AbstractCriterionTriggerInstance {
-        public Instance(ResourceLocation idIn, EntityPredicate.Composite p_i231464_2_) {
+    public abstract static class Instance extends CriterionInstance {
+        public Instance(ResourceLocation idIn, EntityPredicate.AndPredicate p_i231464_2_) {
             super(idIn, p_i231464_2_);
         }
 

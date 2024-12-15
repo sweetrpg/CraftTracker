@@ -40,6 +40,15 @@ public class CraftingQueueStorage extends WorldSavedData {
     }
 
     /**
+     * Gets the data stored.
+     *
+     * @return A {@link Map} of the data in this storage.
+     */
+    public Map<ResourceLocation, CraftingQueueProduct> getData() {
+        return this.products;
+    }
+
+    /**
      * Sets the data to store.
      *
      * @param products A map of end products to write to storage

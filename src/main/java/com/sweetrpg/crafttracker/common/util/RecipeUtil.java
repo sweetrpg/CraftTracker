@@ -88,20 +88,20 @@ public class RecipeUtil {
      * @param recipes A list of recipes to examine
      * @return The least expensive recipe
      */
-    public static ICraftingRecipe chooseLeastExpensiveOf(List<ICraftingRecipe> recipes) {
+    public static IRecipe<?> chooseLeastExpensiveOf(List<IRecipe<?>> recipes) {
         CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", recipes.stream().map(DebugUtil::printRecipe).toList());
 
         if(recipes.size() == 1) {
             return recipes.get(0);
         }
 
-        List<Tuple<ICraftingRecipe, Integer>> recipeCosts = new ArrayList<>();
+        List<Tuple<IRecipe<?>, Integer>> recipeCosts = new ArrayList<>();
 
-        for(ICraftingRecipe recipe : recipes) {
+        for(IRecipe<?> recipe : recipes) {
             CraftTracker.LOGGER.debug("recipe: {}", DebugUtil.printRecipe(recipe));
             var cost = new RecipeCostCalculator(recipe).calculate();
             CraftTracker.LOGGER.debug("cost: {}", cost);
-            var tuple = new Tuple<>(recipe, cost);
+            var tuple = new Tuple<IRecipe<?>, Integer>(recipe, cost);
 
             recipeCosts.add(tuple);
         }

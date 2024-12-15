@@ -4,6 +4,8 @@ import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.storage.ShoppingListStorage;
 import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
@@ -44,8 +46,10 @@ public class ShoppingListManager {
 
         try {
             InputStream in = Files.newInputStream(file, StandardOpenOption.READ);
-            var data = NbtIo.readCompressed(in);
-            this.items = ShoppingListStorage.load(data);
+            var data = CompressedStreamTools.readCompressed(in);
+            var storage = new ShoppingListStorage();
+            storage.load(data);
+            this.items = storage.getData();
         }
         catch (NoSuchFileException e) {
             // ignore
@@ -79,11 +83,11 @@ public class ShoppingListManager {
         try {
             boolean overwritten = Files.deleteIfExists(file);
             try (OutputStream out = Files.newOutputStream(file, StandardOpenOption.CREATE)) {
-                var root = new CompoundTag();
+                var root = new CompoundNBT();
                 var storage = new ShoppingListStorage();
                 storage.putData(this.items);
                 var data = storage.save(root);
-                NbtIo.writeCompressed(data, out);
+                CompressedStreamTools.writeCompressed(data, out);
             }
         }
         catch (IOException e) {

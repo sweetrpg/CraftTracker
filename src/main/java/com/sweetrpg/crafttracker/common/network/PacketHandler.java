@@ -5,7 +5,7 @@ import com.sweetrpg.crafttracker.common.network.packet.AdvancementPacket;
 import com.sweetrpg.crafttracker.common.network.packet.QueueCommandPacket;
 import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public final class PacketHandler {
@@ -21,7 +21,7 @@ public final class PacketHandler {
         CraftTracker.HANDLER.sendToServer(message);
     }
 
-    public static <MSG> void sendToPlayer(PlayerEntity player, MSG message) {
+    public static <MSG> void sendToPlayer(ServerPlayerEntity player, MSG message) {
         CraftTracker.HANDLER.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 

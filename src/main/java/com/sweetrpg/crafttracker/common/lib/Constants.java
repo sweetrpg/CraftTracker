@@ -13,6 +13,10 @@ public class Constants {
 
     public static final String JEI_PLUGIN_ID = "jei_plugin";
 
+    // GUIs
+    public static final int BACKGROUND_COLOR = 0x015f5f5f;
+    public static final int BORDER_COLOR = 0x011f1f1f;
+
     // Network
     public static final ResourceLocation CHANNEL_NAME = Util.getResource("channel");
     public static final String PROTOCOL_VERSION = Integer.toString(1);
@@ -62,10 +66,14 @@ public class Constants {
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y = "crafttracker.config.client.craft_queue_y";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH = "crafttracker.config.client.craft_queue_width";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HEIGHT = "crafttracker.config.client.craft_queue_height";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_BACKGROUND_COLOR = "crafttracker.config.client.craft_queue_background_color";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_BORDER_COLOR = "crafttracker.config.client.craft_queue_border_color";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_X = "crafttracker.config.client.shopping_list_x";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_Y = "crafttracker.config.client.shopping_list_y";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_WIDTH = "crafttracker.config.client.shopping_list_width";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT = "crafttracker.config.client.shopping_list_height";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_BACKGROUND_COLOR = "crafttracker.config.client.shopping_list_background_color";
+    public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_BORDER_COLOR = "crafttracker.config.client.shopping_list_border_color";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY = "crafttracker.config.client.craft_queue_hide_empty";
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY = "crafttracker.config.client.shopping_list_hide_empty";
 

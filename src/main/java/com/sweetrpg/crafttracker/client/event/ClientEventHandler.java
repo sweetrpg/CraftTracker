@@ -16,12 +16,20 @@ import com.sweetrpg.crafttracker.common.util.KeyUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.CraftingScreen;
+import net.minecraft.client.gui.screen.inventory.CreativeScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.Optional;
 
 public class ClientEventHandler {
 
@@ -170,42 +178,45 @@ public class ClientEventHandler {
     private static void handleAddToQueue() {
         CraftTracker.LOGGER.debug("#handleAddToQueue");
 
-        CTPlugin.jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse()
-                .ifPresent(ingredient -> {
-                    CraftTracker.LOGGER.debug("#handleAddToQueue: type {}", ingredient.getType());
-                    CraftTracker.LOGGER.debug("#handleAddToQueue: ingredient {}", ingredient.getIngredient());
+        Optional.ofNullable(CTPlugin.jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse())
+                .stream()
+                .filter(i -> i instanceof ItemStack)
+                .map(i -> (ItemStack) i)
+                .findFirst()
+                .ifPresent(stack -> {
+//                    CraftTracker.LOGGER.debug("#handleAddToQueue: type {}", ingredient.getType());
+                    CraftTracker.LOGGER.debug("#handleAddToQueue: stack {}", stack);
 
-                    if(ingredient.getIngredient() instanceof ItemStack itemStack) {
-                        ResourceLocation res = itemStack.getItem().getRegistryName();
-                        CraftTracker.LOGGER.debug("#handleAddToQueue: res {}", res);
+                    Item item = stack.getItem();
+                    ResourceLocation res = item.getRegistryName();
+                    CraftTracker.LOGGER.debug("#handleAddToQueue: res {}", res);
 
-                        var player = Minecraft.getInstance().player;
-                        CraftingQueueManager.INSTANCE.addProduct(player, res, 1);
+                    var player = Minecraft.getInstance().player;
+                    CraftingQueueManager.INSTANCE.addProduct(player, res, 1);
 
-                        // send advancement packet
-                        PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.QUEUE_ITEM));
-                    }
+                    // send advancement packet
+                    PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.QUEUE_ITEM));
                 });
     }
 
     @SubscribeEvent
-    public void onInputEvent(final MovementInputUpdateEvent event) {
+    public void onInputEvent(final InputUpdateEvent event) {
         CraftTracker.LOGGER.trace("#onInputEvent: {}", event);
 
     }
 
     @SubscribeEvent
-    public static void onScreenInit(final ScreenEvent.InitScreenEvent.Post event) {
+    public static void onScreenInit(final GuiScreenEvent.InitGuiEvent.Post event) {
         CraftTracker.LOGGER.trace("#onScreenInit: {}", event);
 
     }
 
     @SubscribeEvent
-    public void onScreenDrawForeground(final ScreenEvent.DrawScreenEvent event) {
+    public void onScreenDrawForeground(final GuiScreenEvent.DrawScreenEvent event) {
         CraftTracker.LOGGER.trace("#onScreenDrawForeground: {}", event);
 
-        Screen screen = event.getScreen();
-        if(screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
+        Screen screen = event.getGui();
+        if(screen instanceof InventoryScreen || screen instanceof CreativeScreen) {
 //            boolean creative = screen instanceof CreativeModeInventoryScreen;
 
             // TODO

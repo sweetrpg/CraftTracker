@@ -64,10 +64,14 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y, "The Y position on the screen for the craft queue overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH, "The width of the craft queue overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HEIGHT, "The height of the craft queue overlay");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_BACKGROUND_COLOR, "The background color of the craft queue overlay");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_BORDER_COLOR, "The border color of the craft queue overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_X, "The X position on the screen for the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_Y, "The Y position on the screen for the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_WIDTH, "The width of the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT, "The height of the shopping list overlay");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_BACKGROUND_COLOR, "The background color of the shopping list overlay");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_BORDER_COLOR, "The border color of the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY, "Should the craft queue overlay be hidden when it is empty?");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY, "Should the shopping list overlay be hidden when it is empty?");
 
@@ -122,10 +126,14 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y, "The Y position on the screen for the craft queue overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH, "The width of the craft queue overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HEIGHT, "The height of the craft queue overlay");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_BACKGROUND_COLOR, "The background color of the craft queue overlay");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_BORDER_COLOR, "The border color of the craft queue overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_X, "The X position on the screen for the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_Y, "The Y position on the screen for the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_WIDTH, "The width of the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT, "The height of the shopping list overlay");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_BACKGROUND_COLOR, "The background color of the shopping list overlay");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_BORDER_COLOR, "The border color of the shopping list overlay");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY, "Should the craft queue overlay be hidden when it is empty?");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY, "Should the shopping list overlay be hidden when it is empty?");
 
@@ -180,10 +188,14 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y, "Die Y-Position auf dem Bildschirm für die Handwerkswarteschlangenüberlagerung");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH, "Die Breite der Craft-Warteschlangenüberlagerung");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HEIGHT, "Die Höhe der Craft-Warteschlangenüberlagerung");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_BACKGROUND_COLOR, "Die Hintergrundfarbe der Craft-Warteschlangenüberlagerung");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_BORDER_COLOR, "Die Rahmenfarbe der Handwerkswarteschlangenüberlagerung");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_X, "Die X-Position auf dem Bildschirm für die Einkaufslisten-Überlagerung");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_Y, "Die Y-Position auf dem Bildschirm für die Einkaufslisten-Überlagerung");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_WIDTH, "Die Breite des Einkaufslisten-Overlays");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT, "Die Höhe des Einkaufslisten-Overlays");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_BACKGROUND_COLOR, "Die Hintergrundfarbe des Einkaufslisten-Overlays");
+        add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_BORDER_COLOR, "Die Rahmenfarbe der Einkaufslisten-Overlays");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY, "Soll das Overlay der Herstellungswarteschlange ausgeblendet werden, wenn es leer ist?");
         add(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY, "Soll das Einkaufslisten-Overlay ausgeblendet werden, wenn es leer ist?");
 

@@ -2,6 +2,7 @@ package com.sweetrpg.crafttracker.common.storage;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.util.NBTUtil;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
@@ -28,7 +29,16 @@ public class ShoppingListStorage extends WorldSavedData {
      * Default constructor.
      */
     public ShoppingListStorage() {
-        super();
+        super(Util.getResourcePath("shopping_list"));
+    }
+
+    /**
+     * Gets the data stored.
+     *
+     * @return A {@link Map} of the data in this storage.
+     */
+    public Map<ResourceLocation, Integer> getData() {
+        return this.products;
     }
 
     /**
@@ -71,7 +81,7 @@ public class ShoppingListStorage extends WorldSavedData {
             store.products.put(itemId, quantity);
         }
 
-        return store.products;
+//        return store.products;
     }
 
     /**
@@ -81,7 +91,7 @@ public class ShoppingListStorage extends WorldSavedData {
      * @return The root tag
      */
     @Override
-    public  CompoundNBT save( CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         CraftTracker.LOGGER.debug("ShoppingListStorage#save: {}", compound);
 
         NBTUtil.putUniqueId(compound, ShoppingListStorage.Keys.OWNER_ID, this.ownerId);

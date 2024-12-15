@@ -4,25 +4,26 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.sweetrpg.crafttracker.common.lib.Resources;
-import net.java.games.input.Component;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.fonts.Font;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 
 public class SmallButton extends Button {
 
-    public SmallButton(int x, int y, Component text, OnPress onPress) {
+    public SmallButton(int x, int y, ITextComponent text, IPressable onPress) {
         super(x, y, 12, 12, text, onPress);
     }
 
     @Override
     public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
-//        Font font = mc.font.;
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-        RenderSystem.setShaderTexture(0, Resources.SMALL_WIDGETS);
+        FontRenderer font = mc.font;
+//        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+//        RenderSystem.setShaderTexture(0, Resources.SMALL_WIDGETS);
+        mc.getTextureManager().bind(Resources.SMALL_WIDGETS);
         int i = this.getYImage(this.isHovered() || this.isFocused());
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -30,6 +31,6 @@ public class SmallButton extends Button {
         this.blit(stack, this.x, this.y, 0, i * 12, this.width, this.height);
         this.renderBg(stack, mc, mouseX, mouseY);
         int j = getFGColor();
-        this.drawCenteredString(stack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
+        this.drawCenteredString(stack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
     }
 }

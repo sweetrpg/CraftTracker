@@ -3,7 +3,10 @@
   "icon": "minecraft:chest",
   "category": "crafttracker:keys",
   "pages": [
-    "There are several key bindings that let you perform certain functions with Craft Tracker",
+    {
+      "type": "patchouli:text",
+      "text": "There are several key bindings that let you perform certain functions with Craft Tracker"
+    },
     {
       "type": "patchouli:text",
       "title": "Add to Queue",

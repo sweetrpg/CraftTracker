@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Arrays;
 
@@ -31,7 +32,7 @@ public class DebugUtil {
                     builder.append(i.getItem().getRegistryName());
 
                     builder.append(", tags=[");
-                    builder.append(String.join(",", i.getItem().getTags().stream().map(TagKey::toString).toList()));
+                    builder.append(String.join(",", i.getItem().getTags().stream().map(ResourceLocation::toString).toList()));
                     builder.append("]");
 
                     builder.append(", count=");
@@ -62,7 +63,7 @@ public class DebugUtil {
         builder.append(itemStack.getCount());
 
         builder.append(", tags=[");
-        builder.append(String.join(",", itemStack.getItem().getTags().stream().map(TagKey::toString).toList()));
+        builder.append(String.join(",", itemStack.getItem().getTags().stream().map(ResourceLocation::toString).toList()));
         builder.append("]");
 
         builder.append(" }");

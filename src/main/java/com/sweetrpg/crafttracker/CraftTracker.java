@@ -56,8 +56,10 @@ public class CraftTracker {
         // Client Events
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             modEventBus.addListener(this::clientSetup);
-            modEventBus.addListener(ClientSetup::addClientReloadListeners);
+//            modEventBus.addListener(ClientSetup::addClientReloadListeners);
             modEventBus.addListener(ClientSetup::addKeyBindings);
+
+            ClientSetup.initOverlays();
 
             forgeEventBus.register(new ClientEventHandler());
         });

@@ -9,6 +9,7 @@ import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.util.AdvancementUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemPickupEvent;
@@ -35,8 +36,8 @@ public class EventHandler {
         }
         else {
             // send packet
-            PacketHandler.sendToPlayer((PlayerEntity) event.getPlayer(), new QueueCommandData(RECALCULATE));
-            AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (PlayerEntity) event.getPlayer());
+            PacketHandler.sendToPlayer((ServerPlayerEntity) event.getPlayer(), new QueueCommandData(RECALCULATE));
+            AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayerEntity) event.getPlayer());
         }
     }
 
@@ -53,8 +54,8 @@ public class EventHandler {
         }
         else {
             // send packet
-            PacketHandler.sendToPlayer((PlayerEntity) event.getPlayer(), new QueueCommandData(RECALCULATE));
-            AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (Entity) event.getPlayer());
+            PacketHandler.sendToPlayer((ServerPlayerEntity) event.getPlayer(), new QueueCommandData(RECALCULATE));
+            AdvancementUtil.trigger(ModAdvancements.Key.CRAFT_ITEM, (ServerPlayerEntity) event.getPlayer());
         }
     }
 
@@ -71,8 +72,8 @@ public class EventHandler {
         }
         else {
             // send packet
-            PacketHandler.sendToPlayer((PlayerEntity) event.getPlayer(), new QueueCommandData(RECALCULATE));
-            AdvancementUtil.trigger(ModAdvancements.Key.ACQUIRE_ITEM, (PlayerEntity) event.getPlayer());
+            PacketHandler.sendToPlayer((ServerPlayerEntity) event.getPlayer(), new QueueCommandData(RECALCULATE));
+            AdvancementUtil.trigger(ModAdvancements.Key.ACQUIRE_ITEM, (ServerPlayerEntity) event.getPlayer());
         }
     }
 
