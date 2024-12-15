@@ -1,7 +1,6 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
@@ -9,8 +8,9 @@ import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.Util;
-import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,7 +20,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraft.client.resources.I18n;
 
 @OnlyIn(Dist.CLIENT)
 public class CraftQueueOverlay {
@@ -132,9 +131,9 @@ public class CraftQueueOverlay {
             var selectedRecipe = p.getRecipes().get(p.getIndex());
             var amountProduced = selectedRecipe.getResultItem().getCount() * p.getIterations();
             stack.setCount(amountProduced);
-//            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-//                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-//            drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+            ItemRenderer itemRenderer = mc.getItemRenderer();
+            itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+            itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
             var text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getIterations());
             mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
 
@@ -178,9 +177,9 @@ public class CraftQueueOverlay {
                     continue;
                 }
 
-//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-//                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+                ItemRenderer itemRenderer = mc.getItemRenderer();
+                itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+                itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -235,9 +234,9 @@ public class CraftQueueOverlay {
                     continue;
                 }
 
-//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-//                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+                ItemRenderer itemRenderer = mc.getItemRenderer();
+                itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+                itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -292,9 +291,9 @@ public class CraftQueueOverlay {
                     continue;
                 }
 
-//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-//                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+                ItemRenderer itemRenderer = mc.getItemRenderer();
+                itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+                itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {

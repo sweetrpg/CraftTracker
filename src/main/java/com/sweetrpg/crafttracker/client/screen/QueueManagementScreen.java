@@ -2,7 +2,6 @@ package com.sweetrpg.crafttracker.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
@@ -10,16 +9,13 @@ import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
 import com.sweetrpg.crafttracker.common.network.PacketHandler;
 import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.helpers.IJeiHelpers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -110,10 +106,9 @@ public class QueueManagementScreen extends Screen {
             mc.gui.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
 
             // icon
-//            mc.gui.;
-//            var drawable = CTPlugin.jeiRuntime
-//                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
-//            drawable.draw(poseStack, topX + ITEM_X_ICON_OFFSET, y + 2);
+            ItemRenderer itemRenderer = mc.getItemRenderer();
+            itemRenderer.renderAndDecorateFakeItem(itemStack, topX + ITEM_X_ICON_OFFSET, y + 2);
+            itemRenderer.renderGuiItemDecorations(mc.font, itemStack, topX + ITEM_X_ICON_OFFSET, y + 2);
 
             // name
             this.font.draw(poseStack, item.getDescription(), topX + ITEM_X_TEXT_OFFSET, y + 6, ITEM_COLOR);
