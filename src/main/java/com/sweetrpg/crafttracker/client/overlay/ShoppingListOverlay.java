@@ -1,14 +1,12 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.Util;
-import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -131,9 +129,10 @@ public class ShoppingListOverlay {
                 continue;
             }
 
-            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-            drawable.draw(graphics, x + SECTION_X_OFFSET, yPos);
+            graphics.renderItem(stack, x + SECTION_X_OFFSET, yPos);
+//            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//            drawable.draw(graphics, x + SECTION_X_OFFSET, yPos);
 
             final int lambdaYpos = yPos;
             if(playerHasQuantity > 0) {
