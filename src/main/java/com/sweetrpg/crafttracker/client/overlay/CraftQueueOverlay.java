@@ -1,16 +1,16 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
-import mezz.jei.api.constants.VanillaTypes;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -38,10 +38,11 @@ public class CraftQueueOverlay {
     public void onRenderGuiOverlay(RenderGuiOverlayEvent event) {
         CraftTracker.LOGGER.trace("CraftQueueOverlay#onRenderGuiOverlay");
 
-        final var gui = (ForgeGui) Minecraft.getInstance().gui;
+        final var mc = Minecraft.getInstance();
+        final var gui = (ForgeGui) mc.gui;
         final var poseStack = event.getPoseStack();
-        final var width = Minecraft.getInstance().getWindow().getWidth();
-        final var height = Minecraft.getInstance().getWindow().getHeight();
+        final var width = mc.getWindow().getWidth();
+        final var height = mc.getWindow().getHeight();
 
         var mgr = CraftingQueueManager.INSTANCE;
         var products = mgr.getEndProducts().stream().sorted((i1, i2) -> {
@@ -73,8 +74,8 @@ public class CraftQueueOverlay {
         var y = ConfigHandler.CLIENT.craftQueueOverlayY.get();
         var olWidth = Math.min((ConfigHandler.CLIENT.craftQueueOverlayX.get() + ConfigHandler.CLIENT.craftQueueOverlayWidth.get()), width - 10);
         var olHeight = Math.min((ConfigHandler.CLIENT.craftQueueOverlayY.get() + ConfigHandler.CLIENT.craftQueueOverlayHeight.get()), height - 10);
-        var backgroundColor = 0x015f5f5f; // TODO: get from config
-        var borderColor = 0x061f1f1f; // TODO: get from config
+        var backgroundColor = Util.parseColor(ConfigHandler.CLIENT.craftQueueOverlayBackgroundColor.get(), 16, Constants.BACKGROUND_COLOR);
+        var borderColor = Util.parseColor(ConfigHandler.CLIENT.craftQueueOverlayBorderColor.get(), 16, Constants.BORDER_COLOR);
 
         GuiComponent.fill(poseStack, x, y, olWidth, olHeight, borderColor);
         GuiComponent.fill(poseStack, x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
@@ -121,9 +122,14 @@ public class CraftQueueOverlay {
             var selectedRecipe = p.getRecipes().get(p.getIndex());
             var amountProduced = selectedRecipe.getResultItem().getCount() * p.getIterations();
             stack.setCount(amountProduced);
-            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-            drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+
+            ItemRenderer itemRenderer = mc.getItemRenderer();
+            itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+            itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
+//            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//            drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+
             var text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getIterations());
             GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
 
@@ -167,9 +173,12 @@ public class CraftQueueOverlay {
                     continue;
                 }
 
-                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+                ItemRenderer itemRenderer = mc.getItemRenderer();
+                itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+                itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
+//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -224,9 +233,12 @@ public class CraftQueueOverlay {
                     continue;
                 }
 
-                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+                ItemRenderer itemRenderer = mc.getItemRenderer();
+                itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+                itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
+//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -281,9 +293,12 @@ public class CraftQueueOverlay {
                     continue;
                 }
 
-                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+                ItemRenderer itemRenderer = mc.getItemRenderer();
+                itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+                itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
+//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//                drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -309,8 +324,6 @@ public class CraftQueueOverlay {
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(new CraftQueueOverlay());
-//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "craft_queue", CraftQueueOverlay.CRAFT_QUEUE);
-//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "shopping_list", ShoppingListOverlay.SHOPPING_LIST);
     }
 
 }

@@ -48,6 +48,6 @@
   "key.crafttracker.clearShoppingList": "Einkaufsliste löschen",
   "key.crafttracker.openQueueManager": "Warteschlangenmanager öffnen",
   "key.crafttracker.populateShoppingList": "Einkaufsliste füllen",
-  "key.crafttracker.toggleCraftQueue": "Herstellungswarteschlangen-Overlay-Modus",
-  "key.crafttracker.toggleShoppingList": "Einkaufslisten-Overlay-Modus"
+  "key.crafttracker.toggleCraftQueue": "Herstellungswarteschlange umschalten",
+  "key.crafttracker.toggleShoppingList": "Einkaufsliste umschalten"
 }
