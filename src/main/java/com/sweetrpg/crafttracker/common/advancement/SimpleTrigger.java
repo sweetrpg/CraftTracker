@@ -1,8 +1,8 @@
 package com.sweetrpg.crafttracker.common.advancement;
 
 import com.google.gson.JsonObject;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.loot.ConditionArrayParser;
 import net.minecraft.util.ResourceLocation;
@@ -11,7 +11,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.function.Supplier;
-import mcp.MethodsReturnNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

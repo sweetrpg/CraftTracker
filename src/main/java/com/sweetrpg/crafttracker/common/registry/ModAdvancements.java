@@ -5,8 +5,6 @@ import com.sweetrpg.crafttracker.data.DisplayInfoBuilder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.IRequirementsStrategy;
-import net.minecraft.advancements.criterion.EnterBlockTrigger;
-import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.advancements.criterion.LocationPredicate;
 import net.minecraft.advancements.criterion.PositionTrigger;
 import net.minecraft.item.ItemStack;

@@ -7,8 +7,6 @@ import com.sweetrpg.crafttracker.common.network.PacketHandler;
 import com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandData;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.util.AdvancementUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
