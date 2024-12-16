@@ -1,1 +1,0 @@
-- `[FIX]` Fix button clipping in the queue manager screen
