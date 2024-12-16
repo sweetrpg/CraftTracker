@@ -30,7 +30,7 @@ public class QueueManagementScreen extends Screen {
     public static final int TITLE_COLOR = 0xbbbbbbbb;
     public static final int TITLE_HEIGHT = 20;
     public static final int ITEM_COLOR = 0xffffffff;
-    public static final int ITEM_HEIGHT = 18;
+    public static final int ITEM_HEIGHT = 20;
     public static final int BUTTON_SIZE = ITEM_HEIGHT - 2;
     public static final int BACKGROUND_COLOR = 0x66666666;
     public static final int ITEM_X_ICON_OFFSET = 2;
@@ -95,7 +95,7 @@ public class QueueManagementScreen extends Screen {
 
             var item = ForgeRegistries.ITEMS.getValue(pItem.getProductId());
             var itemStack = item.getDefaultInstance();
-            var y = topY + TITLE_HEIGHT + (i * (ITEM_HEIGHT + 4));
+            var y = topY + TITLE_HEIGHT + (i * (ITEM_HEIGHT + 6));
 
             if(y + ITEM_HEIGHT > height) {
                 CraftTracker.LOGGER.debug("too many items for display (stopping at item {}, y {}", i, y);
@@ -103,19 +103,19 @@ public class QueueManagementScreen extends Screen {
             }
 
             // background
-            mc.gui.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
+            mc.gui.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 4, BACKGROUND_COLOR);
 
             // icon
             ItemRenderer itemRenderer = mc.getItemRenderer();
-            itemRenderer.renderAndDecorateFakeItem(itemStack, topX + ITEM_X_ICON_OFFSET, y + 2);
-            itemRenderer.renderGuiItemDecorations(mc.font, itemStack, topX + ITEM_X_ICON_OFFSET, y + 2);
+            itemRenderer.renderAndDecorateFakeItem(itemStack, topX + ITEM_X_ICON_OFFSET, y + 3);
+            itemRenderer.renderGuiItemDecorations(mc.font, itemStack, topX + ITEM_X_ICON_OFFSET, y + 3);
 
             // name
-            this.font.draw(poseStack, item.getDescription(), topX + ITEM_X_TEXT_OFFSET, y + 6, ITEM_COLOR);
+            this.font.draw(poseStack, item.getDescription(), topX + ITEM_X_TEXT_OFFSET, y + 9, ITEM_COLOR);
 
             // quantity and adjustment buttons
             {
-                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new StringTextComponent("-"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE + 2, new StringTextComponent("-"), btn -> {
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), -1);
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                 }) /*{
@@ -129,10 +129,10 @@ public class QueueManagementScreen extends Screen {
             }
             {
                 var text = String.format("%d", pItem.getIterations());
-                mc.gui.drawCenteredString(poseStack, this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
+                mc.gui.drawCenteredString(poseStack, this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 9, ITEM_COLOR);
             }
             {
-                Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new StringTextComponent("+"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE + 2, new StringTextComponent("+"), btn -> {
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), 1);
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                 }) /*{
@@ -149,7 +149,7 @@ public class QueueManagementScreen extends Screen {
 
             // delete button
             {
-                Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, new StringTextComponent("x"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE + 2, new StringTextComponent("x"), btn -> {
                     CraftingQueueManager.INSTANCE.removeProduct(player, pItem.getProductId());
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                     this.buttons.clear();
