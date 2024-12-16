@@ -1076,7 +1076,7 @@ public class Costs {
             entry("minecraft:yellow_wool", 10),
             entry("minecraft:zombie_head", 10),
             entry("minecraft:zombie_wall_head", 10)
-            );
+    );
 
     public static final Map<String, Integer> itemOverrides = Map.<String, Integer>ofEntries(
             entry("create:precision_mechanism", 250),

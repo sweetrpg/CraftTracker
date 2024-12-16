@@ -13,15 +13,9 @@ public class ClientSetup {
         MinecraftForge.EVENT_BUS.addListener(ClientEventHandler::onScreenInit);
     }
 
-//    public static void addClientReloadListeners(final RegisterClientReloadListenersEvent event) {
-//    }
-
     public static void addKeyBindings(final FMLClientSetupEvent event) {
 
         MinecraftForge.EVENT_BUS.addListener(ClientEventHandler::onKeyInput);
-
-//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "craft_queue", CraftQueueOverlay.CRAFT_QUEUE);
-//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "shopping_list", ShoppingListOverlay.SHOPPING_LIST);
 
         ModKeyBindings.init();
     }
