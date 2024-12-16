@@ -1,0 +1,1 @@
+- `[NEW]` Overlay background and border color is configurable

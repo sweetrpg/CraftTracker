@@ -1,25 +1,14 @@
 package com.sweetrpg.crafttracker.common.util;
 
-import com.google.common.collect.Lists;
 import com.sweetrpg.crafttracker.common.lib.Constants;
-import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.IForgeRegistryEntry;
-import net.minecraftforge.registries.IRegistryDelegate;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import java.util.Locale;
 
 /**
  * Miscellaneous utilities.
@@ -95,4 +84,14 @@ public class Util {
         return getResource(modId, name).toString();
     }
 
+    public static int parseColor(String colorValue, int radix, int defaultValue) {
+        try {
+            return Integer.parseInt(colorValue, radix);
+        }
+        catch (Exception e) {
+            // ignore
+        }
+
+        return defaultValue;
+    }
 }

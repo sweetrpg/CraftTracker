@@ -65,6 +65,8 @@ public class ConfigHandler {
         public ForgeConfigSpec.IntValue craftQueueOverlayY;
         public ForgeConfigSpec.IntValue craftQueueOverlayWidth;
         public ForgeConfigSpec.IntValue craftQueueOverlayHeight;
+        public ForgeConfigSpec.ConfigValue<String> craftQueueOverlayBackgroundColor;
+        public ForgeConfigSpec.ConfigValue<String> craftQueueOverlayBorderColor;
 
         // Shopping List
         public ForgeConfigSpec.BooleanValue shoppingListOverlayHideEmpty;
@@ -72,6 +74,8 @@ public class ConfigHandler {
         public ForgeConfigSpec.IntValue shoppingListOverlayY;
         public ForgeConfigSpec.IntValue shoppingListOverlayWidth;
         public ForgeConfigSpec.IntValue shoppingListOverlayHeight;
+        public ForgeConfigSpec.ConfigValue<String> shoppingListOverlayBackgroundColor;
+        public ForgeConfigSpec.ConfigValue<String> shoppingListOverlayBorderColor;
 
         public ClientConfig(ForgeConfigSpec.Builder builder) {
             {
@@ -90,6 +94,8 @@ public class ConfigHandler {
                 craftQueueOverlayY = builder.comment("Sets the Y screen location for the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_Y).defineInRange("craft_queue_y", 60, -1000, 10000);
                 craftQueueOverlayWidth = builder.comment("Sets the width of the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_WIDTH).defineInRange("craft_queue_width", 300, 100, 10000);
                 craftQueueOverlayHeight = builder.comment("Sets the height of the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HEIGHT).defineInRange("craft_queue_height", 500, 100, 10000);
+                craftQueueOverlayBackgroundColor = builder.comment("Sets the background color of the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_BACKGROUND_COLOR).define("craft_queue_background_color", "0x015f5f5f");
+                craftQueueOverlayBorderColor = builder.comment("Sets the border color of the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_BORDER_COLOR).define("craft_queue_border_color", "0x011f1f1f");
 
                 builder.pop();
             }
@@ -102,6 +108,8 @@ public class ConfigHandler {
                 shoppingListOverlayY = builder.comment("Sets the Y screen location for the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_Y).defineInRange("shopping_list_y", 60, -1000, 10000);
                 shoppingListOverlayWidth = builder.comment("Sets the width of the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_WIDTH).defineInRange("shopping_list_width", 300, 100, 10000);
                 shoppingListOverlayHeight = builder.comment("Sets the height of the 'shopping list' overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HEIGHT).defineInRange("shopping_list_height", 500, 100, 10000);
+                shoppingListOverlayBackgroundColor = builder.comment("Sets the background color of the shopping list overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_BACKGROUND_COLOR).define("shopping_list_background_color", "0x015f5f5f");
+                shoppingListOverlayBorderColor = builder.comment("Sets the border color of the shopping list overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_BORDER_COLOR).define("shopping_list_border_color", "0x011f1f1f");
 
                 builder.pop();
             }
