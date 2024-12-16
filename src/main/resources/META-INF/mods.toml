@@ -53,5 +53,5 @@ displayName="Craft Tracker"
 
 [modproperties.configured]
 displayName = "Craft Tracker"
-    catalogueImageIcon="configured_icon.png"
-    configuredBackground="minecraft:textures/block/gray_wool.png"
+catalogueImageIcon = "configured_icon.png"
+configuredBackground = "minecraft:textures/block/gray_wool.png"
