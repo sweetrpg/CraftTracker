@@ -131,9 +131,11 @@ public class CraftQueueOverlay {
             var selectedRecipe = p.getRecipes().get(p.getIndex());
             var amountProduced = selectedRecipe.getResultItem().getCount() * p.getIterations();
             stack.setCount(amountProduced);
+
             ItemRenderer itemRenderer = mc.getItemRenderer();
             itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
             itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
+
             var text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getIterations());
             mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
 

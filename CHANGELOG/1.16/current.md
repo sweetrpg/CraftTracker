@@ -1,1 +1,1 @@
-- `[NEW]` Release for 1.16!
+- `[FIX]` Fix button clipping in the queue manager screen
