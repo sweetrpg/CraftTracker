@@ -1,16 +1,15 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.Util;
-import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -38,10 +37,11 @@ public class ShoppingListOverlay {
     public void onRenderGuiOverlay(RenderGuiOverlayEvent event) {
         CraftTracker.LOGGER.trace("ShoppingListOverlay#onRenderGuiOverlay");
 
-        final var gui = (ForgeGui) Minecraft.getInstance().gui;
+        final var mc = Minecraft.getInstance();
+        final var gui = (ForgeGui) mc.gui;
         final var poseStack = event.getPoseStack();
-        final var width = Minecraft.getInstance().getWindow().getWidth();
-        final var height = Minecraft.getInstance().getWindow().getHeight();
+        final var width = mc.getWindow().getWidth();
+        final var height = mc.getWindow().getHeight();
 
         var mgr = ShoppingListManager.INSTANCE;
         var items = mgr.getItems();
@@ -129,9 +129,12 @@ public class ShoppingListOverlay {
                 continue;
             }
 
-            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-            drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+            ItemRenderer itemRenderer = mc.getItemRenderer();
+            itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+            itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
+//            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//            drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
 
             final int lambdaYpos = yPos;
             if(playerHasQuantity > 0) {

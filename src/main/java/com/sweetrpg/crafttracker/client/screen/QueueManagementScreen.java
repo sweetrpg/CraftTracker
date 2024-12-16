@@ -2,7 +2,6 @@ package com.sweetrpg.crafttracker.client.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
@@ -10,11 +9,11 @@ import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
 import com.sweetrpg.crafttracker.common.network.PacketHandler;
 import com.sweetrpg.crafttracker.common.network.packet.data.AdvancementData;
 import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
-import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +30,7 @@ public class QueueManagementScreen extends Screen {
     public static final int TITLE_COLOR = 0xbbbbbbbb;
     public static final int TITLE_HEIGHT = 20;
     public static final int ITEM_COLOR = 0xffffffff;
-    public static final int ITEM_HEIGHT = 18;
+    public static final int ITEM_HEIGHT = 20;
     public static final int BUTTON_SIZE = ITEM_HEIGHT - 2;
     public static final int BACKGROUND_COLOR = 0x66666666;
     public static final int ITEM_X_ICON_OFFSET = 2;
@@ -91,7 +90,7 @@ public class QueueManagementScreen extends Screen {
 
             var item = ForgeRegistries.ITEMS.getValue(pItem.getProductId());
             var itemStack = item.getDefaultInstance();
-            var y = topY + TITLE_HEIGHT + (i * (ITEM_HEIGHT + 4));
+            var y = topY + TITLE_HEIGHT + (i * (ITEM_HEIGHT + 6));
 
             if(y + ITEM_HEIGHT > height) {
                 CraftTracker.LOGGER.debug("too many items for display (stopping at item {}, y {}", i, y);
@@ -99,19 +98,22 @@ public class QueueManagementScreen extends Screen {
             }
 
             // background
-            GuiComponent.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 2, BACKGROUND_COLOR);
+            GuiComponent.fill(poseStack, topX, y, topX + width, y + ITEM_HEIGHT + 4, BACKGROUND_COLOR);
 
             // icon
-            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
-            drawable.draw(poseStack, topX + ITEM_X_ICON_OFFSET, y + 2);
+            ItemRenderer itemRenderer = this.minecraft.getItemRenderer();
+            itemRenderer.renderAndDecorateFakeItem(itemStack, topX + ITEM_X_ICON_OFFSET, y + 4);
+            itemRenderer.renderGuiItemDecorations(this.minecraft.font, itemStack, topX + ITEM_X_ICON_OFFSET, y + 2);
+//            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
+//            drawable.draw(poseStack, topX + ITEM_X_ICON_OFFSET, y + 2);
 
             // name
-            this.font.draw(poseStack, item.getDescription(), topX + ITEM_X_TEXT_OFFSET, y + 6, ITEM_COLOR);
+            this.font.draw(poseStack, item.getDescription(), topX + ITEM_X_TEXT_OFFSET, y + 9, ITEM_COLOR);
 
             // quantity and adjustment buttons
             {
-                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, Component.literal("-"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_DOWN_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE + 2, Component.literal("-"), btn -> {
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), -1);
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                 }) /*{
@@ -125,10 +127,10 @@ public class QueueManagementScreen extends Screen {
             }
             {
                 var text = String.format("%d", pItem.getIterations());
-                GuiComponent.drawCenteredString(poseStack, this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 6, ITEM_COLOR);
+                GuiComponent.drawCenteredString(poseStack, this.font, text, topX + width + ITEM_X_QTY_OFFSET, y + 9, ITEM_COLOR);
             }
             {
-                Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, Component.literal("+"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_UP_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE + 2, Component.literal("+"), btn -> {
                     CraftingQueueManager.INSTANCE.adjustProduct(player, pItem.getProductId(), 1);
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                 }) /*{
@@ -145,7 +147,7 @@ public class QueueManagementScreen extends Screen {
 
             // delete button
             {
-                Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE - 2, Component.literal("x"), btn -> {
+                Button button = new Button(topX + width + ITEM_X_DELETE_BUTTON_OFFSET, y + 2, BUTTON_SIZE, BUTTON_SIZE + 2, Component.literal("x"), btn -> {
                     CraftingQueueManager.INSTANCE.removeProduct(player, pItem.getProductId());
                     QueueManagementScreen.this.productItems = CraftingQueueManager.INSTANCE.getEndProducts();
                     this.renderables.clear();
