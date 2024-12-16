@@ -16,9 +16,9 @@ buildscript {
 }
 
 plugins {
-    id "com.modrinth.minotaur" version "2.+"
     // It's safest to have this on 2.+ to get the latest features and
     // bug fixes without having to worry about breaking changes.
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 apply plugin: 'net.minecraftforge.gradle'

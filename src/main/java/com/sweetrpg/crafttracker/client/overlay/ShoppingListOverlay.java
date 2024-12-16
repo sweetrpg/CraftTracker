@@ -1,15 +1,15 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
-import mezz.jei.api.constants.VanillaTypes;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.gui.IIngameOverlay;
@@ -31,6 +31,7 @@ public class ShoppingListOverlay {
     public static final IIngameOverlay SHOPPING_LIST = (gui, poseStack, partialTicks, width, height) -> {
         CraftTracker.LOGGER.trace("SHOPPING_LIST");
 
+        var mc = Minecraft.getInstance();
         var mgr = ShoppingListManager.INSTANCE;
         var items = mgr.getItems();
 
@@ -61,8 +62,8 @@ public class ShoppingListOverlay {
         }
         var olWidth = Math.min((x + ConfigHandler.CLIENT.shoppingListOverlayWidth.get()), width - 10);
         var olHeight = Math.min((y + ConfigHandler.CLIENT.shoppingListOverlayHeight.get()), height - 10);
-        var backgroundColor = 0x5f5f5f5f; // TODO: get from config?
-        var borderColor = 0x1f1f1f1f; // TODO: get from config?
+        var backgroundColor = Util.parseColor(ConfigHandler.CLIENT.shoppingListOverlayBackgroundColor.get(), 16, Constants.BACKGROUND_COLOR);
+        var borderColor = Util.parseColor(ConfigHandler.CLIENT.shoppingListOverlayBorderColor.get(), 16, Constants.BORDER_COLOR);
 
         GuiComponent.fill(poseStack, x, y, olWidth, olHeight, borderColor);
         GuiComponent.fill(poseStack, x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
@@ -117,9 +118,12 @@ public class ShoppingListOverlay {
                 continue;
             }
 
-            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-            drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
+            ItemRenderer itemRenderer = mc.getItemRenderer();
+            itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+            itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
+//            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//            drawable.draw(poseStack, x + SECTION_X_OFFSET, yPos);
 
             final int lambdaYpos = yPos;
             if(playerHasQuantity > 0) {
