@@ -1,2 +1,1 @@
-- `[NEW]` Add Patchouli book
-- `[CHG]` Renamed the keybinding constants
+- `[NEW]` Overlay background and border color is configurable

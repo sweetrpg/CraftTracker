@@ -84,4 +84,15 @@ public class Util {
         return getResource(modId, name).toString();
     }
 
+    public static int parseColor(String colorValue, int radix, int defaultValue) {
+        try {
+            return Integer.parseInt(colorValue, radix);
+        }
+        catch (Exception e) {
+            // ignore
+        }
+
+        return defaultValue;
+    }
+
 }
