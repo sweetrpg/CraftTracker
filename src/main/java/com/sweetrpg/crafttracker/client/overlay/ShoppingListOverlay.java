@@ -1,13 +1,12 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
 import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
-import mezz.jei.api.constants.VanillaTypes;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -74,8 +73,8 @@ public class ShoppingListOverlay {
         }
         var olWidth = Math.min((x + ConfigHandler.CLIENT.shoppingListOverlayWidth.get()), width - 10);
         var olHeight = Math.min((y + ConfigHandler.CLIENT.shoppingListOverlayHeight.get()), height - 10);
-        var backgroundColor = 0x015f5f5f; // TODO: get from config
-        var borderColor = 0x021f1f1f; // TODO: get from config
+        var backgroundColor = Util.parseColor(ConfigHandler.CLIENT.shoppingListOverlayBackgroundColor.get(), 16, Constants.BACKGROUND_COLOR);
+        var borderColor = Util.parseColor(ConfigHandler.CLIENT.shoppingListOverlayBorderColor.get(), 16, Constants.BORDER_COLOR);
 
         graphics.fill(x, y, olWidth, olHeight, borderColor);
         graphics.fill(x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
@@ -130,9 +129,10 @@ public class ShoppingListOverlay {
                 continue;
             }
 
-            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-            drawable.draw(graphics, x + SECTION_X_OFFSET, yPos);
+            graphics.renderItem(stack, x + SECTION_X_OFFSET, yPos);
+//            var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
+//                    .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
+//            drawable.draw(graphics, x + SECTION_X_OFFSET, yPos);
 
             final int lambdaYpos = yPos;
             if(playerHasQuantity > 0) {
