@@ -302,11 +302,16 @@ public class CraftingQueueManager {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeProduct: {}", product);
 
         var index = Math.min(product.getIndex(), product.getRecipes().size());
-        var recipe = product.getRecipes().get(index);
+        try {
+            var recipe = product.getRecipes().get(index);
 
-        var computedRecipe = this.computeRecipe(recipe, product.getIterations(), 0);
-        CraftTracker.LOGGER.debug("#computeProduct: computedRecipe {}", computedRecipe);
-        ctx.computedRecipes.add(computedRecipe);
+            var computedRecipe = this.computeRecipe(recipe, product.getIterations(), 0);
+            CraftTracker.LOGGER.debug("#computeProduct: computedRecipe {}", computedRecipe);
+            ctx.computedRecipes.add(computedRecipe);
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            CraftTracker.LOGGER.warn("No recipes found for product: {}", product);
+        }
     }
 
     /**
