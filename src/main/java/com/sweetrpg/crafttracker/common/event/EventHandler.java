@@ -9,6 +9,8 @@ import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.util.AdvancementUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemSmeltedEvent;
@@ -20,6 +22,19 @@ import static com.sweetrpg.crafttracker.common.network.packet.data.QueueCommandD
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID)
 public class EventHandler {
+
+    @SubscribeEvent
+    public void onEntityItemPickup(final EntityItemPickupEvent event) {
+        CraftTracker.LOGGER.debug("EventHandler#onEntityItemPickup: {}", event);
+
+    }
+
+
+    @SubscribeEvent
+    public void onPlayerContainerSomething(final PlayerContainerEvent event) {
+        CraftTracker.LOGGER.debug("EventHandler#onPlayerContainerSomething: {}", event);
+
+    }
 
     @SubscribeEvent
     public void onItemCrafted(final ItemCraftedEvent event) {
