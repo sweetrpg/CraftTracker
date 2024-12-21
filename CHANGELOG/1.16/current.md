@@ -1,1 +1,1 @@
-- `[FIX]` Fix button clipping in the queue manager screen
+- `[FIX]` Catch index out of bounds exception in the craft queue overlay
