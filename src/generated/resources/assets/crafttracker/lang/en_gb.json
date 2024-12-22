@@ -35,6 +35,7 @@
   "crafttracker.screen.craft_queue.section.products": "To make:",
   "crafttracker.screen.craft_queue.title": "Craft Queue",
   "crafttracker.screen.have": "have %d",
+  "crafttracker.screen.no_recipes": "No recipes for %s at index %d",
   "crafttracker.screen.queue_mgr.button.clear": "Clear",
   "crafttracker.screen.queue_mgr.button.dec.tooltip": "Decrease the amount crafted",
   "crafttracker.screen.queue_mgr.button.del.tooltip": "Delete this item from the queue",
@@ -48,6 +49,6 @@
   "key.crafttracker.clearShoppingList": "Clear Shopping List",
   "key.crafttracker.openQueueManager": "Open Queue Manager",
   "key.crafttracker.populateShoppingList": "Populate Shopping List",
-  "key.crafttracker.toggleCraftQueue": "Craft Queue Overlay Mode",
-  "key.crafttracker.toggleShoppingList": "Shopping List Overlay Mode"
+  "key.crafttracker.toggleCraftQueue": "Toggle Craft Queue",
+  "key.crafttracker.toggleShoppingList": "Toggle Shopping List"
 }
