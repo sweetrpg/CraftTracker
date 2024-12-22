@@ -42,8 +42,6 @@ public class CraftQueueOverlay {
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(new CraftQueueOverlay());
-//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "craft_queue", CraftQueueOverlay.CRAFT_QUEUE);
-//        OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "shopping_list", ShoppingListOverlay.SHOPPING_LIST);
     }
 
     @SubscribeEvent
@@ -82,7 +80,13 @@ public class CraftQueueOverlay {
         }
 
         int x = ConfigHandler.CLIENT.craftQueueOverlayX.get();
+        if(x < 0) {
+            x = width - (ConfigHandler.CLIENT.craftQueueOverlayX.get() + Math.abs(x));
+        }
         int y = ConfigHandler.CLIENT.craftQueueOverlayY.get();
+        if(x < 0) {
+            y = width - (ConfigHandler.CLIENT.craftQueueOverlayY.get() + Math.abs(y));
+        }
         int olWidth = Math.min((ConfigHandler.CLIENT.craftQueueOverlayX.get() + ConfigHandler.CLIENT.craftQueueOverlayWidth.get()), width - 10);
         int olHeight = Math.min((ConfigHandler.CLIENT.craftQueueOverlayY.get() + ConfigHandler.CLIENT.craftQueueOverlayHeight.get()), height - 10);
         int backgroundColor = Util.parseColor(ConfigHandler.CLIENT.craftQueueOverlayBackgroundColor.get(), 16, Constants.BACKGROUND_COLOR);
@@ -134,12 +138,12 @@ public class CraftQueueOverlay {
             try {
                 Recipe<?> selectedRecipe = getRecipeFor(p);
                 int amountProduced = selectedRecipe.getResultItem(Minecraft.getInstance().level.registryAccess()).getCount() * p.getIterations();
-            stack.setCount(amountProduced);
+                stack.setCount(amountProduced);
 
-            graphics.renderItem(stack, x + SECTION_X_OFFSET, yPos);
+                graphics.renderItem(stack, x + SECTION_X_OFFSET, yPos);
 
                 String text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getIterations());
-            graphics.drawString(gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                graphics.drawString(gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
             }
             catch (RuntimeException e) {
                 String text = I18n.get(Constants.TRANSLATION_KEY_GUI_NO_RECIPES, p.getProductId().toString(), p.getIndex());
@@ -187,9 +191,6 @@ public class CraftQueueOverlay {
                 }
 
                 graphics.renderItem(stack, x + SECTION_X_OFFSET, yPos);
-//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-//                drawable.draw(graphics, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -245,9 +246,6 @@ public class CraftQueueOverlay {
                 }
 
                 graphics.renderItem(stack, x + SECTION_X_OFFSET, yPos);
-//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-//                drawable.draw(graphics, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -303,9 +301,6 @@ public class CraftQueueOverlay {
                 }
 
                 graphics.renderItem(stack, x + SECTION_X_OFFSET, yPos);
-//                var drawable = CTPlugin.jeiRuntime.getJeiHelpers().getGuiHelper()
-//                        .createDrawableIngredient(VanillaTypes.ITEM_STACK, stack);
-//                drawable.draw(graphics, x + SECTION_X_OFFSET, yPos);
 
                 final int lambdaYpos = yPos;
                 if(playerHasQuantity > 0) {
@@ -337,4 +332,5 @@ public class CraftQueueOverlay {
             return product.getRecipes().get(0);
         }
     }
+
 }
