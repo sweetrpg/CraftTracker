@@ -35,6 +35,7 @@
   "crafttracker.screen.craft_queue.section.products": "Um zu machen:",
   "crafttracker.screen.craft_queue.title": "Herstellungswarteschlange",
   "crafttracker.screen.have": "habe %d",
+  "crafttracker.screen.no_recipes": "Keine Rezepte für %s bei Index %d",
   "crafttracker.screen.queue_mgr.button.clear": "Alle löschen",
   "crafttracker.screen.queue_mgr.button.dec.tooltip": "Reduzieren Sie die Menge an hergestellten",
   "crafttracker.screen.queue_mgr.button.del.tooltip": "Dieses Element aus der Warteschlange löschen",
