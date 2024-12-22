@@ -39,6 +39,7 @@
   "crafttracker.screen.craft_queue.section.products": "To make:",
   "crafttracker.screen.craft_queue.title": "Craft Queue",
   "crafttracker.screen.have": "have %d",
+  "crafttracker.screen.no_recipes": "No recipes for %s at index %d",
   "crafttracker.screen.queue_mgr.button.clear": "Clear",
   "crafttracker.screen.queue_mgr.button.dec.tooltip": "Decrease the amount crafted",
   "crafttracker.screen.queue_mgr.button.del.tooltip": "Delete this item from the queue",

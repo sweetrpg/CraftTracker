@@ -85,10 +85,16 @@ public class CraftQueueOverlay {
                 break;
         }
 
-        int x = ConfigHandler.CLIENT.craftQueueOverlayX.get();
-        int y = ConfigHandler.CLIENT.craftQueueOverlayY.get();
         int width = mc.getWindow().getWidth();
         int height = mc.getWindow().getHeight();
+        int x = ConfigHandler.CLIENT.craftQueueOverlayX.get();
+        if(x < 0) {
+            x = width - (ConfigHandler.CLIENT.craftQueueOverlayX.get() + Math.abs(x));
+        }
+        int y = ConfigHandler.CLIENT.craftQueueOverlayY.get();
+        if(x < 0) {
+            y = width - (ConfigHandler.CLIENT.craftQueueOverlayY.get() + Math.abs(y));
+        }
         int olWidth = Math.min((ConfigHandler.CLIENT.craftQueueOverlayX.get() + ConfigHandler.CLIENT.craftQueueOverlayWidth.get()), width - 10);
         int olHeight = Math.min((ConfigHandler.CLIENT.craftQueueOverlayY.get() + ConfigHandler.CLIENT.craftQueueOverlayHeight.get()), height - 10);
         int backgroundColor = Util.parseColor(ConfigHandler.CLIENT.craftQueueOverlayBackgroundColor.get(), 16, Constants.BACKGROUND_COLOR);
@@ -136,16 +142,23 @@ public class CraftQueueOverlay {
                 continue;
             }
             ItemStack stack = item.getDefaultInstance();
-            IRecipe<?> selectedRecipe = p.getRecipes().get(p.getIndex());
-            int amountProduced = selectedRecipe.getResultItem().getCount() * p.getIterations();
-            stack.setCount(amountProduced);
 
-            ItemRenderer itemRenderer = mc.getItemRenderer();
-            itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
-            itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
+            try {
+                IRecipe<?> selectedRecipe = getRecipeFor(p);
+                int amountProduced = selectedRecipe.getResultItem().getCount() * p.getIterations();
+                stack.setCount(amountProduced);
 
-            String text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getIterations());
-            mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                ItemRenderer itemRenderer = mc.getItemRenderer();
+                itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
+                itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
+
+                String text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getIterations());
+                mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+            }
+            catch (RuntimeException e) {
+                String text = I18n.get(Constants.TRANSLATION_KEY_GUI_NO_RECIPES, p.getProductId().toString(), p.getIndex());
+                mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+            }
 
             yPos += LINE_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (product item {}): {}", i, yPos);
@@ -326,5 +339,14 @@ public class CraftQueueOverlay {
             }
         }
     };
+
+    private static IRecipe<?> getRecipeFor(CraftingQueueProduct product) {
+        try {
+            return product.getRecipes().get(product.getIndex());
+        }
+        catch (RuntimeException e) {
+            return product.getRecipes().get(0);
+        }
+    }
 
 }
