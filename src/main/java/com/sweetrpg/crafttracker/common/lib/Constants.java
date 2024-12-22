@@ -35,6 +35,7 @@ public class Constants {
     public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_MATERIALS = "crafttracker.screen.craft_queue.section.materials";
     public static final String TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_FUEL = "crafttracker.screen.craft_queue.section.fuel";
     public static final String TRANSLATION_KEY_GUI_HAVE = "crafttracker.screen.have";
+    public static final String TRANSLATION_KEY_GUI_NO_RECIPES = "crafttracker.screen.no_recipes";
     public static final String TRANSLATION_KEY_GUI_SHOPPING_LIST_TITLE = "crafttracker.screen.shopping_list.title";
     public static final String TRANSLATION_KEY_GUI_SHOPPING_LIST_EMPTY = "crafttracker.screen.shopping_list.empty_message";
     public static final String TRANSLATION_KEY_GUI_SHOPPING_LIST_HELP = "crafttracker.screen.shopping_list.help_message";
