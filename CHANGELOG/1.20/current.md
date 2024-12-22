@@ -1,0 +1,1 @@
+- `[FIX]` Fixed an error when trying to display a product in the crafting queue that has no recipes available
