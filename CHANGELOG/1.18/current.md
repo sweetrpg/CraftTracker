@@ -1,4 +1,1 @@
-
-- `[NEW]` Overlay background and border color is configurable
-- `[FIX]` Fix button clipping in the queue manager screen
-- `[FIX]` Catch index out of bounds exception in the craft queue overlay
+- `[FIX]` Fixed an error when trying to display a product in the crafting queue that has no recipes available
