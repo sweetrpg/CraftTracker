@@ -38,6 +38,7 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_MATERIALS, "With these materials:");
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_FUEL, "And this fuel:");
         add(Constants.TRANSLATION_KEY_GUI_HAVE, "have %d");
+        add(Constants.TRANSLATION_KEY_GUI_NO_RECIPES, "No recipes for %s at index %d");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_TITLE, "Shopping List");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_EMPTY, "The shopping list is empty.");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_HELP, "To clear the list:");
@@ -100,6 +101,7 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_MATERIALS, "With these materials:");
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_FUEL, "And this fuel:");
         add(Constants.TRANSLATION_KEY_GUI_HAVE, "have %d");
+        add(Constants.TRANSLATION_KEY_GUI_NO_RECIPES, "No recipes for %s at index %d");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_TITLE, "Shopping List");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_EMPTY, "The shopping list is empty.");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_HELP, "To clear the list:");
@@ -162,6 +164,7 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_MATERIALS, "Mit diesen Materialien:");
         add(Constants.TRANSLATION_KEY_GUI_CRAFT_QUEUE_SECTION_FUEL, "Und dieser Treibstoff:");
         add(Constants.TRANSLATION_KEY_GUI_HAVE, "habe %d");
+        add(Constants.TRANSLATION_KEY_GUI_NO_RECIPES, "Keine Rezepte für %s bei Index %d");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_TITLE, "Einkaufsliste");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_EMPTY, "The shopping list is empty.");
         add(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_HELP, "To clear the list:");

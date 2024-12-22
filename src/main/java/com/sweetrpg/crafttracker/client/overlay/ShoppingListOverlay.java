@@ -1,5 +1,6 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.lib.CTRuntime;
@@ -10,6 +11,9 @@ import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,6 +22,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class ShoppingListOverlay {
@@ -41,14 +47,14 @@ public class ShoppingListOverlay {
     public void onRender(RenderGameOverlayEvent.Post event) {
         CraftTracker.LOGGER.trace("SHOPPING_LIST");
 
-        var mc = Minecraft.getInstance();
+        Minecraft mc = Minecraft.getInstance();
         if(mc.gui == null) {
             return;
         }
 
-        var mgr = ShoppingListManager.INSTANCE;
-        var items = mgr.getItems();
-        var poseStack = event.getMatrixStack();
+        ShoppingListManager mgr = ShoppingListManager.INSTANCE;
+        List<ShoppingListManager.ListItem> items = mgr.getItems();
+        MatrixStack poseStack = event.getMatrixStack();
 
         switch(CTRuntime.INSTANCE.shoppingOverlayRequestedState) {
             case SHOW:
@@ -67,20 +73,20 @@ public class ShoppingListOverlay {
                 break;
         }
 
-        var width = mc.getWindow().getWidth();
-        var height = mc.getWindow().getHeight();
-        var x = ConfigHandler.CLIENT.shoppingListOverlayX.get();
+        int width = mc.getWindow().getWidth();
+        int height = mc.getWindow().getHeight();
+        int x = ConfigHandler.CLIENT.shoppingListOverlayX.get();
         if(x < 0) {
             x = width - (ConfigHandler.CLIENT.shoppingListOverlayWidth.get() + Math.abs(x));
         }
-        var y = ConfigHandler.CLIENT.shoppingListOverlayY.get();
+        int y = ConfigHandler.CLIENT.shoppingListOverlayY.get();
         if(x < 0) {
             y = width - (ConfigHandler.CLIENT.shoppingListOverlayHeight.get() + Math.abs(y));
         }
-        var olWidth = Math.min((x + ConfigHandler.CLIENT.shoppingListOverlayWidth.get()), width - 10);
-        var olHeight = Math.min((y + ConfigHandler.CLIENT.shoppingListOverlayHeight.get()), height - 10);
-        var backgroundColor = Util.parseColor(ConfigHandler.CLIENT.shoppingListOverlayBackgroundColor.get(), 16, Constants.BACKGROUND_COLOR);
-        var borderColor = Util.parseColor(ConfigHandler.CLIENT.shoppingListOverlayBorderColor.get(), 16, Constants.BORDER_COLOR);
+        int olWidth = Math.min((x + ConfigHandler.CLIENT.shoppingListOverlayWidth.get()), width - 10);
+        int olHeight = Math.min((y + ConfigHandler.CLIENT.shoppingListOverlayHeight.get()), height - 10);
+        int backgroundColor = Util.parseColor(ConfigHandler.CLIENT.shoppingListOverlayBackgroundColor.get(), 16, Constants.BACKGROUND_COLOR);
+        int borderColor = Util.parseColor(ConfigHandler.CLIENT.shoppingListOverlayBorderColor.get(), 16, Constants.BORDER_COLOR);
 
         mc.gui.fill(poseStack, x, y, olWidth, olHeight, borderColor);
         mc.gui.fill(poseStack, x + 2, y + 2, olWidth - 2, olHeight - 2, backgroundColor);
@@ -97,7 +103,7 @@ public class ShoppingListOverlay {
             return;
         }
 
-        var helpText = String.format("%s [%s]",
+        String helpText = String.format("%s [%s]",
                 I18n.get(Constants.TRANSLATION_KEY_GUI_SHOPPING_LIST_HELP),
                 ModKeyBindings.CLEAR_SHOPPING_LIST_MAPPING.getTranslatedKeyMessage().getString());
         mc.gui.drawCenteredString(poseStack, mc.gui.getFont(), helpText,
@@ -106,19 +112,19 @@ public class ShoppingListOverlay {
         int yPos = y + SECTION_TITLE_Y_OFFSET;
         CraftTracker.LOGGER.trace("yPos (initial): {}", yPos);
 
-        var inventory = mc.player.inventory;
+        PlayerInventory inventory = mc.player.inventory;
 
         // items
-        var sortedItems = mgr.getItems().stream().sorted((i1, i2) -> {
-            var item1 = ForgeRegistries.ITEMS.getValue(i1.getItemId());
-            var item2 = ForgeRegistries.ITEMS.getValue(i2.getItemId());
+        List<ShoppingListManager.ListItem> sortedItems = mgr.getItems().stream().sorted((i1, i2) -> {
+            Item item1 = ForgeRegistries.ITEMS.getValue(i1.getItemId());
+            Item item2 = ForgeRegistries.ITEMS.getValue(i2.getItemId());
             return item1.getDescription().getString().compareTo(item2.getDescription().getString());
         }).toList();
         for(int i = 0; i < sortedItems.size(); i++) {
-            var m = sortedItems.get(i);
+            ShoppingListManager.ListItem m = sortedItems.get(i);
 
-            var item = ForgeRegistries.ITEMS.getValue(m.getItemId());
-            var stack = item.getDefaultInstance();
+            Item item = ForgeRegistries.ITEMS.getValue(m.getItemId());
+            ItemStack stack = item.getDefaultInstance();
             stack.setCount(m.getQuantity());
 
             int playerHasQuantity = 0;
@@ -141,15 +147,15 @@ public class ShoppingListOverlay {
 
             final int lambdaYpos = yPos;
             if(playerHasQuantity > 0) {
-                var countText = I18n.get(Constants.TRANSLATION_KEY_GUI_HAVE, playerHasQuantity);
-                var text = String.format("%s [%s]",
+                String countText = I18n.get(Constants.TRANSLATION_KEY_GUI_HAVE, playerHasQuantity);
+                String text = String.format("%s [%s]",
                         item.getDescription().getString(MAX_STRING_LENGTH - countText.length() - 3),
                         countText);
                 CraftTracker.LOGGER.trace("text: {}", text);
                 mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, lambdaYpos + 4, TEXT_COLOR);
             }
             else {
-                var text = item.getDescription().getString(MAX_STRING_LENGTH);
+                String text = item.getDescription().getString(MAX_STRING_LENGTH);
                 mc.gui.drawString(poseStack, mc.gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
             }
 
