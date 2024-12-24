@@ -69,7 +69,13 @@ public class CraftQueueOverlay {
         }
 
         int x = ConfigHandler.CLIENT.craftQueueOverlayX.get();
+        if(x < 0) {
+            x = width - (ConfigHandler.CLIENT.craftQueueOverlayX.get() + Math.abs(x));
+        }
         int y = ConfigHandler.CLIENT.craftQueueOverlayY.get();
+        if(x < 0) {
+            y = width - (ConfigHandler.CLIENT.craftQueueOverlayY.get() + Math.abs(y));
+        }
         int olWidth = Math.min((ConfigHandler.CLIENT.craftQueueOverlayX.get() + ConfigHandler.CLIENT.craftQueueOverlayWidth.get()), width - 10);
         int olHeight = Math.min((ConfigHandler.CLIENT.craftQueueOverlayY.get() + ConfigHandler.CLIENT.craftQueueOverlayHeight.get()), height - 10);
         int backgroundColor = Util.parseColor(ConfigHandler.CLIENT.craftQueueOverlayBackgroundColor.get(), 16, Constants.BACKGROUND_COLOR);
