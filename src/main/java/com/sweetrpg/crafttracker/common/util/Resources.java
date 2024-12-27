@@ -1,6 +1,5 @@
-package com.sweetrpg.crafttracker.common.lib;
+package com.sweetrpg.crafttracker.common.util;
 
-import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.resources.ResourceLocation;
 
 public class Resources {

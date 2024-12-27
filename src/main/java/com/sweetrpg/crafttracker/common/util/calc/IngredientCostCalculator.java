@@ -8,6 +8,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.ObjectUtils;
 
 /**
@@ -38,41 +39,41 @@ public class IngredientCostCalculator implements ICostCalculator {
      */
     @Override
     public int calculate() {
-        CraftTracker.LOGGER.debug("#getIngredientCost: {}", DebugUtil.printIngredient(ingredient));
+        CraftTracker.LOGGER.info("Calculating ingredient cost: {}", DebugUtil.printIngredient(ingredient));
 
         for(ItemStack stack : ingredient.getItems()) {
             CraftTracker.LOGGER.debug("stack: {}", DebugUtil.printItemStack(stack));
 
             // is the item in the override list?
-            var itemId = stack.getItem().getRegistryName();
-            var count = stack.getCount();
+            ResourceLocation itemId = stack.getItem().getRegistryName();
+            int count = stack.getCount();
 
             if(ConfigHandler.COMMON.overrideEntries.containsKey(itemId)) {
-                CraftTracker.LOGGER.debug("found item {} in override list", itemId);
+                CraftTracker.LOGGER.info("Found item {} in override list.", itemId);
                 return ConfigHandler.COMMON.overrideEntries.get(itemId).get() * count;
             }
 
             // it's not, so check its tags
             int highestCost = 0;
             for(TagKey<Item> tag : stack.getTags().toList()) {
-                var tagId = tag.location();
+                ResourceLocation tagId = tag.location();
                 CraftTracker.LOGGER.debug("looking at tagId: {}", tagId);
 
-                if(ConfigHandler.COMMON.tagEntries.containsKey(tagId)) {
+                if(ConfigHandler.COMMON.tagEntries.containsKey(tagId.toString())) {
                     CraftTracker.LOGGER.debug("found tag {} in tag list", tagId);
 
-                    int cost = ConfigHandler.COMMON.tagEntries.get(tagId).get() * count;
+                    int cost = ConfigHandler.COMMON.tagEntries.get(tagId.toString()).get() * count;
                     CraftTracker.LOGGER.debug("cost of tag {} is {}", tagId, cost);
 
                     // adjust the cost by the namespace's multiplier
-                    var tagNamespace = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation("", "")).getNamespace();
+                    String tagNamespace = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation("", "")).getNamespace();
                     CraftTracker.LOGGER.debug("tagNamespace: {}", tagNamespace);
-                    var multiplier = ConfigHandler.COMMON.namespaceEntries.get(tagNamespace);
+                    ForgeConfigSpec.DoubleValue multiplier = ConfigHandler.COMMON.namespaceEntries.get(tagNamespace);
                     CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
 
                     if(multiplier != null) {
-                        var newCost = (int) (cost * multiplier.get());
-                        CraftTracker.LOGGER.debug("#calculate: increasing cost of tag {} in namespace {} by {}: from {} to {}",
+                        int newCost = (int) (cost * multiplier.get());
+                        CraftTracker.LOGGER.info("Increasing cost of tag {} in namespace {} by {}: from {} to {}.",
                                 tagId, tagNamespace, multiplier.get(),
                                 cost, newCost);
                         cost = newCost;
@@ -84,13 +85,14 @@ public class IngredientCostCalculator implements ICostCalculator {
                     }
                 }
             }
+
             if(highestCost > 0) {
-                CraftTracker.LOGGER.debug("returning highest cost: {}", highestCost);
+                CraftTracker.LOGGER.info("Returning highest cost: {}", highestCost);
                 return highestCost;
             }
         }
 
-        CraftTracker.LOGGER.debug("#calculateIngredientCost: fell through to default cost");
+        CraftTracker.LOGGER.info("Fell through to default cost.");
         return 1;
     }
 }

@@ -1,4 +1,4 @@
-package com.sweetrpg.crafttracker.common.addon;
+package com.sweetrpg.crafttracker.integration;
 
 import com.google.common.collect.Lists;
 import com.sweetrpg.crafttracker.CraftTracker;

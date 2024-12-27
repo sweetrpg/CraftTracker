@@ -1,4 +1,4 @@
-package com.sweetrpg.crafttracker.common.lib;
+package com.sweetrpg.crafttracker.data;
 
 import java.util.Map;
 

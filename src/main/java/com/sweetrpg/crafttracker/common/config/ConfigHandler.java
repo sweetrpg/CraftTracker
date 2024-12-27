@@ -1,10 +1,10 @@
 package com.sweetrpg.crafttracker.common.config;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.lib.Constants;
-import com.sweetrpg.crafttracker.common.lib.Costs;
-import com.sweetrpg.crafttracker.common.lib.Multipliers;
+import com.sweetrpg.crafttracker.common.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
+import com.sweetrpg.crafttracker.data.Costs;
+import com.sweetrpg.crafttracker.data.Multipliers;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;

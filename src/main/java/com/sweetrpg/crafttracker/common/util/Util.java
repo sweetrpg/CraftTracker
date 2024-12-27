@@ -1,6 +1,6 @@
 package com.sweetrpg.crafttracker.common.util;
 
-import com.sweetrpg.crafttracker.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
