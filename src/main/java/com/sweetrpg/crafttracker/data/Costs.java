@@ -1,5 +1,7 @@
 package com.sweetrpg.crafttracker.data;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
@@ -938,6 +940,20 @@ public class Costs {
     public static final Map<String, Integer> itemOverrides = Map.<String, Integer>ofEntries(
             entry("create:precision_mechanism", 250),
             entry("minecraft:trapped_chest", 11),
-            entry("minecraft:iron_horse_armor", 300)
+            entry("minecraft:iron_horse_armor", 300),
+            entry("minecraft:gold_horse_armor", 400),
+            entry("minecraft:diamond_horse_armor", 750),
+            entry("minecraft:magma_block", 300)
+    );
+
+    public static final List<String> alwaysRawMaterials = Arrays.<String>asList(
+            "minecraft:cobblestone",
+            "minecraft:seeds",
+            "minecraft:diamond",
+            "minecraft:diamond_ore",
+            "minecraft:obsidian",
+            "minecraft:diamond_horse_armor",
+            "minecraft:gold_horse_armor",
+            "minecraft:iron_horse_armor"
     );
 }

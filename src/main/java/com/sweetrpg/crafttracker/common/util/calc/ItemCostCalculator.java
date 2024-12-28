@@ -56,23 +56,24 @@ public class ItemCostCalculator implements ICostCalculator {
         double highestCost = 0;
         for(TagKey<Item> tag : stack.getTags().toList()) {
             ResourceLocation tagId = tag.location();
+            String tagPath = tagId.getPath();
             CraftTracker.LOGGER.debug("looking at tagId: {}", tagId);
 
-            if(ConfigHandler.COMMON.tagEntries.containsKey(tagId.toString())) {
+            if(ConfigHandler.COMMON.tagEntries.containsKey(tagPath)) {
                 CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
 
-                double cost = ConfigHandler.COMMON.tagEntries.get(tagId.toString()).get() * count;
+                double cost = ConfigHandler.COMMON.tagEntries.get(tagPath).get() * count;
                 CraftTracker.LOGGER.debug("cost of tag {} is {}", tagId, cost);
 
-                String tagNamespace = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation("", "")).getNamespace();
-                CraftTracker.LOGGER.debug("tagNamespace: {}", tagNamespace);
-                double multiplier = Util.getConfigValueOrDefault(ConfigHandler.COMMON.namespaceEntries.get(tagNamespace), 1);
+                String stackTagNamespace = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation("", "")).getNamespace();
+                CraftTracker.LOGGER.debug("stackTagNamespace: {}", stackTagNamespace);
+                double multiplier = Util.getConfigValueOrDefault(ConfigHandler.COMMON.namespaceEntries.get(stackTagNamespace), 1);
                 CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
 
                 if(multiplier != 1) {
                     double newCost = cost * multiplier;
                     CraftTracker.LOGGER.info("Adjusting cost of tag {} in namespace {} by {}: from {} to {}.",
-                            tagId, tagNamespace, multiplier,
+                            tagId, stackTagNamespace, multiplier,
                             cost, newCost);
                     cost = newCost;
                 }
