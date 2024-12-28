@@ -96,20 +96,20 @@ public class RecipeUtil {
             return recipes.get(0);
         }
 
-        List<Tuple<? extends Recipe<?>, Integer>> recipeCosts = new ArrayList<>();
+        List<Tuple<? extends Recipe<?>, Double>> recipeCosts = new ArrayList<>();
 
         for(Recipe<?> recipe : recipes) {
             CraftTracker.LOGGER.debug("recipe: {}", DebugUtil.printRecipe(recipe));
-            int cost = new RecipeCostCalculator(recipe).calculate();
+            double cost = new RecipeCostCalculator(recipe).calculate();
             CraftTracker.LOGGER.debug("cost: {}", cost);
-            Tuple<? extends Recipe<?>, Integer> tuple = new Tuple<>(recipe, cost);
+            Tuple<? extends Recipe<?>, Double> tuple = new Tuple<>(recipe, cost);
 
             recipeCosts.add(tuple);
         }
 
         CraftTracker.LOGGER.info("Calculated costs for recipes:");
         recipeCosts.forEach(rc -> {
-            String formattedCost = String.format("  %50s -> %d", rc.getA().getId().toString(), rc.getB());
+            String formattedCost = String.format("  %50s -> %f", rc.getA().getId().toString(), rc.getB());
             CraftTracker.LOGGER.info(formattedCost);
         });
 
@@ -141,29 +141,29 @@ public class RecipeUtil {
             return stacks[0];
         }
 
-        List<Tuple<ItemStack, Integer>> itemCosts = new ArrayList<>();
+        List<Tuple<ItemStack, Double>> itemCosts = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
             CraftTracker.LOGGER.debug("stack: {}", DebugUtil.printItemStack(stack));
-            int cost = new ItemCostCalculator(stack).calculate();
+            double cost = new ItemCostCalculator(stack).calculate();
             CraftTracker.LOGGER.debug("cost: {}", cost);
-            Tuple<ItemStack, Integer> tuple = new Tuple<>(stack, cost);
+            Tuple<ItemStack, Double> tuple = new Tuple<>(stack, cost);
 
             itemCosts.add(tuple);
         }
 
         CraftTracker.LOGGER.info("Calculated costs for items:");
         itemCosts.forEach(ic -> {
-            String formattedCost = String.format("  %50s -> %d", ic.getA().getItem().getRegistryName().toString(), ic.getB());
+            String formattedCost = String.format("  %50s -> %f", ic.getA().getItem().getRegistryName().toString(), ic.getB());
             CraftTracker.LOGGER.info(formattedCost);
         });
 
         CraftTracker.LOGGER.info("Considering the costs of {} items:", itemCosts.size());
         itemCosts.forEach(t -> {
             ItemStack s = t.getA();
-            Integer c = t.getB();
+            Double c = t.getB();
 
-            CraftTracker.LOGGER.debug("item: {}, cost: {}", s.getItem().getRegistryName(), c);
+            CraftTracker.LOGGER.info("Item: {}, cost: {}", s.getItem().getRegistryName(), c);
         });
 
         CraftTracker.LOGGER.debug("sorting items");

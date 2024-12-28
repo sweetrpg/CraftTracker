@@ -3,6 +3,7 @@ package com.sweetrpg.crafttracker.common.util;
 import com.sweetrpg.crafttracker.common.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
@@ -90,6 +91,14 @@ public class Util {
         }
         catch (Exception e) {
             // ignore
+        }
+
+        return defaultValue;
+    }
+
+    public static double getConfigValueOrDefault(ForgeConfigSpec.DoubleValue value, double defaultValue) {
+        if(value != null) {
+            return value.get();
         }
 
         return defaultValue;

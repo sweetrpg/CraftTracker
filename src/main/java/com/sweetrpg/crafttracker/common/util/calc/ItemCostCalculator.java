@@ -3,13 +3,17 @@ package com.sweetrpg.crafttracker.common.util.calc;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.util.DebugUtil;
+import com.sweetrpg.crafttracker.common.util.RecipeUtil;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraft.world.item.crafting.Recipe;
 import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.List;
 
 /**
  * Calculates the cost of an item stack
@@ -37,7 +41,7 @@ public class ItemCostCalculator implements ICostCalculator {
      * @return An integer value of the item stack's cost
      */
     @Override
-    public int calculate() {
+    public double calculate() {
         CraftTracker.LOGGER.info("Calculating item cost: {}", DebugUtil.printItemStack(stack));
 
         ResourceLocation itemId = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation(""));
@@ -49,7 +53,7 @@ public class ItemCostCalculator implements ICostCalculator {
         }
 
         // it's not, so check its tags
-        int highestCost = 0;
+        double highestCost = 0;
         for(TagKey<Item> tag : stack.getTags().toList()) {
             ResourceLocation tagId = tag.location();
             CraftTracker.LOGGER.debug("looking at tagId: {}", tagId);
@@ -57,18 +61,18 @@ public class ItemCostCalculator implements ICostCalculator {
             if(ConfigHandler.COMMON.tagEntries.containsKey(tagId.toString())) {
                 CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
 
-                int cost = ConfigHandler.COMMON.tagEntries.get(tagId.toString()).get() * count;
+                double cost = ConfigHandler.COMMON.tagEntries.get(tagId.toString()).get() * count;
                 CraftTracker.LOGGER.debug("cost of tag {} is {}", tagId, cost);
 
                 String tagNamespace = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation("", "")).getNamespace();
                 CraftTracker.LOGGER.debug("tagNamespace: {}", tagNamespace);
-                ForgeConfigSpec.DoubleValue multiplier = ConfigHandler.COMMON.namespaceEntries.get(tagNamespace);
+                double multiplier = Util.getConfigValueOrDefault(ConfigHandler.COMMON.namespaceEntries.get(tagNamespace), 1);
                 CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
 
-                if(multiplier != null) {
-                    int newCost = (int) (cost * multiplier.get());
-                    CraftTracker.LOGGER.info("Increasing cost of tag {} in namespace {} by {}: from {} to {}.",
-                            tagId, tagNamespace, multiplier.get(),
+                if(multiplier != 1) {
+                    double newCost = cost * multiplier;
+                    CraftTracker.LOGGER.info("Adjusting cost of tag {} in namespace {} by {}: from {} to {}.",
+                            tagId, tagNamespace, multiplier,
                             cost, newCost);
                     cost = newCost;
                 }
@@ -78,6 +82,13 @@ public class ItemCostCalculator implements ICostCalculator {
                     highestCost = (int) cost;
                 }
             }
+        }
+
+        // if the stack item has recipes, then double the cost
+        List<? extends Recipe<?>> recipes = RecipeUtil.getRecipesFor(this.stack.getItem().getRegistryName());
+        if(!recipes.isEmpty()) {
+            CraftTracker.LOGGER.info("Doubling cost of item {} because it is crafted.", DebugUtil.printItemStack(this.stack));
+            highestCost *= 2;
         }
 
         if(highestCost > 0) {

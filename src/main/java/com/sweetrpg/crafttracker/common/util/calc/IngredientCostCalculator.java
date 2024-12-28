@@ -3,12 +3,12 @@ package com.sweetrpg.crafttracker.common.util.calc;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.util.DebugUtil;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.ObjectUtils;
 
 /**
@@ -38,7 +38,7 @@ public class IngredientCostCalculator implements ICostCalculator {
      * @return An integer value of the ingredient's cost
      */
     @Override
-    public int calculate() {
+    public double calculate() {
         CraftTracker.LOGGER.info("Calculating ingredient cost: {}", DebugUtil.printIngredient(ingredient));
 
         for(ItemStack stack : ingredient.getItems()) {
@@ -54,7 +54,7 @@ public class IngredientCostCalculator implements ICostCalculator {
             }
 
             // it's not, so check its tags
-            int highestCost = 0;
+            double highestCost = 0;
             for(TagKey<Item> tag : stack.getTags().toList()) {
                 ResourceLocation tagId = tag.location();
                 CraftTracker.LOGGER.debug("looking at tagId: {}", tagId);
@@ -62,19 +62,19 @@ public class IngredientCostCalculator implements ICostCalculator {
                 if(ConfigHandler.COMMON.tagEntries.containsKey(tagId.toString())) {
                     CraftTracker.LOGGER.debug("found tag {} in tag list", tagId);
 
-                    int cost = ConfigHandler.COMMON.tagEntries.get(tagId.toString()).get() * count;
+                    double cost = ConfigHandler.COMMON.tagEntries.get(tagId.getPath()).get() * count;
                     CraftTracker.LOGGER.debug("cost of tag {} is {}", tagId, cost);
 
                     // adjust the cost by the namespace's multiplier
                     String tagNamespace = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation("", "")).getNamespace();
                     CraftTracker.LOGGER.debug("tagNamespace: {}", tagNamespace);
-                    ForgeConfigSpec.DoubleValue multiplier = ConfigHandler.COMMON.namespaceEntries.get(tagNamespace);
+                    double multiplier = Util.getConfigValueOrDefault(ConfigHandler.COMMON.namespaceEntries.get(tagNamespace), 1);
                     CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
 
-                    if(multiplier != null) {
-                        int newCost = (int) (cost * multiplier.get());
-                        CraftTracker.LOGGER.info("Increasing cost of tag {} in namespace {} by {}: from {} to {}.",
-                                tagId, tagNamespace, multiplier.get(),
+                    if(multiplier != 1) {
+                        double newCost = cost * multiplier;
+                        CraftTracker.LOGGER.info("Adjusting cost of tag {} in namespace {} by {}: from {} to {}.",
+                                tagId, tagNamespace, multiplier,
                                 cost, newCost);
                         cost = newCost;
                     }
