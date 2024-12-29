@@ -10,6 +10,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -33,8 +34,8 @@ public class RecipeUtil {
     public static List<? extends Recipe<?>> getRecipesFor(ResourceLocation itemId) {
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: {}", itemId);
 
-        var mgr = Minecraft.getInstance().level.getRecipeManager();
-        var recipes = mgr.getRecipes().stream()
+        RecipeManager mgr = Minecraft.getInstance().level.getRecipeManager();
+        List<Recipe<?>> recipes = mgr.getRecipes().stream()
                 .filter(r -> ForgeRegistries.ITEMS.getKey(r.getResultItem().getItem()).equals(itemId))
                 .toList();
 
@@ -95,28 +96,34 @@ public class RecipeUtil {
             return recipes.get(0);
         }
 
-        List<Tuple<? extends Recipe<?>, Integer>> recipeCosts = new ArrayList<>();
+        List<Tuple<? extends Recipe<?>, Double>> recipeCosts = new ArrayList<>();
 
         for(Recipe<?> recipe : recipes) {
             CraftTracker.LOGGER.debug("recipe: {}", DebugUtil.printRecipe(recipe));
-            var cost = new RecipeCostCalculator(recipe).calculate();
+            double cost = new RecipeCostCalculator(recipe).calculate();
             CraftTracker.LOGGER.debug("cost: {}", cost);
-            var tuple = new Tuple<>(recipe, cost);
+            Tuple<? extends Recipe<?>, Double> tuple = new Tuple<>(recipe, cost);
 
             recipeCosts.add(tuple);
         }
 
+        CraftTracker.LOGGER.info("Calculated costs for recipes:");
+        recipeCosts.forEach(rc -> {
+            String formattedCost = String.format("  %50s -> %f", rc.getA().getId().toString(), rc.getB());
+            CraftTracker.LOGGER.info(formattedCost);
+        });
+
         CraftTracker.LOGGER.debug("sorting recipes");
         recipeCosts.sort((rc1, rc2) -> {
-            var result = rc1.getB().compareTo(rc2.getB());
+            int result = rc1.getB().compareTo(rc2.getB());
             if(result == 0) {
                 return rc1.getA().getId().compareTo(rc2.getA().getId());
             }
             return result;
         });
 
-        var itemToReturn = recipeCosts.get(0).getA();
-        CraftTracker.LOGGER.debug("returning top item from sorted recipes: {}", DebugUtil.printRecipe(itemToReturn));
+        Recipe<?> itemToReturn = recipeCosts.get(0).getA();
+        CraftTracker.LOGGER.info("Returning recipe: {}", DebugUtil.printRecipe(itemToReturn));
         return itemToReturn;
     }
 
@@ -134,23 +141,29 @@ public class RecipeUtil {
             return stacks[0];
         }
 
-        List<Tuple<ItemStack, Integer>> itemCosts = new ArrayList<>();
+        List<Tuple<ItemStack, Double>> itemCosts = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
             CraftTracker.LOGGER.debug("stack: {}", DebugUtil.printItemStack(stack));
-            var cost = new ItemCostCalculator(stack).calculate();
+            double cost = new ItemCostCalculator(stack).calculate();
             CraftTracker.LOGGER.debug("cost: {}", cost);
-            var tuple = new Tuple<>(stack, cost);
+            Tuple<ItemStack, Double> tuple = new Tuple<>(stack, cost);
 
             itemCosts.add(tuple);
         }
 
+        CraftTracker.LOGGER.info("Calculated costs for items:");
+        itemCosts.forEach(ic -> {
+            String formattedCost = String.format("  %50s -> %f", ForgeRegistries.ITEMS.getKey(ic.getA().getItem()).toString(), ic.getB());
+            CraftTracker.LOGGER.info(formattedCost);
+        });
+
         CraftTracker.LOGGER.debug("Considering the costs of {} items:", itemCosts.size());
         itemCosts.forEach(t -> {
-            var s = t.getA();
-            var c = t.getB();
+            ItemStack s = t.getA();
+            Double c = t.getB();
 
-            CraftTracker.LOGGER.debug("item: {}, cost: {}", ForgeRegistries.ITEMS.getKey(s.getItem()), c);
+            CraftTracker.LOGGER.info("Item: {}, cost: {}", ForgeRegistries.ITEMS.getKey(s.getItem()), c);
         });
 
         CraftTracker.LOGGER.debug("sorting items");
@@ -164,7 +177,7 @@ public class RecipeUtil {
         });
 
         var itemToReturn = itemCosts.get(0).getA();
-        CraftTracker.LOGGER.debug("returning top item from sorted items: {}", DebugUtil.printItemStack(itemToReturn));
+        CraftTracker.LOGGER.info("Returning item: {}", DebugUtil.printItemStack(itemToReturn));
         return itemToReturn;
     }
 
