@@ -11,6 +11,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -34,9 +35,9 @@ public class RecipeUtil {
     public static List<? extends Recipe<?>> getRecipesFor(ResourceLocation itemId) {
         CraftTracker.LOGGER.debug("RecipeUtil#getRecipesFor: {}", itemId);
 
-        var mgr = Minecraft.getInstance().level.getRecipeManager();
+        RecipeManager mgr = Minecraft.getInstance().level.getRecipeManager();
         RegistryAccess access = Minecraft.getInstance().level.registryAccess();
-        var recipes = mgr.getRecipes().stream()
+        List<? extends Recipe<?>> recipes = mgr.getRecipes().stream()
                 .filter(r -> ForgeRegistries.ITEMS.getKey(r.getResultItem(access).getItem()).equals(itemId))
                 .toList();
 
@@ -91,26 +92,33 @@ public class RecipeUtil {
      * @return The least expensive recipe
      */
     public static Recipe<?> chooseLeastExpensiveOf(List<? extends Recipe<?>> recipes) {
-        CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", recipes.stream().map(DebugUtil::printRecipe).toList());
+        CraftTracker.LOGGER.info("Choosing least expensive of: {}", recipes.stream().map(DebugUtil::printRecipe).toList());
 
         if(recipes.size() == 1) {
+            CraftTracker.LOGGER.info("Only 1 recipe in the list; returning that one.");
             return recipes.get(0);
         }
 
-        List<Tuple<? extends Recipe<?>, Integer>> recipeCosts = new ArrayList<>();
+        List<Tuple<? extends Recipe<?>, Double>> recipeCosts = new ArrayList<>();
 
         for(Recipe<?> recipe : recipes) {
             CraftTracker.LOGGER.debug("recipe: {}", DebugUtil.printRecipe(recipe));
-            var cost = new RecipeCostCalculator(recipe).calculate();
+            double cost = new RecipeCostCalculator(recipe).calculate();
             CraftTracker.LOGGER.debug("cost: {}", cost);
-            var tuple = new Tuple<>(recipe, cost);
+            Tuple<? extends Recipe<?>, Double> tuple = new Tuple<>(recipe, cost);
 
             recipeCosts.add(tuple);
         }
 
+        CraftTracker.LOGGER.info("Calculated costs for recipes:");
+        recipeCosts.forEach(rc -> {
+            String formattedCost = String.format("  %50s -> %f", rc.getA().getId().toString(), rc.getB());
+            CraftTracker.LOGGER.info(formattedCost);
+        });
+
         CraftTracker.LOGGER.debug("sorting recipes");
         recipeCosts.sort((rc1, rc2) -> {
-            var result = rc1.getB().compareTo(rc2.getB());
+            int result = rc1.getB().compareTo(rc2.getB());
             if(result == 0) {
                 return rc1.getA().getId().compareTo(rc2.getA().getId());
             }
@@ -118,7 +126,7 @@ public class RecipeUtil {
         });
 
         var itemToReturn = recipeCosts.get(0).getA();
-        CraftTracker.LOGGER.debug("returning top item from sorted recipes: {}", DebugUtil.printRecipe(itemToReturn));
+        CraftTracker.LOGGER.info("Returning recipe: {}", DebugUtil.printRecipe(itemToReturn));
         return itemToReturn;
     }
 
@@ -129,35 +137,41 @@ public class RecipeUtil {
      * @return The least expensive item stack
      */
     public static ItemStack chooseLeastExpensiveOf(ItemStack[] stacks) {
-        CraftTracker.LOGGER.debug("RecipeUtil#chooseLeastExpensiveOf: {}", Arrays.stream(stacks).map(DebugUtil::printItemStack).toList());
+        CraftTracker.LOGGER.info("Choosing least expensive of: {}", Arrays.stream(stacks).map(DebugUtil::printItemStack).toList());
 
         if(stacks.length == 1) {
-            CraftTracker.LOGGER.debug("only 1 item in the stack; returning that");
+            CraftTracker.LOGGER.info("Only 1 item in the stack; returning that.");
             return stacks[0];
         }
 
-        List<Tuple<ItemStack, Integer>> itemCosts = new ArrayList<>();
+        List<Tuple<ItemStack, Double>> itemCosts = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
             CraftTracker.LOGGER.debug("stack: {}", DebugUtil.printItemStack(stack));
-            var cost = new ItemCostCalculator(stack).calculate();
+            double cost = new ItemCostCalculator(stack).calculate();
             CraftTracker.LOGGER.debug("cost: {}", cost);
-            var tuple = new Tuple<>(stack, cost);
+            Tuple<ItemStack, Double> tuple = new Tuple<>(stack, cost);
 
             itemCosts.add(tuple);
         }
 
+        CraftTracker.LOGGER.info("Calculated costs for items:");
+        itemCosts.forEach(ic -> {
+            String formattedCost = String.format("  %50s -> %f", ForgeRegistries.ITEMS.getKey(ic.getA().getItem()).toString(), ic.getB());
+            CraftTracker.LOGGER.info(formattedCost);
+        });
+
         CraftTracker.LOGGER.debug("Considering the costs of {} items:", itemCosts.size());
         itemCosts.forEach(t -> {
-            var s = t.getA();
-            var c = t.getB();
+            ItemStack s = t.getA();
+            Double c = t.getB();
 
-            CraftTracker.LOGGER.debug("item: {}, cost: {}", ForgeRegistries.ITEMS.getKey(s.getItem()), c);
+            CraftTracker.LOGGER.info("Item: {}, cost: {}", ForgeRegistries.ITEMS.getKey(s.getItem()), c);
         });
 
         CraftTracker.LOGGER.debug("sorting items");
         itemCosts.sort((rc1, rc2) -> {
-            var result = rc1.getB().compareTo(rc2.getB());
+            int result = rc1.getB().compareTo(rc2.getB());
             if(result == 0) {
                 return ForgeRegistries.ITEMS.getKey(rc1.getA().getItem()).toString()
                         .compareTo(ForgeRegistries.ITEMS.getKey(rc2.getA().getItem()).toString());
@@ -165,8 +179,8 @@ public class RecipeUtil {
             return result;
         });
 
-        var itemToReturn = itemCosts.get(0).getA();
-        CraftTracker.LOGGER.debug("returning top item from sorted items: {}", DebugUtil.printItemStack(itemToReturn));
+        ItemStack itemToReturn = itemCosts.get(0).getA();
+        CraftTracker.LOGGER.info("Returning item: {}", DebugUtil.printItemStack(itemToReturn));
         return itemToReturn;
     }
 
