@@ -469,7 +469,6 @@ public class CraftingQueueManager {
             }
             if(treatAsRaw) {
                 CraftTracker.LOGGER.info("Handling ingredient {} as a raw material because: {}.", ingredientId, reason);
-                // no recipes for this ingredient, so it's a raw material
                 computedRecipe.rawMaterials.compute(id,
                         (itemId, quantity) ->
                                 ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId))

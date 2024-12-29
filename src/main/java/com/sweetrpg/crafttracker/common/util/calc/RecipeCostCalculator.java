@@ -71,7 +71,7 @@ public class RecipeCostCalculator implements ICostCalculator {
         double typeMultiplier = Util.getConfigValueOrDefault(ConfigHandler.COMMON.recipeTypeEntries.get(recipeType.toString()), 1);
         CraftTracker.LOGGER.debug("typeMultiplier: {}", typeMultiplier);
         if(typeMultiplier != 1) {
-            int newCost = (int) Math.round((cost * typeMultiplier) + 1);
+            double newCost = cost * typeMultiplier;
             CraftTracker.LOGGER.info("Adjusting cost of recipe type {} by {}: from {} to {}.",
                     recipeType, typeMultiplier,
                     cost, newCost);

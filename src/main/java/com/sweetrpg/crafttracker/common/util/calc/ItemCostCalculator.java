@@ -80,7 +80,7 @@ public class ItemCostCalculator implements ICostCalculator {
 
                 if(cost > highestCost) {
                     CraftTracker.LOGGER.trace("replacing highestCost with new value: was {}, is {}", highestCost, cost);
-                    highestCost = (int) cost;
+                    highestCost = cost;
                 }
             }
         }

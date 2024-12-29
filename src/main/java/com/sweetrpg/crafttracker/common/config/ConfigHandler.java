@@ -150,9 +150,7 @@ public class ConfigHandler {
             {
                 builder.push("Raw Material Overrides");
 
-                Costs.alwaysRawMaterials.forEach((s) -> {
-                    rawMaterials.add(s); // , builder.comment("An item that should always be considered a raw material").define(s, ""));
-                });
+                rawMaterials.addAll(Costs.alwaysRawMaterials);
 
                 builder.pop();
             }

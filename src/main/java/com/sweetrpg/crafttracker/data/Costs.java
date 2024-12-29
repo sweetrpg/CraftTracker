@@ -948,12 +948,13 @@ public class Costs {
 
     public static final List<String> alwaysRawMaterials = Arrays.<String>asList(
             "minecraft:cobblestone",
-            "minecraft:seeds",
             "minecraft:diamond",
-            "minecraft:diamond_ore",
-            "minecraft:obsidian",
             "minecraft:diamond_horse_armor",
+            "minecraft:diamond_ore",
             "minecraft:gold_horse_armor",
-            "minecraft:iron_horse_armor"
+            "minecraft:iron_horse_armor",
+            "minecraft:obsidian",
+            "minecraft:redstone",
+            "minecraft:seeds"
     );
 }
