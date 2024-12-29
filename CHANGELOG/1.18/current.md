@@ -1,1 +1,2 @@
-- `[FIX]` Fixed some errors in item/recipe cost calculation.
+- `[FIX]` Fixed some errors in item/recipe cost calculation
+- `[NEW]` Add configuration override for raw materials
