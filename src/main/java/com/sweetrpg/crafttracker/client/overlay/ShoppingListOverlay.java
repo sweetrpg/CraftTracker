@@ -2,9 +2,9 @@ package com.sweetrpg.crafttracker.client.overlay;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.Constants;
+import com.sweetrpg.crafttracker.common.Runtime;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
-import com.sweetrpg.crafttracker.common.lib.CTRuntime;
-import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.Util;
@@ -51,7 +51,7 @@ public class ShoppingListOverlay {
         ShoppingListManager mgr = ShoppingListManager.INSTANCE;
         List<ShoppingListManager.ListItem> items = mgr.getItems();
 
-        switch(CTRuntime.INSTANCE.shoppingOverlayRequestedState) {
+        switch(Runtime.INSTANCE.shoppingOverlayRequestedState) {
             case SHOW:
                 //
                 break;

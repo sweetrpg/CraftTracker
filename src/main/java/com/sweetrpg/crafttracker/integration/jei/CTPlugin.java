@@ -1,7 +1,7 @@
-package com.sweetrpg.crafttracker.common.addon.jei;
+package com.sweetrpg.crafttracker.integration.jei;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import mezz.jei.api.IModPlugin;
