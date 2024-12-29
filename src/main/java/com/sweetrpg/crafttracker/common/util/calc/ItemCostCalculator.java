@@ -3,10 +3,14 @@ package com.sweetrpg.crafttracker.common.util.calc;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
 import com.sweetrpg.crafttracker.common.util.DebugUtil;
-import net.minecraft.item.Item;
+import com.sweetrpg.crafttracker.common.util.RecipeUtil;
+import com.sweetrpg.crafttracker.common.util.Util;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.List;
 
 /**
  * Calculates the cost of an item stack
@@ -34,54 +38,63 @@ public class ItemCostCalculator implements ICostCalculator {
      * @return An integer value of the item stack's cost
      */
     @Override
-    public int calculate() {
-        CraftTracker.LOGGER.debug("#calculateItemCost: {}", DebugUtil.printItemStack(stack));
+    public double calculate() {
+        CraftTracker.LOGGER.info("Calculating item cost: {}", DebugUtil.printItemStack(stack));
 
-        var itemId = stack.getItem().getRegistryName();
-        var count = stack.getCount();
+        ResourceLocation itemId = stack.getItem().getRegistryName();
+        int count = stack.getCount();
 
-        if(ConfigHandler.COMMON.overrideEntries.containsKey(itemId)) {
+        if(ConfigHandler.COMMON.overrideEntries.containsKey(itemId.toString())) {
             CraftTracker.LOGGER.debug("found item {} in override list", itemId);
-            return ConfigHandler.COMMON.overrideEntries.get(itemId).get() * count;
+            return ConfigHandler.COMMON.overrideEntries.get(itemId.toString()).get() * count;
         }
 
         // it's not, so check its tags
-        int highestCost = 0;
+        double highestCost = 0;
         for(ResourceLocation tagId : stack.getItem().getTags().stream().toList()) {
 //            var tagId = tag.location();
+            String tagPath = tagId.getPath();
             CraftTracker.LOGGER.debug("looking at tagId: {}", tagId);
 
-            if(ConfigHandler.COMMON.tagEntries.containsKey(tagId)) {
+            if(ConfigHandler.COMMON.tagEntries.containsKey(tagPath)) {
                 CraftTracker.LOGGER.debug("found item {} in tag list", tagId);
 
-                int cost = ConfigHandler.COMMON.tagEntries.get(tagId).get() * count;
+                double cost = ConfigHandler.COMMON.tagEntries.get(tagPath).get() * count;
                 CraftTracker.LOGGER.debug("cost of tag {} is {}", tagId, cost);
 
-                var tagNamespace = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation("", "")).getNamespace();
-                CraftTracker.LOGGER.debug("tagNamespace: {}", tagNamespace);
-                var multiplier = ConfigHandler.COMMON.namespaceEntries.get(tagNamespace);
+                String stackTagNamespace = ObjectUtils.defaultIfNull(stack.getItem().getRegistryName(), new ResourceLocation("", "")).getNamespace();
+                CraftTracker.LOGGER.debug("stackTagNamespace: {}", stackTagNamespace);
+                double multiplier = Util.getConfigValueOrDefault(ConfigHandler.COMMON.namespaceEntries.get(stackTagNamespace), 1);
                 CraftTracker.LOGGER.debug("multiplier: {}", multiplier);
 
-                if(multiplier != null) {
-                    var newCost = (int) (cost * multiplier.get());
+                if(multiplier != 1) {
+                    double newCost = cost * multiplier;
                     CraftTracker.LOGGER.debug("#calculate: increasing cost of tag {} in namespace {} by {}: from {} to {}",
-                            tagId, tagNamespace, multiplier.get(),
+                            tagId, stackTagNamespace, multiplier,
                             cost, newCost);
                     cost = newCost;
                 }
 
                 if(cost > highestCost) {
                     CraftTracker.LOGGER.trace("replacing highestCost with new value: was {}, is {}", highestCost, cost);
-                    highestCost = (int) cost;
+                    highestCost = cost;
                 }
             }
         }
+
+        // if the stack item has recipes, then double the cost
+        List<IRecipe<?>> recipes = RecipeUtil.getRecipesFor(this.stack.getItem().getRegistryName());
+        if(!recipes.isEmpty()) {
+            CraftTracker.LOGGER.info("Doubling cost of item {} because it is crafted.", DebugUtil.printItemStack(this.stack));
+            highestCost *= 2;
+        }
+
         if(highestCost > 0) {
-            CraftTracker.LOGGER.debug("returning highest cost: {}", highestCost);
+            CraftTracker.LOGGER.info("Returning highest cost: {}", highestCost);
             return highestCost;
         }
 
-        CraftTracker.LOGGER.debug("#calculate: fell through to rarity");
+        CraftTracker.LOGGER.info("Fell through to rarity.");
         var rarity = stack.getItem().getRarity(stack);
         return Math.max(rarity.ordinal() * count, count);
     }

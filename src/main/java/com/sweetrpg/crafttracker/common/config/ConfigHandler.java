@@ -1,10 +1,10 @@
 package com.sweetrpg.crafttracker.common.config;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.lib.Constants;
-import com.sweetrpg.crafttracker.common.lib.Costs;
-import com.sweetrpg.crafttracker.common.lib.Multipliers;
+import com.sweetrpg.crafttracker.common.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
+import com.sweetrpg.crafttracker.data.Costs;
+import com.sweetrpg.crafttracker.data.Multipliers;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -12,7 +12,9 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConfigHandler {
@@ -86,7 +88,7 @@ public class ConfigHandler {
             }
 
             {
-                builder.push("CraftQueue");
+                builder.push("Craft Queue");
 
                 craftQueueOverlayHideEmpty = builder.comment("Sets whether the craft queue overlay should be displayed only when it has items in it.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_HIDE_EMPTY).define("craft_queue_hide_empty", true);
                 craftQueueOverlayX = builder.comment("Sets the X screen location for the craft queue overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_CRAFT_QUEUE_X).defineInRange("craft_queue_x", 10, -1000, 10000);
@@ -100,7 +102,7 @@ public class ConfigHandler {
             }
 
             {
-                builder.push("ShoppingList");
+                builder.push("Shopping List");
 
                 shoppingListOverlayHideEmpty = builder.comment("Sets whether the shopping list overlay should be displayed only when it has items in it.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_HIDE_EMPTY).define("shopping_list_hide_empty", true);
                 shoppingListOverlayX = builder.comment("Sets the X screen location for the shopping list overlay.").translation(Constants.TRANSLATION_KEY_CONFIG_CLIENT_SHOPPING_LIST_X).defineInRange("shopping_list_x", -10, -1000, 10000);
@@ -119,6 +121,7 @@ public class ConfigHandler {
 
         public Map<String, ForgeConfigSpec.IntValue> tagEntries = new HashMap<>();
         public Map<String, ForgeConfigSpec.IntValue> overrideEntries = new HashMap<>();
+        public List<String> rawMaterials = new ArrayList<>();
         public Map<String, ForgeConfigSpec.DoubleValue> namespaceEntries = new HashMap<>();
         public Map<String, ForgeConfigSpec.DoubleValue> recipeTypeEntries = new HashMap<>();
 
@@ -139,6 +142,14 @@ public class ConfigHandler {
                 Costs.itemOverrides.forEach((k, v) -> {
                     overrideEntries.put(k, builder.comment("An item and corresponding cost override").defineInRange(k, v, 1, 10000));
                 });
+
+                builder.pop();
+            }
+
+            {
+                builder.push("Raw Material Overrides");
+
+                rawMaterials.addAll(Costs.alwaysRawMaterials);
 
                 builder.pop();
             }
