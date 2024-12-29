@@ -451,9 +451,22 @@ public class CraftingQueueManager {
             var subRecipes = RecipeUtil.getRecipesFor(id);
             CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes.stream().map(DebugUtil::printRecipe).toList());
 
-            if(subRecipes.isEmpty() || depth >= ConfigHandler.CLIENT.calculationDepth.get()) {
-                CraftTracker.LOGGER.debug("subRecipes is empty; ingredient {} is a raw material", ingredientId);
-                // no recipes for this ingredient, so it's a raw material
+            String reason = "";
+            boolean treatAsRaw = false;
+            if(subRecipes.isEmpty()) {
+                reason = "ingredient has no recipes";
+                treatAsRaw = true;
+            }
+            else if(ConfigHandler.COMMON.rawMaterials.contains(id.toString())) {
+                reason = "ingredient is declared as raw in configuration";
+                treatAsRaw = true;
+            }
+            else if(depth >= ConfigHandler.CLIENT.calculationDepth.get()) {
+                reason = "calculation depth maximum has been reached";
+                treatAsRaw = true;
+            }
+            if(treatAsRaw) {
+                CraftTracker.LOGGER.info("Handling ingredient {} as a raw material because: {}.", ingredientId, reason);                // no recipes for this ingredient, so it's a raw material
                 computedRecipe.rawMaterials.compute(id,
                         (itemId, quantity) ->
                                 ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId))
