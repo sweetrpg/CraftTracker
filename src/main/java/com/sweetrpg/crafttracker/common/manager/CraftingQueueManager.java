@@ -372,7 +372,7 @@ public class CraftingQueueManager {
     ComputedRecipe computeRecipe(Recipe<?> recipe, int iterations, int depth) {
         CraftTracker.LOGGER.debug("CraftingQueueManager#computeRecipe: {}", DebugUtil.printRecipe(recipe));
 
-        var computedRecipe = new ComputedRecipe(recipe.getId());
+        ComputedRecipe computedRecipe = new ComputedRecipe(recipe.getId());
 
         var ingredients = recipe.getIngredients();
         CraftTracker.LOGGER.debug("ingredients: {}", ingredients.stream().map(DebugUtil::printIngredient).toList());
@@ -380,9 +380,9 @@ public class CraftingQueueManager {
         // if we're not at the root, and
         //   1. the ingredients are in a different namespace than the recipe, or
         //   2. the ingredients are in a different namespace than the result item
-        var recipeNamespace = ObjectUtils.defaultIfNull(recipe.getId().getNamespace(), "");
+        String recipeNamespace = ObjectUtils.defaultIfNull(recipe.getId().getNamespace(), "");
         RegistryAccess access = Minecraft.getInstance().level.registryAccess();
-        var itemNamespace = ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(recipe.getResultItem(access).getItem()).getNamespace(), "");
+        String itemNamespace = ObjectUtils.defaultIfNull(ForgeRegistries.ITEMS.getKey(recipe.getResultItem(access).getItem()).getNamespace(), "");
         if(depth > 0 &&
                 (!RecipeUtil.areIngredientsSameNamespace(recipeNamespace, ingredients) ||
                         !RecipeUtil.areIngredientsSameNamespace(itemNamespace, ingredients))) {
@@ -453,9 +453,22 @@ public class CraftingQueueManager {
             var subRecipes = RecipeUtil.getRecipesFor(id);
             CraftTracker.LOGGER.debug("subRecipes: {}", subRecipes.stream().map(DebugUtil::printRecipe).toList());
 
-            if(subRecipes.isEmpty() || depth >= ConfigHandler.CLIENT.calculationDepth.get()) {
-                CraftTracker.LOGGER.debug("subRecipes is empty; ingredient {} is a raw material", ingredientId);
-                // no recipes for this ingredient, so it's a raw material
+            String reason = "";
+            boolean treatAsRaw = false;
+            if(subRecipes.isEmpty()) {
+                reason = "ingredient has no recipes";
+                treatAsRaw = true;
+            }
+            else if(ConfigHandler.COMMON.rawMaterials.contains(id.toString())) {
+                reason = "ingredient is declared as raw in configuration";
+                treatAsRaw = true;
+            }
+            else if(depth >= ConfigHandler.CLIENT.calculationDepth.get()) {
+                reason = "calculation depth maximum has been reached";
+                treatAsRaw = true;
+            }
+            if(treatAsRaw) {
+                CraftTracker.LOGGER.info("Handling ingredient {} as a raw material because: {}.", ingredientId, reason);
                 computedRecipe.rawMaterials.compute(id,
                         (itemId, quantity) ->
                                 ObjectUtils.defaultIfNull(quantity, new ComputedRecipeItem(itemId))
@@ -465,10 +478,10 @@ public class CraftingQueueManager {
             else {
                 CraftTracker.LOGGER.debug("subRecipes has {} items; ingredient {} is an intermediate product", subRecipes.size(), ingredientId);
 
-                var chosenSubRecipe = RecipeUtil.chooseLeastExpensiveOf(subRecipes);
+                Recipe<?> chosenSubRecipe = RecipeUtil.chooseLeastExpensiveOf(subRecipes);
                 CraftTracker.LOGGER.debug("chosenSubRecipe: {}", DebugUtil.printRecipe(chosenSubRecipe));
 
-                var computedSubRecipe = this.computeRecipe(chosenSubRecipe, amountRequired * iterations, depth + 1);
+                ComputedRecipe computedSubRecipe = this.computeRecipe(chosenSubRecipe, amountRequired * iterations, depth + 1);
                 CraftTracker.LOGGER.debug("computedSubRecipe: {}", computedSubRecipe);
                 if(computedSubRecipe == null) {
                     CraftTracker.LOGGER.debug("computed sub-recipe for {} returned is null; treat as raw material", DebugUtil.printRecipe(chosenSubRecipe));

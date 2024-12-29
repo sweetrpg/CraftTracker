@@ -1,7 +1,7 @@
 package com.sweetrpg.crafttracker.common.registry;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.sweetrpg.crafttracker.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.Constants;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
