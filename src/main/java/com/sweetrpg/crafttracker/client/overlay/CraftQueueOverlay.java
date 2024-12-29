@@ -1,9 +1,9 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.Constants;
+import com.sweetrpg.crafttracker.common.Runtime;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
-import com.sweetrpg.crafttracker.common.lib.CTRuntime;
-import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueItem;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
@@ -62,7 +62,7 @@ public class CraftQueueOverlay {
             return item1.getDescription().getString().compareTo(item2.getDescription().getString());
         }).toList();
 
-        switch(CTRuntime.INSTANCE.queueOverlayRequestedState) {
+        switch(Runtime.INSTANCE.queueOverlayRequestedState) {
             case SHOW:
                 //
                 break;
