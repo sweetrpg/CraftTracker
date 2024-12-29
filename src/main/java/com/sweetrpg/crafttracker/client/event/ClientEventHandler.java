@@ -2,9 +2,8 @@ package com.sweetrpg.crafttracker.client.event;
 
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.client.screen.QueueManagementScreen;
-import com.sweetrpg.crafttracker.common.addon.jei.CTPlugin;
-import com.sweetrpg.crafttracker.common.lib.CTRuntime;
-import com.sweetrpg.crafttracker.common.lib.Constants;
+import com.sweetrpg.crafttracker.common.Constants;
+import com.sweetrpg.crafttracker.common.Runtime;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import com.sweetrpg.crafttracker.common.network.PacketHandler;
@@ -13,6 +12,7 @@ import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.KeyUtil;
+import com.sweetrpg.crafttracker.integration.jei.CTPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.CraftingScreen;
@@ -87,21 +87,21 @@ public class ClientEventHandler {
 
         var player = Minecraft.getInstance().player;
         TranslationTextComponent msg;
-        switch(CTRuntime.INSTANCE.queueOverlayRequestedState) {
+        switch(Runtime.INSTANCE.queueOverlayRequestedState) {
             case SHOW:
-                CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.HIDE;
+                Runtime.INSTANCE.queueOverlayRequestedState = Runtime.OverlayState.HIDE;
                 msg = new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE);
                 player.displayClientMessage(msg, true);
                 break;
 
             case HIDE:
-                CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.DYNAMIC;
+                Runtime.INSTANCE.queueOverlayRequestedState = Runtime.OverlayState.DYNAMIC;
                 msg = new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC);
                 player.displayClientMessage(msg, true);
                 break;
 
             case DYNAMIC:
-                CTRuntime.INSTANCE.queueOverlayRequestedState = CTRuntime.OverlayState.SHOW;
+                Runtime.INSTANCE.queueOverlayRequestedState = Runtime.OverlayState.SHOW;
                 msg = new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW);
                 player.displayClientMessage(msg, true);
                 break;
@@ -152,21 +152,21 @@ public class ClientEventHandler {
 
         var player = Minecraft.getInstance().player;
         TranslationTextComponent msg;
-        switch(CTRuntime.INSTANCE.shoppingOverlayRequestedState) {
+        switch(Runtime.INSTANCE.shoppingOverlayRequestedState) {
             case SHOW:
-                CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.HIDE;
+                Runtime.INSTANCE.shoppingOverlayRequestedState = Runtime.OverlayState.HIDE;
                 msg = new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_HIDE);
                 player.displayClientMessage(msg, true);
                 break;
 
             case HIDE:
-                CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.DYNAMIC;
+                Runtime.INSTANCE.shoppingOverlayRequestedState = Runtime.OverlayState.DYNAMIC;
                 msg = new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_DYNAMIC);
                 player.displayClientMessage(msg, true);
                 break;
 
             case DYNAMIC:
-                CTRuntime.INSTANCE.shoppingOverlayRequestedState = CTRuntime.OverlayState.SHOW;
+                Runtime.INSTANCE.shoppingOverlayRequestedState = Runtime.OverlayState.SHOW;
                 msg = new TranslationTextComponent(Constants.TRANSLATION_KEY_GUI_MSG_SLIST_OVERLAY_MODE_SHOW);
                 player.displayClientMessage(msg, true);
                 break;
