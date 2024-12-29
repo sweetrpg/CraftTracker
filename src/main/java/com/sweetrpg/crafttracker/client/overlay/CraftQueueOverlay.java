@@ -1,9 +1,9 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.Constants;
+import com.sweetrpg.crafttracker.common.Runtime;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
-import com.sweetrpg.crafttracker.common.lib.CTRuntime;
-import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueItem;
 import com.sweetrpg.crafttracker.common.model.CraftingQueueProduct;
@@ -51,7 +51,7 @@ public class CraftQueueOverlay {
             return item1.getDescription().getString().compareTo(item2.getDescription().getString());
         }).toList();
 
-        switch(CTRuntime.INSTANCE.queueOverlayRequestedState) {
+        switch(Runtime.INSTANCE.queueOverlayRequestedState) {
             case SHOW:
                 //
                 break;
@@ -69,7 +69,13 @@ public class CraftQueueOverlay {
         }
 
         int x = ConfigHandler.CLIENT.craftQueueOverlayX.get();
+        if(x < 0) {
+            x = width - (ConfigHandler.CLIENT.craftQueueOverlayX.get() + Math.abs(x));
+        }
         int y = ConfigHandler.CLIENT.craftQueueOverlayY.get();
+        if(x < 0) {
+            y = width - (ConfigHandler.CLIENT.craftQueueOverlayY.get() + Math.abs(y));
+        }
         int olWidth = Math.min((ConfigHandler.CLIENT.craftQueueOverlayX.get() + ConfigHandler.CLIENT.craftQueueOverlayWidth.get()), width - 10);
         int olHeight = Math.min((ConfigHandler.CLIENT.craftQueueOverlayY.get() + ConfigHandler.CLIENT.craftQueueOverlayHeight.get()), height - 10);
         int backgroundColor = Util.parseColor(ConfigHandler.CLIENT.craftQueueOverlayBackgroundColor.get(), 16, Constants.BACKGROUND_COLOR);

@@ -1,11 +1,11 @@
-package com.sweetrpg.crafttracker.common.lib;
+package com.sweetrpg.crafttracker.common;
 
 /**
  * Container class for runtime information.
  */
-public class CTRuntime {
+public class Runtime {
 
-    public static CTRuntime INSTANCE = new CTRuntime();
+    public static Runtime INSTANCE = new Runtime();
 
     public enum OverlayState {
         SHOW,
@@ -17,7 +17,7 @@ public class CTRuntime {
     public OverlayState queueOverlayRequestedState;
     public OverlayState shoppingOverlayRequestedState;
 
-    public CTRuntime() {
+    public Runtime() {
         init();
     }
 

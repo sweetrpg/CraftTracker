@@ -1,9 +1,9 @@
 package com.sweetrpg.crafttracker.client.overlay;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.common.Constants;
+import com.sweetrpg.crafttracker.common.Runtime;
 import com.sweetrpg.crafttracker.common.config.ConfigHandler;
-import com.sweetrpg.crafttracker.common.lib.CTRuntime;
-import com.sweetrpg.crafttracker.common.lib.Constants;
 import com.sweetrpg.crafttracker.common.manager.ShoppingListManager;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.Util;
@@ -35,7 +35,7 @@ public class ShoppingListOverlay {
         var mgr = ShoppingListManager.INSTANCE;
         var items = mgr.getItems();
 
-        switch(CTRuntime.INSTANCE.shoppingOverlayRequestedState) {
+        switch(Runtime.INSTANCE.shoppingOverlayRequestedState) {
             case SHOW:
                 //
                 break;

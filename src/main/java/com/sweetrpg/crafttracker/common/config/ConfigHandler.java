@@ -1,10 +1,10 @@
 package com.sweetrpg.crafttracker.common.config;
 
 import com.sweetrpg.crafttracker.CraftTracker;
-import com.sweetrpg.crafttracker.common.lib.Constants;
-import com.sweetrpg.crafttracker.common.lib.Costs;
-import com.sweetrpg.crafttracker.common.lib.Multipliers;
+import com.sweetrpg.crafttracker.common.Constants;
 import com.sweetrpg.crafttracker.common.manager.CraftingQueueManager;
+import com.sweetrpg.crafttracker.data.Costs;
+import com.sweetrpg.crafttracker.data.Multipliers;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -13,7 +13,9 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConfigHandler {
@@ -120,6 +122,7 @@ public class ConfigHandler {
 
         public Map<String, ForgeConfigSpec.IntValue> tagEntries = new HashMap<>();
         public Map<String, ForgeConfigSpec.IntValue> overrideEntries = new HashMap<>();
+        public List<String> rawMaterials = new ArrayList<>();
         public Map<String, ForgeConfigSpec.DoubleValue> namespaceEntries = new HashMap<>();
         public Map<String, ForgeConfigSpec.DoubleValue> recipeTypeEntries = new HashMap<>();
 
@@ -140,6 +143,14 @@ public class ConfigHandler {
                 Costs.itemOverrides.forEach((k, v) -> {
                     overrideEntries.put(k, builder.comment("An item and corresponding cost override").defineInRange(k, v, 1, 10000));
                 });
+
+                builder.pop();
+            }
+
+            {
+                builder.push("Raw Material Overrides");
+
+                rawMaterials.addAll(Costs.alwaysRawMaterials);
 
                 builder.pop();
             }
