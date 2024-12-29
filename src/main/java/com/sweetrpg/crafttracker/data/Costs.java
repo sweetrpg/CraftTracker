@@ -954,6 +954,7 @@ public class Costs {
             "minecraft:gold_horse_armor",
             "minecraft:iron_horse_armor",
             "minecraft:obsidian",
+            "minecraft:redstone",
             "minecraft:seeds"
     );
 }
