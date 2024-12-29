@@ -123,6 +123,7 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${ptch_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${ptch_version}")
+    runtimeOnly fg.deobf("curse.maven:the-one-probe-${top_project_id}:${top_file_id}")
 
     implementation fg.deobf("curse.maven:farmers-delight-${farmers_project_id}:${farmers_file_id}")
     implementation fg.deobf("curse.maven:create-${create_project_id}:${create_file_id}")
@@ -132,11 +133,10 @@ dependencies {
     implementation fg.deobf("curse.maven:geckolib-${gecko_project_id}:${gecko_file_id}")
 //    implementation fg.deobf("curse.maven:celestial-exploration-${cexp_project_id}:${cexp_file_id}")
 //    implementation fg.deobf("curse.maven:azurelib-${azure_project_id}:${azure_file_id}")
+//    implementation fg.deobf("curse.maven:super-secret-doors-${ssd_project_id}:${ssd_file_id}")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiter_version}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiter_version}")
-
-    runtimeOnly fg.deobf("curse.maven:the-one-probe-${top_project_id}:${top_file_id}")
 }
 
 // Define a task to create a jar of project sources
