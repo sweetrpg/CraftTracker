@@ -1,0 +1,1 @@
+- `[FIX]` Change default key binding of 'toggle shopping list' to 'H'
