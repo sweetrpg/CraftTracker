@@ -1,3 +1,1 @@
-- `[FIX]` Fixed an error when trying to display a product in the crafting queue that has no recipes available
-- `[FIX]` Fixed some errors in item/recipe cost calculation
-- `[NEW]` Add configuration override for raw materials
+- `[FIX]` Change default key binding of 'toggle shopping list' to 'H'
