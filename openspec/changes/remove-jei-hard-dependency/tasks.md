@@ -47,5 +47,5 @@
 ## 7. Verification
 
 - [x] 7.1 `./gradlew build` and `./gradlew test` pass
-- [ ] 7.2 Launch `./gradlew client` with JEI present: verify hover-add from container slots, hover-add from the JEI panel, the picker, and that queue/list load on join
-- [ ] 7.3 Launch the client with JEI removed from `runtimeOnly`: verify the mod loads (no `NoClassDefFoundError`), hover-add from slots works, the picker works, and queue/list load on join
+- [x] 7.2 Launch `./gradlew client` with JEI present: verify hover-add from container slots, hover-add from the JEI panel, the picker, and that queue/list load on join
+- [x] 7.3 Launch the client with JEI removed from `runtimeOnly`: verify the mod loads (no `NoClassDefFoundError`), hover-add from slots works, the picker works, and queue/list load on join
