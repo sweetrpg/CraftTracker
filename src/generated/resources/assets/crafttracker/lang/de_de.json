@@ -40,6 +40,8 @@
   "crafttracker.screen.queue_mgr.button.dec.tooltip": "Reduzieren Sie die Menge an hergestellten",
   "crafttracker.screen.queue_mgr.button.del.tooltip": "Dieses Element aus der Warteschlange l\u00F6schen",
   "crafttracker.screen.queue_mgr.button.inc.tooltip": "Erh\u00F6hen Sie die Menge an hergestellten",
+  "crafttracker.screen.queue_mgr.picker.search_label": "Suchen:",
+  "crafttracker.screen.queue_mgr.picker.title": "Gegenstand hinzuf\u00FCgen",
   "crafttracker.screen.queue_mgr.title": "Warteschlangenmanager",
   "crafttracker.screen.shopping_list.empty_message": "The shopping list is empty.",
   "crafttracker.screen.shopping_list.help_message": "To clear the list:",
