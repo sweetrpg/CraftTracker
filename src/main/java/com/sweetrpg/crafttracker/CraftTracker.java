@@ -82,7 +82,6 @@ public class CraftTracker {
         LOGGER.debug("Client startup");
 
         ClientSetup.setupScreenManagers(event);
-
     }
 
     protected void interModProcess(final InterModProcessEvent event) {
