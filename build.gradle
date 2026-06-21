@@ -106,7 +106,9 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            args '--mod', project.mod_id, '--all', '--output', '"' + file('src/generated/resources/') + '"', '--existing', '"' + sourceSets.main.resources.srcDirs[0] + '"'
+            args '--mod', project.mod_id, '--all',
+                    '--output', file('src/generated/resources/'),
+                    '--existing', sourceSets.main.resources.srcDirs[0]
             mods {
                 create(mod_id) {
                     source(sourceSets.main)
