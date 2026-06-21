@@ -12,21 +12,39 @@ import com.sweetrpg.crafttracker.common.registry.ModAdvancements;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.KeyUtil;
-import com.sweetrpg.crafttracker.integration.jei.CTPlugin;
+import com.sweetrpg.crafttracker.integration.HoverProviderRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.CraftingScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ClientEventHandler {
+
+    private static boolean managersLoaded = false;
+
+    public static void onClientLogin(final ClientPlayerNetworkEvent.LoggedInEvent event) {
+        CraftTracker.LOGGER.debug("#onClientLogin");
+        if (!managersLoaded) {
+            managersLoaded = true;
+            var player = event.getPlayer();
+            if (player != null) {
+                CraftingQueueManager.INSTANCE.load(player);
+                ShoppingListManager.INSTANCE.load(player);
+            }
+        }
+    }
+
+    public static void onClientLogout(final ClientPlayerNetworkEvent.LoggedOutEvent event) {
+        CraftTracker.LOGGER.debug("#onClientLogout");
+        managersLoaded = false;
+    }
 
     public static void onKeyInput(final InputEvent.KeyInputEvent event) {
         CraftTracker.LOGGER.trace("#onKeyInput: {}", event);
@@ -69,8 +87,7 @@ public class ClientEventHandler {
             return;
         }
 
-        if(screen instanceof CraftingScreen ||
-                screen instanceof InventoryScreen) { // TODO: others?
+        if (screen instanceof AbstractContainerScreen) {
             if(ModKeyBindings.ADD_TO_QUEUE_MAPPING.matches(event.getKey(), event.getScanCode())) {
                 CraftTracker.LOGGER.debug("#onKeyInput: ADD_TO_QUEUE_MAPPING");
 
@@ -173,22 +190,15 @@ public class ClientEventHandler {
     private static void handleAddToQueue() {
         CraftTracker.LOGGER.debug("#handleAddToQueue");
 
-        CTPlugin.jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse()
-                .ifPresent(ingredient -> {
-                    CraftTracker.LOGGER.debug("#handleAddToQueue: type {}", ingredient.getType());
-                    CraftTracker.LOGGER.debug("#handleAddToQueue: ingredient {}", ingredient.getIngredient());
+        var screen = Minecraft.getInstance().screen;
+        if (screen == null) return;
 
-                    if(ingredient.getIngredient() instanceof ItemStack itemStack) {
-                        ResourceLocation res = itemStack.getItem().getRegistryName();
-                        CraftTracker.LOGGER.debug("#handleAddToQueue: res {}", res);
-
-                        var player = Minecraft.getInstance().player;
-                        CraftingQueueManager.INSTANCE.addProduct(player, res, 1);
-
-                        // send advancement packet
-                        PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.QUEUE_ITEM));
-                    }
-                });
+        HoverProviderRegistry.resolve(screen).ifPresent(res -> {
+            CraftTracker.LOGGER.debug("#handleAddToQueue: res {}", res);
+            var player = Minecraft.getInstance().player;
+            CraftingQueueManager.INSTANCE.addProduct(player, res, 1);
+            PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.QUEUE_ITEM));
+        });
     }
 
     @SubscribeEvent

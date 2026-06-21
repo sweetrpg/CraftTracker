@@ -32,7 +32,7 @@ displayName = "Craft Tracker"
 
 [[dependencies.crafttracker]]
     modId="jei"
-    mandatory=true
+mandatory = false
     versionRange="[9.7.2.281,)"
     ordering="NONE"
     side="BOTH"
