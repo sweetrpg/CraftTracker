@@ -12,6 +12,7 @@ out
 *.iws
 *.iml
 .idea/workspace.xml
+.idea/shelf/
 
 # gradle
 build
