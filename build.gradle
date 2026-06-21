@@ -204,7 +204,7 @@ curseforge {
         addGameVersion project.target_mc_version
         relations {
             optionalDependency 'configured'
-            requiredDependency 'jei'
+            optionalDependency 'jei'
             optionalDependency 'patchouli'
         }
     }
@@ -224,7 +224,7 @@ modrinth {
     loaders = ["forge"]
     dependencies {
         optional.project "configured"
-        required.project "jei"
+        optional.project "jei"
         optional.project "patchouli"
     }
 }
