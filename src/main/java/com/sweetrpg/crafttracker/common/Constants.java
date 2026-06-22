@@ -45,6 +45,8 @@ public class Constants {
     public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_DEC_BUTTON_TOOLTIP = "crafttracker.screen.queue_mgr.button.dec.tooltip";
     public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_INC_BUTTON_TOOLTIP = "crafttracker.screen.queue_mgr.button.inc.tooltip";
     public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_DEL_BUTTON_TOOLTIP = "crafttracker.screen.queue_mgr.button.del.tooltip";
+    public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_PICKER_TITLE = "crafttracker.screen.queue_mgr.picker.title";
+    public static final String TRANSLATION_KEY_GUI_QUEUE_MGR_PICKER_SEARCH = "crafttracker.screen.queue_mgr.picker.search_label";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_HIDE = "crafttracker.msg.queue_overlay_mode.hide";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_SHOW = "crafttracker.msg.queue_overlay_mode.show";
     public static final String TRANSLATION_KEY_GUI_MSG_QUEUE_OVERLAY_MODE_DYNAMIC = "crafttracker.msg.queue_overlay_mode.dynamic";

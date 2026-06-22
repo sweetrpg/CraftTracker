@@ -4,6 +4,8 @@ import com.sweetrpg.crafttracker.client.event.ClientEventHandler;
 import com.sweetrpg.crafttracker.client.overlay.CraftQueueOverlay;
 import com.sweetrpg.crafttracker.client.overlay.ShoppingListOverlay;
 import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
+import com.sweetrpg.crafttracker.integration.HoverProviderRegistry;
+import com.sweetrpg.crafttracker.integration.VanillaSlotHoverProvider;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,10 +25,14 @@ public class ClientSetup {
 
         MinecraftForge.EVENT_BUS.addListener(ClientEventHandler::onScreenInit);
         MinecraftForge.EVENT_BUS.addListener(ClientEventHandler::onKeyInput);
+        MinecraftForge.EVENT_BUS.addListener(ClientEventHandler::onClientLogin);
+        MinecraftForge.EVENT_BUS.addListener(ClientEventHandler::onClientLogout);
 
         OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "craft_queue", CraftQueueOverlay.CRAFT_QUEUE);
         OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "shopping_list", ShoppingListOverlay.SHOPPING_LIST);
 
         ModKeyBindings.init();
+
+        HoverProviderRegistry.register(new VanillaSlotHoverProvider());
     }
 }

@@ -47,6 +47,8 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_DEC_BUTTON_TOOLTIP, "Decrease the amount crafted");
         add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_INC_BUTTON_TOOLTIP, "Increase the amount crafted");
         add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_DEL_BUTTON_TOOLTIP, "Delete this item from the queue");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_PICKER_TITLE, "Add Item");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_PICKER_SEARCH, "Search:");
         add(Constants.KEY_BINDINGS_CATEGORY_TITLE, "Craft Tracker");
         add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Add to Queue");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFT_QUEUE_TITLE, "Toggle Craft Queue");
@@ -106,6 +108,8 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_DEC_BUTTON_TOOLTIP, "Decrease the amount crafted");
         add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_INC_BUTTON_TOOLTIP, "Increase the amount crafted");
         add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_DEL_BUTTON_TOOLTIP, "Delete this item from the queue");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_PICKER_TITLE, "Add Item");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_PICKER_SEARCH, "Search:");
         add(Constants.KEY_BINDINGS_CATEGORY_TITLE, "Craft Tracker");
         add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Add to Queue");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFT_QUEUE_TITLE, "Toggle Craft Queue");
@@ -165,6 +169,8 @@ public class CTLangProvider extends LanguageProvider {
         add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_DEC_BUTTON_TOOLTIP, "Reduzieren Sie die Menge an hergestellten");
         add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_INC_BUTTON_TOOLTIP, "Erhöhen Sie die Menge an hergestellten");
         add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_DEL_BUTTON_TOOLTIP, "Dieses Element aus der Warteschlange löschen");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_PICKER_TITLE, "Gegenstand hinzufügen");
+        add(Constants.TRANSLATION_KEY_GUI_QUEUE_MGR_PICKER_SEARCH, "Suchen:");
         add(Constants.KEY_BINDINGS_CATEGORY_TITLE, "Handwerks-Tracker");
         add(Constants.TRANSLATION_KEY_BINDINGS_ADDTOQUEUE_TITLE, "Zur Warteschlange hinzufügen");
         add(Constants.TRANSLATION_KEY_BINDINGS_TOGGLE_CRAFT_QUEUE_TITLE, "Herstellungswarteschlange umschalten");

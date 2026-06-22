@@ -40,6 +40,8 @@
   "crafttracker.screen.queue_mgr.button.dec.tooltip": "Decrease the amount crafted",
   "crafttracker.screen.queue_mgr.button.del.tooltip": "Delete this item from the queue",
   "crafttracker.screen.queue_mgr.button.inc.tooltip": "Increase the amount crafted",
+  "crafttracker.screen.queue_mgr.picker.search_label": "Search:",
+  "crafttracker.screen.queue_mgr.picker.title": "Add Item",
   "crafttracker.screen.queue_mgr.title": "Queue Manager",
   "crafttracker.screen.shopping_list.empty_message": "The shopping list is empty.",
   "crafttracker.screen.shopping_list.help_message": "To clear the list:",

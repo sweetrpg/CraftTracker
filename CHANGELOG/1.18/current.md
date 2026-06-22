@@ -1,0 +1,1 @@
+- [NEW] JEI is now an optional dependency
