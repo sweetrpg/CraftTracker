@@ -37,9 +37,20 @@ public class CraftQueueOverlay {
     static int LINE_HEIGHT = 16;
     static int TEXT_HEIGHT = 12;
     static int MAX_STRING_LENGTH = 40;
+    static int ITEM_ICON_SIZE = 16;
+
+    /**
+     * The item currently under the mouse in the overlay; {@link ItemStack#EMPTY} when none.
+     */
+    public static ItemStack hoveredItem = ItemStack.EMPTY;
 
     public static final IIngameOverlay CRAFT_QUEUE = (gui, poseStack, partialTicks, width, height) -> {
         CraftTracker.LOGGER.trace("CRAFT_QUEUE");
+
+        hoveredItem = ItemStack.EMPTY;
+        double guiScale = Minecraft.getInstance().getWindow().getGuiScale();
+        int mouseX = (int) (Minecraft.getInstance().mouseHandler.xpos() / guiScale);
+        int mouseY = (int) (Minecraft.getInstance().mouseHandler.ypos() / guiScale);
 
         Minecraft mc = Minecraft.getInstance();
         CraftingQueueManager mgr = CraftingQueueManager.INSTANCE;
@@ -141,6 +152,10 @@ public class CraftQueueOverlay {
                 GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
             }
 
+            if (isMouseOver(mouseX, mouseY, x + SECTION_X_OFFSET, yPos)) {
+                hoveredItem = stack;
+            }
+
             yPos += LINE_HEIGHT + 2;
             CraftTracker.LOGGER.trace("yPos (product item {}): {}", i, yPos);
         }
@@ -199,6 +214,10 @@ public class CraftQueueOverlay {
                     String text = item.getDescription().getString(MAX_STRING_LENGTH) +
                             (inter.isTag() ? "*" : "");
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                }
+
+                if (isMouseOver(mouseX, mouseY, x + SECTION_X_OFFSET, yPos)) {
+                    hoveredItem = stack;
                 }
 
                 yPos += LINE_HEIGHT + 2;
@@ -320,6 +339,11 @@ public class CraftQueueOverlay {
             }
         }
     };
+
+    private static boolean isMouseOver(int mouseX, int mouseY, int itemX, int itemY) {
+        return mouseX >= itemX && mouseX < itemX + ITEM_ICON_SIZE
+                && mouseY >= itemY && mouseY < itemY + ITEM_ICON_SIZE;
+    }
 
     private static Recipe<?> getRecipeFor(CraftingQueueProduct product) {
         try {

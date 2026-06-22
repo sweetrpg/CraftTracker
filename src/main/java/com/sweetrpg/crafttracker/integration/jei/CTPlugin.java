@@ -3,6 +3,7 @@ package com.sweetrpg.crafttracker.integration.jei;
 import com.sweetrpg.crafttracker.CraftTracker;
 import com.sweetrpg.crafttracker.common.Constants;
 import com.sweetrpg.crafttracker.integration.HoverProviderRegistry;
+import com.sweetrpg.crafttracker.integration.RecipeViewerRegistry;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.*;
@@ -75,5 +76,6 @@ public class CTPlugin implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
         CraftTracker.LOGGER.debug("CTPlugin#onRuntimeAvailable: {}", jeiRuntime);
         HoverProviderRegistry.register(new JeiHoverProvider(jeiRuntime));
+        RecipeViewerRegistry.register(new JeiRecipeViewerProvider(jeiRuntime));
     }
 }
