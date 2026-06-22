@@ -144,7 +144,11 @@ public class CraftQueueOverlay {
                 itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
                 itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
 
-                String text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getIterations());
+                String iterText = "";
+                if (p.getIterations() > 1) {
+                    iterText = String.format(" (x%d)", p.getIterations());
+                }
+                String text = String.format("%s%s", item.getDescription().getString(MAX_STRING_LENGTH), iterText);
                 GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
             }
             catch (RuntimeException e) {
