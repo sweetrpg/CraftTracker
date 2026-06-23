@@ -1,1 +1,2 @@
 - [NEW] JEI is now an optional dependency
+- [NEW] Open the hovered item in JEI

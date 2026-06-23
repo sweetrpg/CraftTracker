@@ -62,6 +62,7 @@ public class Constants {
     public static final String TRANSLATION_KEY_BINDINGS_OPEN_QMGR_TITLE = "key.crafttracker.openQueueManager";
     public static final String TRANSLATION_KEY_BINDINGS_POPULATE_SHOPPING_LIST_TITLE = "key.crafttracker.populateShoppingList";
     public static final String TRANSLATION_KEY_BINDINGS_CLEAR_SHOPPING_LIST_TITLE = "key.crafttracker.clearShoppingList";
+    public static final String TRANSLATION_KEY_BINDINGS_SHOW_RECIPE_TITLE = "key.crafttracker.showRecipe";
 
     // Config
     public static final String TRANSLATION_KEY_CONFIG_CLIENT_CALC_DEPTH = "crafttracker.config.client.calculation_depth";

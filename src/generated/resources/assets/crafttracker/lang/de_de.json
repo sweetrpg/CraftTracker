@@ -51,6 +51,7 @@
   "key.crafttracker.clearShoppingList": "Einkaufsliste l\u00F6schen",
   "key.crafttracker.openQueueManager": "Warteschlangenmanager \u00F6ffnen",
   "key.crafttracker.populateShoppingList": "Einkaufsliste f\u00FCllen",
+  "key.crafttracker.showRecipe": "Rezept anzeigen",
   "key.crafttracker.toggleCraftQueue": "Herstellungswarteschlange umschalten",
   "key.crafttracker.toggleShoppingList": "Einkaufsliste umschalten"
 }
