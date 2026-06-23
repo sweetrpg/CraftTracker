@@ -31,6 +31,7 @@ public class ClientEventHandler {
 
     private static boolean managersLoaded = false;
 
+    @SubscribeEvent
     public static void onClientLogin(final ClientPlayerNetworkEvent.LoggedInEvent event) {
         CraftTracker.LOGGER.debug("#onClientLogin");
         if (!managersLoaded) {
@@ -43,9 +44,11 @@ public class ClientEventHandler {
         }
     }
 
+    @SubscribeEvent
     public static void onClientLogout(final ClientPlayerNetworkEvent.LoggedOutEvent event) {
         CraftTracker.LOGGER.debug("#onClientLogout");
         managersLoaded = false;
+        CraftingQueueManager.INSTANCE.unload();
     }
 
     public static void onKeyInput(final InputEvent.KeyInputEvent event) {

@@ -54,6 +54,8 @@ public class CraftQueueOverlay {
 
         Minecraft mc = Minecraft.getInstance();
         CraftingQueueManager mgr = CraftingQueueManager.INSTANCE;
+        if (!mgr.isReady()) return;
+
         List<CraftingQueueProduct> products = mgr.getEndProducts().stream().sorted((i1, i2) -> {
             Item item1 = ForgeRegistries.ITEMS.getValue(i1.getProductId());
             if(item1 == null) return 0;
@@ -152,6 +154,7 @@ public class CraftQueueOverlay {
                 GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
             }
             catch (RuntimeException e) {
+                CraftTracker.LOGGER.error("Error rendering recipe item: {}", p.getProductId(), e);
                 String text = I18n.get(Constants.TRANSLATION_KEY_GUI_NO_RECIPES, p.getProductId().toString(), p.getIndex());
                 GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
             }
@@ -351,6 +354,10 @@ public class CraftQueueOverlay {
 
     private static Recipe<?> getRecipeFor(CraftingQueueProduct product) {
         try {
+//            if(product.getRecipes().isEmpty()) {
+//                CraftTracker.LOGGER.debug("No recipes found for product: {}; attempting to acquire again", product.getProductId());
+//                product.setRecipes(RecipeUtil.getRecipesFor(product.getProductId()));
+//            }
             return product.getRecipes().get(product.getIndex());
         }
         catch (RuntimeException e) {
