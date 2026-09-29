@@ -45,11 +45,26 @@ public class CraftingQueueManager {
     private Map<ResourceLocation, CraftingQueueItem> intermediateProducts = new HashMap<>();
     private Map<ResourceLocation, CraftingQueueItem> rawMaterials = new HashMap<>();
     private Map<ResourceLocation, CraftingQueueItem> fuel = new HashMap<>();
+    private boolean ready = false;
 
     /**
      * Default constructor.
      */
     public CraftingQueueManager() {
+    }
+
+    /**
+     * Returns true after {@link #load} has completed for the current session.
+     */
+    public boolean isReady() {
+        return ready;
+    }
+
+    /**
+     * Marks the manager as uninitialized; call on player logout.
+     */
+    public void unload() {
+        this.ready = false;
     }
 
     /**
@@ -77,6 +92,8 @@ public class CraftingQueueManager {
         catch (IOException e) {
             CraftTracker.LOGGER.error("An error occurred while loading crafting queue [" + file + "]", e);
         }
+
+        this.ready = true;
     }
 
     /**

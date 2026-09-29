@@ -1,6 +1,7 @@
 package com.sweetrpg.crafttracker.client.event;
 
 import com.sweetrpg.crafttracker.CraftTracker;
+import com.sweetrpg.crafttracker.client.overlay.CraftQueueOverlay;
 import com.sweetrpg.crafttracker.client.screen.QueueManagementScreen;
 import com.sweetrpg.crafttracker.common.Constants;
 import com.sweetrpg.crafttracker.common.Runtime;
@@ -13,6 +14,7 @@ import com.sweetrpg.crafttracker.common.registry.ModKeyBindings;
 import com.sweetrpg.crafttracker.common.util.InventoryUtil;
 import com.sweetrpg.crafttracker.common.util.KeyUtil;
 import com.sweetrpg.crafttracker.integration.HoverProviderRegistry;
+import com.sweetrpg.crafttracker.integration.RecipeViewerRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -29,6 +31,7 @@ public class ClientEventHandler {
 
     private static boolean managersLoaded = false;
 
+    @SubscribeEvent
     public static void onClientLogin(final ClientPlayerNetworkEvent.LoggedInEvent event) {
         CraftTracker.LOGGER.debug("#onClientLogin");
         if (!managersLoaded) {
@@ -41,9 +44,11 @@ public class ClientEventHandler {
         }
     }
 
+    @SubscribeEvent
     public static void onClientLogout(final ClientPlayerNetworkEvent.LoggedOutEvent event) {
         CraftTracker.LOGGER.debug("#onClientLogout");
         managersLoaded = false;
+        CraftingQueueManager.INSTANCE.unload();
     }
 
     public static void onKeyInput(final InputEvent.KeyInputEvent event) {
@@ -92,6 +97,11 @@ public class ClientEventHandler {
                 CraftTracker.LOGGER.debug("#onKeyInput: ADD_TO_QUEUE_MAPPING");
 
                 handleAddToQueue();
+            } else if (KeyUtil.isKeyDown(event.getKey()) &&
+                    ModKeyBindings.SHOW_RECIPE_MAPPING.matches(event.getKey(), event.getScanCode())) {
+                CraftTracker.LOGGER.debug("#onKeyInput: SHOW_RECIPE_MAPPING");
+
+                handleShowRecipe();
             }
         }
     }
@@ -199,6 +209,15 @@ public class ClientEventHandler {
             CraftingQueueManager.INSTANCE.addProduct(player, res, 1);
             PacketHandler.sendToServer(new AdvancementData(ModAdvancements.Key.QUEUE_ITEM));
         });
+    }
+
+    private static void handleShowRecipe() {
+        CraftTracker.LOGGER.debug("#handleShowRecipe");
+
+        var hovered = CraftQueueOverlay.hoveredItem;
+        if (!hovered.isEmpty()) {
+            RecipeViewerRegistry.showRecipesFor(hovered);
+        }
     }
 
     @SubscribeEvent

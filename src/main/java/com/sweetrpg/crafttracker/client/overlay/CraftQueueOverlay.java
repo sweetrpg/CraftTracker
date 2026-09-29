@@ -37,12 +37,25 @@ public class CraftQueueOverlay {
     static int LINE_HEIGHT = 16;
     static int TEXT_HEIGHT = 12;
     static int MAX_STRING_LENGTH = 40;
+    static int ITEM_ICON_SIZE = 16;
+
+    /**
+     * The item currently under the mouse in the overlay; {@link ItemStack#EMPTY} when none.
+     */
+    public static ItemStack hoveredItem = ItemStack.EMPTY;
 
     public static final IIngameOverlay CRAFT_QUEUE = (gui, poseStack, partialTicks, width, height) -> {
         CraftTracker.LOGGER.trace("CRAFT_QUEUE");
 
+        hoveredItem = ItemStack.EMPTY;
+        double guiScale = Minecraft.getInstance().getWindow().getGuiScale();
+        int mouseX = (int) (Minecraft.getInstance().mouseHandler.xpos() / guiScale);
+        int mouseY = (int) (Minecraft.getInstance().mouseHandler.ypos() / guiScale);
+
         Minecraft mc = Minecraft.getInstance();
         CraftingQueueManager mgr = CraftingQueueManager.INSTANCE;
+        if (!mgr.isReady()) return;
+
         List<CraftingQueueProduct> products = mgr.getEndProducts().stream().sorted((i1, i2) -> {
             Item item1 = ForgeRegistries.ITEMS.getValue(i1.getProductId());
             if(item1 == null) return 0;
@@ -133,12 +146,21 @@ public class CraftQueueOverlay {
                 itemRenderer.renderAndDecorateFakeItem(stack, x + SECTION_X_OFFSET, yPos);
                 itemRenderer.renderGuiItemDecorations(mc.font, stack, x + SECTION_X_OFFSET, yPos);
 
-                String text = String.format("%s (x%d)", item.getDescription().getString(MAX_STRING_LENGTH), p.getIterations());
+                String iterText = "";
+                if (p.getIterations() > 1) {
+                    iterText = String.format(" (x%d)", p.getIterations());
+                }
+                String text = String.format("%s%s", item.getDescription().getString(MAX_STRING_LENGTH), iterText);
                 GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
             }
             catch (RuntimeException e) {
+                CraftTracker.LOGGER.error("Error rendering recipe item: {}", p.getProductId(), e);
                 String text = I18n.get(Constants.TRANSLATION_KEY_GUI_NO_RECIPES, p.getProductId().toString(), p.getIndex());
                 GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+            }
+
+            if (isMouseOver(mouseX, mouseY, x + SECTION_X_OFFSET, yPos)) {
+                hoveredItem = stack;
             }
 
             yPos += LINE_HEIGHT + 2;
@@ -199,6 +221,10 @@ public class CraftQueueOverlay {
                     String text = item.getDescription().getString(MAX_STRING_LENGTH) +
                             (inter.isTag() ? "*" : "");
                     GuiComponent.drawString(poseStack, gui.getFont(), text, x + ITEM_NAME_X_OFFSET, yPos + 4, TEXT_COLOR);
+                }
+
+                if (isMouseOver(mouseX, mouseY, x + SECTION_X_OFFSET, yPos)) {
+                    hoveredItem = stack;
                 }
 
                 yPos += LINE_HEIGHT + 2;
@@ -321,8 +347,17 @@ public class CraftQueueOverlay {
         }
     };
 
+    private static boolean isMouseOver(int mouseX, int mouseY, int itemX, int itemY) {
+        return mouseX >= itemX && mouseX < itemX + ITEM_ICON_SIZE
+                && mouseY >= itemY && mouseY < itemY + ITEM_ICON_SIZE;
+    }
+
     private static Recipe<?> getRecipeFor(CraftingQueueProduct product) {
         try {
+//            if(product.getRecipes().isEmpty()) {
+//                CraftTracker.LOGGER.debug("No recipes found for product: {}; attempting to acquire again", product.getProductId());
+//                product.setRecipes(RecipeUtil.getRecipesFor(product.getProductId()));
+//            }
             return product.getRecipes().get(product.getIndex());
         }
         catch (RuntimeException e) {

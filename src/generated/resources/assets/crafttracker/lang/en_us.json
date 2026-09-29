@@ -51,6 +51,7 @@
   "key.crafttracker.clearShoppingList": "Clear Shopping List",
   "key.crafttracker.openQueueManager": "Open Queue Manager",
   "key.crafttracker.populateShoppingList": "Populate Shopping List",
+  "key.crafttracker.showRecipe": "Show Recipe",
   "key.crafttracker.toggleCraftQueue": "Toggle Craft Queue",
   "key.crafttracker.toggleShoppingList": "Toggle Shopping List"
 }
